@@ -9,13 +9,15 @@
 
     <title>azure_sdk_for_rust::azure::service_bus::event_hub::Client - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../../main.css">
+    
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../../../index.html'>azure_sdk_for_rust</a>::<wbr><a href='../../index.html'>azure</a>::<wbr><a href='../index.html'>service_bus</a>::<wbr><a href='index.html'>event_hub</a></p><script>window.sidebarCurrent = {name: 'Client', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Client</p><div class="block items"><ul><li><a href="#methods">Methods</a></li></ul></div><p class='location'><a href='../../../index.html'>azure_sdk_for_rust</a>::<wbr><a href='../../index.html'>azure</a>::<wbr><a href='../index.html'>service_bus</a>::<wbr><a href='index.html'>event_hub</a></p><script>window.sidebarCurrent = {name: 'Client', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -41,16 +43,15 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../../../index.html'>azure_sdk_for_rust</a>::<wbr><a href='../../index.html'>azure</a>::<wbr><a href='../index.html'>service_bus</a>::<wbr><a href='index.html'>event_hub</a>::<wbr><a class='struct' href=''>Client</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-3346' class='srclink' href='../../../../src/azure_sdk_for_rust/azure/service_bus/event_hub/client.rs.html#10-15' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Client {
-    // some fields omitted
-}</pre><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../../../../azure_sdk_for_rust/azure/service_bus/event_hub/struct.Client.html' title='azure_sdk_for_rust::azure::service_bus::event_hub::Client'>Client</a></code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(namespace: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, event_hub: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, policy_name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='../../../../azure_sdk_for_rust/azure/service_bus/event_hub/struct.Client.html' title='azure_sdk_for_rust::azure::service_bus::event_hub::Client'>Client</a></code></h4>
-<h4 id='method.send_event' class='method'><code>fn <a href='#method.send_event' class='fnname'>send_event</a>(&amp;mut self, event_body: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(&amp;mut <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Read.html' title='std::io::Read'>Read</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>)</a>, duration: <a class='struct' href='../../../../time/duration/struct.Duration.html' title='time::duration::Duration'>Duration</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, <a class='enum' href='../../../../azure_sdk_for_rust/azure/core/errors/enum.AzureError.html' title='azure_sdk_for_rust::azure::core::errors::AzureError'>AzureError</a>&gt;</code></h4>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../../index.html'>azure_sdk_for_rust</a>::<wbr><a href='../../index.html'>azure</a>::<wbr><a href='../index.html'>service_bus</a>::<wbr><a href='index.html'>event_hub</a>::<wbr><a class="struct" href=''>Client</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../../src/azure_sdk_for_rust/azure/service_bus/event_hub/client.rs.html#10-15' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Client { /* fields omitted */ }</pre><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../../../../azure_sdk_for_rust/azure/service_bus/event_hub/struct.Client.html" title="struct azure_sdk_for_rust::azure::service_bus::event_hub::Client">Client</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../../src/azure_sdk_for_rust/azure/service_bus/event_hub/client.rs.html#17-42' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(namespace: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, event_hub: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, policy_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, key: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../../../../azure_sdk_for_rust/azure/service_bus/event_hub/struct.Client.html" title="struct azure_sdk_for_rust::azure::service_bus::event_hub::Client">Client</a></code></span></h4>
+<h4 id='method.send_event' class="method"><span id='send_event.v' class='invisible'><code>fn <a href='#method.send_event' class='fnname'>send_event</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;event_body: &amp;mut <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a>&amp;mut <a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Read.html" title="trait std::io::Read">Read</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;duration: <a class="struct" href="../../../../time/duration/struct.Duration.html" title="struct time::duration::Duration">Duration</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="enum" href="../../../../azure_sdk_for_rust/azure/core/errors/enum.AzureError.html" title="enum azure_sdk_for_rust::azure::core::errors::AzureError">AzureError</a>&gt;</code></span></h4>
 </div></section>
     <section id='search' class="content hidden"></section>
 
@@ -74,6 +75,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -94,7 +97,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -105,11 +108,9 @@
     <script>
         window.rootPath = "../../../../";
         window.currentCrate = "azure_sdk_for_rust";
-        window.playgroundUrl = "";
     </script>
     <script src="../../../../jquery.js"></script>
     <script src="../../../../main.js"></script>
-    
     <script defer src="../../../../search-index.js"></script>
 </body>
 </html>

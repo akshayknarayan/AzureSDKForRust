@@ -4,18 +4,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `src/azure/service_bus/event_hub/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/mindflavor/src/rust/AzureSDKForRust/src/azure/service_bus/event_hub/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../../../main.css">
+    
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -41,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -141,106 +143,138 @@
 <span id="98"> 98</span>
 <span id="99"> 99</span>
 <span id="100">100</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>azure</span>::<span class='ident'>core</span>::<span class='ident'>errors</span>::{<span class='ident'>AzureError</span>, <span class='ident'>UnexpectedHTTPResult</span>};
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">errors</span>::{<span class="ident">AzureError</span>, <span class="ident">UnexpectedHTTPResult</span>};
 
-<span class='kw'>use</span> <span class='ident'>hyper</span>;
-<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>header</span>::{<span class='ident'>Headers</span>, <span class='ident'>ContentLength</span>};
-<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>status</span>::<span class='ident'>StatusCode</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">net</span>::<span class="ident">HttpsConnector</span>;
+<span class="kw">use</span> <span class="ident">hyper_native_tls</span>::<span class="ident">NativeTlsClient</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::{<span class="ident">Headers</span>, <span class="ident">ContentLength</span>};
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">status</span>::<span class="ident">StatusCode</span>;
 
-<span class='kw'>use</span> <span class='ident'>chrono</span>;
-<span class='kw'>use</span> <span class='ident'>time</span>::<span class='ident'>Duration</span>;
+<span class="kw">use</span> <span class="ident">chrono</span>;
+<span class="kw">use</span> <span class="ident">time</span>::<span class="ident">Duration</span>;
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>Add</span>;
-<span class='kw'>use</span> <span class='ident'>serialize</span>::<span class='ident'>base64</span>::{<span class='ident'>STANDARD</span>, <span class='ident'>ToBase64</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span>;
+<span class="kw">use</span> <span class="ident">base64</span>;
 
-<span class='kw'>use</span> <span class='ident'>url</span>::<span class='ident'>percent_encoding</span>::{<span class='ident'>utf8_percent_encode</span>, <span class='ident'>HTTP_VALUE_ENCODE_SET</span>, <span class='ident'>FORM_URLENCODED_ENCODE_SET</span>};
+<span class="kw">use</span> <span class="ident">url</span>::<span class="ident">percent_encoding</span>::<span class="ident">utf8_percent_encode</span>;
+<span class="kw">use</span> <span class="ident">url</span>::<span class="ident">form_urlencoded</span>::<span class="ident">Serializer</span>;
 
-<span class='kw'>use</span> <span class='ident'>crypto</span>::<span class='ident'>sha2</span>::<span class='ident'>Sha256</span>;
-<span class='kw'>use</span> <span class='ident'>crypto</span>::<span class='ident'>hmac</span>::<span class='ident'>Hmac</span>;
-<span class='kw'>use</span> <span class='ident'>crypto</span>::<span class='ident'>mac</span>::<span class='ident'>Mac</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::<span class="ident">parsing</span>::<span class="ident">HTTP_VALUE</span>;
 
-<span class='kw'>use</span> <span class='ident'>url</span>::<span class='ident'>Url</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Read</span>;
+<span class="kw">use</span> <span class="ident">crypto</span>::<span class="ident">sha2</span>::<span class="ident">Sha256</span>;
+<span class="kw">use</span> <span class="ident">crypto</span>::<span class="ident">hmac</span>::<span class="ident">Hmac</span>;
+<span class="kw">use</span> <span class="ident">crypto</span>::<span class="ident">mac</span>::<span class="ident">Mac</span>;
 
-<span class='kw'>mod</span> <span class='ident'>client</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>client</span>::<span class='ident'>Client</span>;
+<span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Read</span>;
 
-<span class='macro'>header</span><span class='macro'>!</span> { (<span class='ident'>Authorization</span>, <span class='string'>&quot;Authorization&quot;</span>) <span class='op'>=&gt;</span> [<span class='ident'>String</span>] }
+<span class="kw">mod</span> <span class="ident">client</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">client</span>::<span class="ident">Client</span>;
 
-<span class='kw'>fn</span> <span class='ident'>send_event</span>(<span class='ident'>namespace</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>,
-              <span class='ident'>event_hub</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>,
-              <span class='ident'>policy_name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>,
-              <span class='ident'>hmac</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Hmac</span><span class='op'>&lt;</span><span class='ident'>Sha256</span><span class='op'>&gt;</span>,
-              <span class='ident'>event_body</span>: (<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Read</span>, <span class='ident'>u64</span>),
-              <span class='ident'>duration</span>: <span class='ident'>Duration</span>)
-              <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>AzureError</span><span class='op'>&gt;</span> {
+<span class="macro">header</span><span class="macro">!</span> { (<span class="ident">Authorization</span>, <span class="string">&quot;Authorization&quot;</span>) <span class="op">=&gt;</span> [<span class="ident">String</span>] }
 
-    <span class='comment'>// prepare the url to call</span>
-    <span class='kw'>let</span> <span class='ident'>url</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;https://{}.servicebus.windows.net/{}/messages&quot;</span>,
-                      <span class='ident'>namespace</span>,
-                      <span class='ident'>event_hub</span>);
-    <span class='kw'>let</span> <span class='ident'>url</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Url</span>::<span class='ident'>parse</span>(<span class='kw-2'>&amp;</span><span class='ident'>url</span>));
-    <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;url == {:?}&quot;</span>, <span class='ident'>url</span>);
+<span class="kw">fn</span> <span class="ident">send_event</span>(<span class="ident">namespace</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+              <span class="ident">event_hub</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+              <span class="ident">policy_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+              <span class="ident">hmac</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Hmac</span><span class="op">&lt;</span><span class="ident">Sha256</span><span class="op">&gt;</span>,
+              <span class="ident">event_body</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Read</span>, <span class="ident">u64</span>),
+              <span class="ident">duration</span>: <span class="ident">Duration</span>)
+              <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">AzureError</span><span class="op">&gt;</span> {
 
-    <span class='comment'>// create content</span>
+    <span class="comment">// prepare the url to call</span>
+    <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;https://{}.servicebus.windows.net/{}/messages&quot;</span>,
+                      <span class="ident">namespace</span>,
+                      <span class="ident">event_hub</span>);
+    <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>));
+    <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;url == {:?}&quot;</span>, <span class="ident">url</span>);
 
-    <span class='comment'>// generate sas signature based on key name, key value, url and duration.</span>
-    <span class='kw'>let</span> <span class='ident'>sas</span> <span class='op'>=</span> <span class='ident'>generate_signature</span>(<span class='kw-2'>&amp;</span><span class='ident'>policy_name</span>, <span class='ident'>hmac</span>, <span class='kw-2'>&amp;</span><span class='ident'>url</span>.<span class='ident'>to_string</span>(), <span class='ident'>duration</span>);
-    <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;sas == {}&quot;</span>, <span class='ident'>sas</span>);
+    <span class="comment">// create content</span>
 
-    <span class='comment'>// add required headers (in this case just the Authorization and Content-Length).</span>
-    <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>hyper</span>::<span class='ident'>client</span>::<span class='ident'>Client</span>::<span class='ident'>new</span>();
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>headers</span> <span class='op'>=</span> <span class='ident'>Headers</span>::<span class='ident'>new</span>();
-    <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>Authorization</span>(<span class='ident'>sas</span>));
-    <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>ContentLength</span>(<span class='ident'>event_body</span>.<span class='number'>1</span>));
+    <span class="comment">// generate sas signature based on key name, key value, url and duration.</span>
+    <span class="kw">let</span> <span class="ident">sas</span> <span class="op">=</span> <span class="ident">generate_signature</span>(<span class="ident">policy_name</span>, <span class="ident">hmac</span>, <span class="kw-2">&amp;</span><span class="ident">url</span>.<span class="ident">to_string</span>(), <span class="ident">duration</span>);
+    <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;sas == {}&quot;</span>, <span class="ident">sas</span>);
 
-    <span class='kw'>let</span> <span class='ident'>body</span> <span class='op'>=</span> <span class='ident'>hyper</span>::<span class='ident'>client</span>::<span class='ident'>Body</span>::<span class='ident'>SizedBody</span>(<span class='ident'>event_body</span>.<span class='number'>0</span>, <span class='ident'>event_body</span>.<span class='number'>1</span>);
+    <span class="comment">// add required headers (in this case just the Authorization and Content-Length).</span>
+    <span class="kw">let</span> <span class="ident">ssl</span> <span class="op">=</span> <span class="ident">NativeTlsClient</span>::<span class="ident">new</span>().<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">connector</span> <span class="op">=</span> <span class="ident">HttpsConnector</span>::<span class="ident">new</span>(<span class="ident">ssl</span>);
+    <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">hyper</span>::<span class="ident">client</span>::<span class="ident">Client</span>::<span class="ident">with_connector</span>(<span class="ident">connector</span>);
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">Headers</span>::<span class="ident">new</span>();
+    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">Authorization</span>(<span class="ident">sas</span>));
+    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ContentLength</span>(<span class="ident">event_body</span>.<span class="number">1</span>));
+    <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;headers == {:?}&quot;</span>, <span class="ident">headers</span>);
 
-    <span class='comment'>// Post the request along with the headers and the body.</span>
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>response</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>post</span>(<span class='ident'>url</span>).<span class='ident'>body</span>(<span class='ident'>body</span>).<span class='ident'>headers</span>(<span class='ident'>headers</span>).<span class='ident'>send</span>());
-    <span class='macro'>info</span><span class='macro'>!</span>(<span class='string'>&quot;response.status == {}&quot;</span>, <span class='ident'>response</span>.<span class='ident'>status</span>);
-    <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;response.headers == {:?}&quot;</span>, <span class='ident'>response</span>.<span class='ident'>headers</span>);
+    <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">hyper</span>::<span class="ident">client</span>::<span class="ident">Body</span>::<span class="ident">SizedBody</span>(<span class="ident">event_body</span>.<span class="number">0</span>, <span class="ident">event_body</span>.<span class="number">1</span>);
 
-    <span class='kw'>if</span> <span class='ident'>response</span>.<span class='ident'>status</span> <span class='op'>!=</span> <span class='ident'>StatusCode</span>::<span class='ident'>Created</span> {
-        <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;response status unexpected, returning Err&quot;</span>);
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>resp_s</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>response</span>.<span class='ident'>read_to_string</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>resp_s</span>));
-        <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>AzureError</span>::<span class='ident'>UnexpectedHTTPResult</span>(<span class='ident'>UnexpectedHTTPResult</span>::<span class='ident'>new</span>(
-            <span class='ident'>StatusCode</span>::<span class='ident'>Created</span>,
-            <span class='ident'>response</span>.<span class='ident'>status</span>,
-            <span class='kw-2'>&amp;</span><span class='ident'>resp_s</span>)));
+    <span class="comment">// Post the request along with the headers and the body.</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">response</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">client</span>.<span class="ident">post</span>(<span class="ident">url</span>).<span class="ident">body</span>(<span class="ident">body</span>).<span class="ident">headers</span>(<span class="ident">headers</span>).<span class="ident">send</span>());
+    <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;response.status == {}&quot;</span>, <span class="ident">response</span>.<span class="ident">status</span>);
+    <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;response.headers == {:?}&quot;</span>, <span class="ident">response</span>.<span class="ident">headers</span>);
+
+    <span class="kw">if</span> <span class="ident">response</span>.<span class="ident">status</span> <span class="op">!=</span> <span class="ident">StatusCode</span>::<span class="ident">Created</span> {
+        <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;response status unexpected, returning Err&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp_s</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">response</span>.<span class="ident">read_to_string</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">resp_s</span>));
+        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">AzureError</span>::<span class="ident">UnexpectedHTTPResult</span>(<span class="ident">UnexpectedHTTPResult</span>::<span class="ident">new</span>(
+            <span class="ident">StatusCode</span>::<span class="ident">Created</span>,
+            <span class="ident">response</span>.<span class="ident">status</span>,
+            <span class="kw-2">&amp;</span><span class="ident">resp_s</span>)));
     }
 
-    <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;response status ok, returning Ok&quot;</span>);
-    <span class='prelude-val'>Ok</span>(())
+    <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;response status ok, returning Ok&quot;</span>);
+    <span class="prelude-val">Ok</span>(())
 }
 
-<span class='kw'>fn</span> <span class='ident'>generate_signature</span>(<span class='ident'>policy_name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>,
-                      <span class='ident'>hmac</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Hmac</span><span class='op'>&lt;</span><span class='ident'>Sha256</span><span class='op'>&gt;</span>,
-                      <span class='ident'>url</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>,
-                      <span class='ident'>ttl</span>: <span class='ident'>Duration</span>)
-                      <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-    <span class='kw'>let</span> <span class='ident'>expiry</span> <span class='op'>=</span> <span class='ident'>chrono</span>::<span class='ident'>UTC</span>::<span class='ident'>now</span>().<span class='ident'>add</span>(<span class='ident'>ttl</span>).<span class='ident'>timestamp</span>();
-    <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;expiry == {:?}&quot;</span>, <span class='ident'>expiry</span>);
+<span class="kw">fn</span> <span class="ident">generate_signature</span>(<span class="ident">policy_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+                      <span class="ident">hmac</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Hmac</span><span class="op">&lt;</span><span class="ident">Sha256</span><span class="op">&gt;</span>,
+                      <span class="ident">url</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+                      <span class="ident">ttl</span>: <span class="ident">Duration</span>)
+                      <span class="op">-&gt;</span> <span class="ident">String</span> {
+    <span class="kw">let</span> <span class="ident">expiry</span> <span class="op">=</span> <span class="ident">chrono</span>::<span class="ident">UTC</span>::<span class="ident">now</span>().<span class="ident">add</span>(<span class="ident">ttl</span>).<span class="ident">timestamp</span>();
+    <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;expiry == {:?}&quot;</span>, <span class="ident">expiry</span>);
 
-    <span class='kw'>let</span> <span class='ident'>url_encoded</span> <span class='op'>=</span> <span class='ident'>utf8_percent_encode</span>(<span class='ident'>url</span>, <span class='ident'>HTTP_VALUE_ENCODE_SET</span>);
-    <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;url_encoded == {:?}&quot;</span>, <span class='ident'>url_encoded</span>);
+    <span class="kw">let</span> <span class="ident">url_encoded</span> <span class="op">=</span> <span class="ident">utf8_percent_encode</span>(<span class="ident">url</span>, <span class="ident">HTTP_VALUE</span>);
+    <span class="comment">//debug!(&quot;url_encoded == {:?}&quot;, url_encoded);</span>
 
-    <span class='kw'>let</span> <span class='ident'>str_to_sign</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}\n{}&quot;</span>, <span class='ident'>url_encoded</span>, <span class='ident'>expiry</span>);
-    <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;str_to_sign == {:?}&quot;</span>, <span class='ident'>str_to_sign</span>);
+    <span class="kw">let</span> <span class="ident">str_to_sign</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}\n{}&quot;</span>, <span class="ident">url_encoded</span>, <span class="ident">expiry</span>);
+    <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;str_to_sign == {:?}&quot;</span>, <span class="ident">str_to_sign</span>);
 
-    <span class='ident'>hmac</span>.<span class='ident'>reset</span>();
-    <span class='ident'>hmac</span>.<span class='ident'>input</span>(<span class='ident'>str_to_sign</span>.<span class='ident'>as_bytes</span>());
-    <span class='kw'>let</span> <span class='ident'>sig</span> <span class='op'>=</span> <span class='ident'>hmac</span>.<span class='ident'>result</span>().<span class='ident'>code</span>().<span class='ident'>to_base64</span>(<span class='ident'>STANDARD</span>);
-    <span class='kw'>let</span> <span class='ident'>sig</span> <span class='op'>=</span> <span class='ident'>utf8_percent_encode</span>(<span class='kw-2'>&amp;</span><span class='ident'>sig</span>, <span class='ident'>FORM_URLENCODED_ENCODE_SET</span>);
-    <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;sig == {:?}&quot;</span>, <span class='ident'>sig</span>);
+    <span class="ident">hmac</span>.<span class="ident">reset</span>();
+    <span class="ident">hmac</span>.<span class="ident">input</span>(<span class="ident">str_to_sign</span>.<span class="ident">as_bytes</span>());
+    <span class="kw">let</span> <span class="ident">sig</span> <span class="op">=</span> {
+        <span class="kw">let</span> <span class="ident">sig</span> <span class="op">=</span> <span class="ident">base64</span>::<span class="ident">encode</span>(<span class="ident">hmac</span>.<span class="ident">result</span>().<span class="ident">code</span>());
+        <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;sig == {}&quot;</span>, <span class="ident">sig</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ser</span> <span class="op">=</span> <span class="ident">Serializer</span>::<span class="ident">new</span>(<span class="ident">String</span>::<span class="ident">new</span>());
+        <span class="ident">ser</span>.<span class="ident">append_pair</span>(<span class="string">&quot;sig&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">sig</span>);
+        <span class="kw">let</span> <span class="ident">sig</span> <span class="op">=</span> <span class="ident">ser</span>.<span class="ident">finish</span>();
+        <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;sig == {}&quot;</span>, <span class="ident">sig</span>);
+        <span class="ident">sig</span>
+    };
 
-    <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;SharedAccessSignature sr={}&amp;sig={}&amp;se={}&amp;skn={}&quot;</span>,
-            <span class='kw-2'>&amp;</span><span class='ident'>url_encoded</span>,
-            <span class='ident'>sig</span>,
-            <span class='ident'>expiry</span>,
-            <span class='ident'>policy_name</span>)
+    <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;sig == {:?}&quot;</span>, <span class="ident">sig</span>);
+
+    <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;SharedAccessSignature sr={}&amp;{}&amp;se={}&amp;skn={}&quot;</span>,
+            <span class="kw-2">&amp;</span><span class="ident">url_encoded</span>,
+            <span class="ident">sig</span>,
+            <span class="ident">expiry</span>,
+            <span class="ident">policy_name</span>)
 }
 </pre>
 </section>
@@ -266,6 +300,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -286,7 +322,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -297,11 +333,9 @@
     <script>
         window.rootPath = "../../../../../";
         window.currentCrate = "azure_sdk_for_rust";
-        window.playgroundUrl = "";
     </script>
     <script src="../../../../../jquery.js"></script>
     <script src="../../../../../main.js"></script>
-    
     <script defer src="../../../../../search-index.js"></script>
 </body>
 </html>

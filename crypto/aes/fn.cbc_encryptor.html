@@ -9,13 +9,15 @@
 
     <title>crypto::aes::cbc_encryptor - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc fn">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -41,13 +43,13 @@
         </form>
     </nav>
 
-    <section id='main' class="content fn">
-<h1 class='fqn'><span class='in-band'>Function <a href='../index.html'>crypto</a>::<wbr><a href='index.html'>aes</a>::<wbr><a class='fn' href=''>cbc_encryptor</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-63' class='srclink' href='../../src/crypto/aes.rs.html#138-166' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn cbc_encryptor&lt;X: <a class='trait' href='../../crypto/blockmodes/trait.PaddingProcessor.html' title='crypto::blockmodes::PaddingProcessor'>PaddingProcessor</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + 'static&gt;(key_size: <a class='enum' href='../../crypto/aes/enum.KeySize.html' title='crypto::aes::KeySize'>KeySize</a>, key: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>, iv: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>, padding: X) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html' title='alloc::boxed::Box'>Box</a>&lt;<a class='trait' href='../../crypto/symmetriccipher/trait.Encryptor.html' title='crypto::symmetriccipher::Encryptor'>Encryptor</a> + 'static&gt;</pre><div class='docblock'><p>Get the best implementation of a CbcEncryptor</p>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Function <a href='../index.html'>crypto</a>::<wbr><a href='index.html'>aes</a>::<wbr><a class="fn" href=''>cbc_encryptor</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/crypto/aes.rs.html#138-166' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn cbc_encryptor&lt;X:&nbsp;<a class="trait" href="../../crypto/blockmodes/trait.PaddingProcessor.html" title="trait crypto::blockmodes::PaddingProcessor">PaddingProcessor</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'static&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;key_size: <a class="enum" href="../../crypto/aes/enum.KeySize.html" title="enum crypto::aes::KeySize">KeySize</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;key: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;iv: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;padding: X<br>) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;<a class="trait" href="../../crypto/symmetriccipher/trait.Encryptor.html" title="trait crypto::symmetriccipher::Encryptor">Encryptor</a> + 'static&gt;</pre><div class='docblock'><p>Get the best implementation of a CbcEncryptor</p>
 </div></section>
     <section id='search' class="content hidden"></section>
 
@@ -71,6 +73,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -91,7 +95,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -102,11 +106,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "crypto";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

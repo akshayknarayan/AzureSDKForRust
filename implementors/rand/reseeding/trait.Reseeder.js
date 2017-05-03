@@ -1,5 +1,15 @@
 (function() {var implementors = {};
-implementors['rand'] = [];implementors['openssl'] = ["impl <a class='trait' href='rand/reseeding/trait.Reseeder.html' title='rand::reseeding::Reseeder'>Reseeder</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/std/rand/struct.StdRng.html' title='std::rand::StdRng'>StdRng</a>&gt; for <a class='struct' href='https://doc.rust-lang.org/nightly/std/rand/struct.ThreadRngReseeder.html' title='std::rand::ThreadRngReseeder'>ThreadRngReseeder</a>",];
+implementors["antidote"] = [];
+implementors["azure_sdk_for_rust"] = [];
+implementors["chrono"] = [];
+implementors["hyper"] = [];
+implementors["libc"] = [];
+implementors["num"] = [];
+implementors["openssl"] = [];
+implementors["rand"] = [];
+implementors["regex_syntax"] = [];
+implementors["serde"] = [];
+implementors["syn"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

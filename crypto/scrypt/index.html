@@ -9,13 +9,15 @@
 
     <title>crypto::scrypt - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc mod">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>crypto</a></p><script>window.sidebarCurrent = {name: 'scrypt', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+        <p class='location'>Module scrypt</p><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'><a href='../index.html'>crypto</a></p><script>window.sidebarCurrent = {name: 'scrypt', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -41,12 +43,12 @@
         </form>
     </nav>
 
-    <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>crypto</a>::<wbr><a class='mod' href=''>scrypt</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-5039' class='srclink' href='../../src/crypto/scrypt.rs.html#7-531' title='goto source code'>[src]</a></span></h1>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>crypto</a>::<wbr><a class="mod" href=''>scrypt</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/crypto/scrypt.rs.html#7-531' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>This module implements the Scrypt key derivation function as specified in [1].</p>
 
 <h1 id='references' class='section-header'><a href='#references'>References</a></h1>
@@ -54,47 +56,39 @@
       <a href="http://www.tarsnap.com/scrypt/scrypt.pdf">http://www.tarsnap.com/scrypt/scrypt.pdf</a></p>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.ScryptParams.html'
-                               title='crypto::scrypt::ScryptParams'>ScryptParams</a></td>
-                        <td class='docblock short'>
-                             <p>The Scrypt parameter values.</p>
-
-                        </td>
-                    </tr>
-                </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.ScryptParams.html"
+                                  title='struct crypto::scrypt::ScryptParams'>ScryptParams</a></td>
+                           <td class='docblock-short'>
+                                <p>The Scrypt parameter values.</p>
+                           </td>
+                       </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.scrypt.html'
-                               title='crypto::scrypt::scrypt'>scrypt</a></td>
-                        <td class='docblock short'>
-                             <p>The scrypt key derivation function.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.scrypt_check.html'
-                               title='crypto::scrypt::scrypt_check'>scrypt_check</a></td>
-                        <td class='docblock short'>
-                             <p>scrypt_check compares a password against the result of a previous call to scrypt_simple and
+                       <tr class=' module-item'>
+                           <td><a class="fn" href="fn.scrypt.html"
+                                  title='fn crypto::scrypt::scrypt'>scrypt</a></td>
+                           <td class='docblock-short'>
+                                <p>The scrypt key derivation function.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="fn" href="fn.scrypt_check.html"
+                                  title='fn crypto::scrypt::scrypt_check'>scrypt_check</a></td>
+                           <td class='docblock-short'>
+                                <p>scrypt_check compares a password against the result of a previous call to scrypt_simple and
 returns true if the passed in password hashes to the same value.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.scrypt_simple.html'
-                               title='crypto::scrypt::scrypt_simple'>scrypt_simple</a></td>
-                        <td class='docblock short'>
-                             <p>scrypt_simple is a helper function that should be sufficient for the majority of cases where
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="fn" href="fn.scrypt_simple.html"
+                                  title='fn crypto::scrypt::scrypt_simple'>scrypt_simple</a></td>
+                           <td class='docblock-short'>
+                                <p>scrypt_simple is a helper function that should be sufficient for the majority of cases where
 an application needs to use Scrypt to hash a password for storage. The result is a String that
 contains the parameters used as part of its encoding. The scrypt_check function may be used on
 a password to check if it is equal to a hashed value.</p>
-
-                        </td>
-                    </tr>
-                </table></section>
+                           </td>
+                       </tr></table></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -117,6 +111,8 @@ a password to check if it is equal to a hashed value.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -137,7 +133,7 @@ a password to check if it is equal to a hashed value.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -148,11 +144,9 @@ a password to check if it is equal to a hashed value.</p>
     <script>
         window.rootPath = "../../";
         window.currentCrate = "crypto";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

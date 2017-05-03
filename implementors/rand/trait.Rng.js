@@ -1,5 +1,16 @@
 (function() {var implementors = {};
-implementors['rand'] = [];implementors['openssl'] = ["impl <a class='trait' href='rand/trait.Rng.html' title='rand::Rng'>Rng</a> for <a class='struct' href='https://doc.rust-lang.org/nightly/std/rand/os/imp/struct.OsRng.html' title='std::rand::os::imp::OsRng'>OsRng</a>","impl&lt;R&gt; <a class='trait' href='rand/trait.Rng.html' title='rand::Rng'>Rng</a> for <a class='struct' href='https://doc.rust-lang.org/nightly/std/rand/reader/struct.ReaderRng.html' title='std::rand::reader::ReaderRng'>ReaderRng</a>&lt;R&gt; <span class='where'>where R: <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Read.html' title='std::io::Read'>Read</a></span>","impl <a class='trait' href='rand/trait.Rng.html' title='rand::Rng'>Rng</a> for <a class='struct' href='https://doc.rust-lang.org/nightly/std/rand/struct.StdRng.html' title='std::rand::StdRng'>StdRng</a>","impl <a class='trait' href='rand/trait.Rng.html' title='rand::Rng'>Rng</a> for <a class='struct' href='https://doc.rust-lang.org/nightly/std/rand/struct.ThreadRng.html' title='std::rand::ThreadRng'>ThreadRng</a>",];implementors['crypto'] = ["impl <a class='trait' href='rand/trait.Rng.html' title='rand::Rng'>Rng</a> for <a class='struct' href='crypto/fortuna/struct.Fortuna.html' title='crypto::fortuna::Fortuna'>Fortuna</a>",];
+implementors["antidote"] = [];
+implementors["azure_sdk_for_rust"] = ["impl <a class=\"trait\" href=\"rand/trait.Rng.html\" title=\"trait rand::Rng\">Rng</a> for <a class=\"struct\" href=\"crypto/fortuna/struct.Fortuna.html\" title=\"struct crypto::fortuna::Fortuna\">Fortuna</a>",];
+implementors["chrono"] = [];
+implementors["crypto"] = ["impl <a class=\"trait\" href=\"rand/trait.Rng.html\" title=\"trait rand::Rng\">Rng</a> for <a class=\"struct\" href=\"crypto/fortuna/struct.Fortuna.html\" title=\"struct crypto::fortuna::Fortuna\">Fortuna</a>",];
+implementors["hyper"] = [];
+implementors["libc"] = [];
+implementors["num"] = [];
+implementors["openssl"] = [];
+implementors["rand"] = [];
+implementors["regex_syntax"] = [];
+implementors["serde"] = [];
+implementors["syn"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

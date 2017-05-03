@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["blob",""],["client",""],["container",""]]});
+initSidebarItems({"mod":[["blob",""],["client",""],["container",""],["table",""]]});

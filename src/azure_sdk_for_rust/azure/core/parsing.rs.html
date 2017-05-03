@@ -4,18 +4,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `src/azure/core/parsing.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/mindflavor/src/rust/AzureSDKForRust/src/azure/core/parsing.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>parsing.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../../main.css">
+    
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -41,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -349,177 +351,169 @@
 <span id="306">306</span>
 <span id="307">307</span>
 <span id="308">308</span>
-<span id="309">309</span>
-<span id="310">310</span>
-<span id="311">311</span>
-<span id="312">312</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>xml</span>::<span class='ident'>Element</span>;
-<span class='kw'>use</span> <span class='ident'>xml</span>::<span class='ident'>Xml</span>::{<span class='ident'>ElementNode</span>, <span class='ident'>CharacterNode</span>};
-<span class='kw'>use</span> <span class='ident'>azure</span>::<span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>TraversingError</span>;
-<span class='kw'>use</span> <span class='ident'>chrono</span>;
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">xml</span>::<span class="ident">Element</span>;
+<span class="kw">use</span> <span class="ident">xml</span>::<span class="ident">Xml</span>::{<span class="ident">ElementNode</span>, <span class="ident">CharacterNode</span>};
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">errors</span>::<span class="ident">TraversingError</span>;
+<span class="kw">use</span> <span class="ident">chrono</span>;
 
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>FromStringOptional</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>from_str_optional</span>(<span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>TraversingError</span><span class='op'>&gt;</span>;
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">FromStringOptional</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">from_str_optional</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">TraversingError</span><span class="op">&gt;</span>;
 }
 
-<span class='kw'>impl</span> <span class='ident'>FromStringOptional</span><span class='op'>&lt;</span><span class='ident'>u64</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>u64</span> {
-    <span class='kw'>fn</span> <span class='ident'>from_str_optional</span>(<span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>u64</span>, <span class='ident'>TraversingError</span><span class='op'>&gt;</span> {
-        <span class='prelude-val'>Ok</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>s</span>.<span class='ident'>parse</span>::<span class='op'>&lt;</span><span class='ident'>u64</span><span class='op'>&gt;</span>()))
+<span class="kw">impl</span> <span class="ident">FromStringOptional</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">u64</span> {
+    <span class="kw">fn</span> <span class="ident">from_str_optional</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">TraversingError</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">s</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>()))
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>FromStringOptional</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>String</span> {
-    <span class='kw'>fn</span> <span class='ident'>from_str_optional</span>(<span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>String</span>, <span class='ident'>TraversingError</span><span class='op'>&gt;</span> {
-        <span class='prelude-val'>Ok</span>(<span class='ident'>s</span>.<span class='ident'>to_owned</span>())
+<span class="kw">impl</span> <span class="ident">FromStringOptional</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">String</span> {
+    <span class="kw">fn</span> <span class="ident">from_str_optional</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">TraversingError</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">s</span>.<span class="ident">to_owned</span>())
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>FromStringOptional</span><span class='op'>&lt;</span><span class='ident'>chrono</span>::<span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='ident'>chrono</span>::<span class='ident'>UTC</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>chrono</span>::<span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='ident'>chrono</span>::<span class='ident'>UTC</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>from_str_optional</span>(<span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>chrono</span>::<span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='ident'>chrono</span>::<span class='ident'>UTC</span><span class='op'>&gt;</span>, <span class='ident'>TraversingError</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='ident'>from_azure_time</span>(<span class='ident'>s</span>) {
-            <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>TraversingError</span>::<span class='ident'>DateTimeParseError</span>(<span class='ident'>e</span>)),
-            <span class='prelude-val'>Ok</span>(<span class='ident'>dt</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>dt</span>),
+<span class="kw">impl</span> <span class="ident">FromStringOptional</span><span class="op">&lt;</span><span class="ident">chrono</span>::<span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">chrono</span>::<span class="ident">UTC</span><span class="op">&gt;&gt;</span> <span class="kw">for</span> <span class="ident">chrono</span>::<span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">chrono</span>::<span class="ident">UTC</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">from_str_optional</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">chrono</span>::<span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">chrono</span>::<span class="ident">UTC</span><span class="op">&gt;</span>, <span class="ident">TraversingError</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="ident">from_azure_time</span>(<span class="ident">s</span>) {
+            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">TraversingError</span>::<span class="ident">DateTimeParseError</span>(<span class="ident">e</span>)),
+            <span class="prelude-val">Ok</span>(<span class="ident">dt</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">dt</span>),
         }
     }
 }
 
-<span class='attribute'>#[<span class='ident'>inline</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_azure_time</span>(<span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>chrono</span>::<span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='ident'>chrono</span>::<span class='ident'>UTC</span><span class='op'>&gt;</span>, <span class='ident'>chrono</span>::<span class='ident'>ParseError</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>dt</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>chrono</span>::<span class='ident'>DateTime</span>::<span class='ident'>parse_from_rfc2822</span>(<span class='ident'>s</span>));
-    <span class='kw'>let</span> <span class='ident'>dt_utc</span>: <span class='ident'>chrono</span>::<span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='ident'>chrono</span>::<span class='ident'>UTC</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>dt</span>.<span class='ident'>with_timezone</span>(<span class='kw-2'>&amp;</span><span class='ident'>chrono</span>::<span class='ident'>UTC</span>);
-    <span class='prelude-val'>Ok</span>(<span class='ident'>dt_utc</span>)
+<span class="attribute">#[<span class="ident">inline</span>]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_azure_time</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">chrono</span>::<span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">chrono</span>::<span class="ident">UTC</span><span class="op">&gt;</span>, <span class="ident">chrono</span>::<span class="ident">ParseError</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">dt</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">chrono</span>::<span class="ident">DateTime</span>::<span class="ident">parse_from_rfc2822</span>(<span class="ident">s</span>));
+    <span class="kw">let</span> <span class="ident">dt_utc</span>: <span class="ident">chrono</span>::<span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">chrono</span>::<span class="ident">UTC</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">dt</span>.<span class="ident">with_timezone</span>(<span class="kw-2">&amp;</span><span class="ident">chrono</span>::<span class="ident">UTC</span>);
+    <span class="prelude-val">Ok</span>(<span class="ident">dt_utc</span>)
 }
 
-<span class='attribute'>#[<span class='ident'>inline</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>traverse_single_must</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>node</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Element</span>,
-                                <span class='ident'>path</span>: <span class='kw-2'>&amp;</span>[<span class='kw-2'>&amp;</span><span class='ident'>str</span>])
-                                <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Element</span>, <span class='ident'>TraversingError</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>vec</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>traverse</span>(<span class='ident'>node</span>, <span class='ident'>path</span>, <span class='boolval'>false</span>));
-    <span class='kw'>if</span> <span class='ident'>vec</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='number'>1</span> {
-        <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>TraversingError</span>::<span class='ident'>MultipleNode</span>(<span class='ident'>path</span>[<span class='ident'>path</span>.<span class='ident'>len</span>() <span class='op'>-</span> <span class='number'>1</span>].<span class='ident'>to_owned</span>()));
+<span class="attribute">#[<span class="ident">inline</span>]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">traverse_single_must</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Element</span>,
+                                <span class="ident">path</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>])
+                                <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Element</span>, <span class="ident">TraversingError</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">vec</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">traverse</span>(<span class="ident">node</span>, <span class="ident">path</span>, <span class="bool-val">false</span>));
+    <span class="kw">if</span> <span class="ident">vec</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">1</span> {
+        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TraversingError</span>::<span class="ident">MultipleNode</span>(<span class="ident">path</span>[<span class="ident">path</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>].<span class="ident">to_owned</span>()));
     }
 
-    <span class='prelude-val'>Ok</span>(<span class='ident'>vec</span>[<span class='number'>0</span>])
+    <span class="prelude-val">Ok</span>(<span class="ident">vec</span>[<span class="number">0</span>])
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>traverse_single_optional</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>node</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Element</span>,
-                                    <span class='ident'>path</span>: <span class='kw-2'>&amp;</span>[<span class='kw-2'>&amp;</span><span class='ident'>str</span>])
-                                    <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Element</span><span class='op'>&gt;</span>, <span class='ident'>TraversingError</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>vec</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>traverse</span>(<span class='ident'>node</span>, <span class='ident'>path</span>, <span class='boolval'>true</span>));
-    <span class='kw'>if</span> <span class='ident'>vec</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='number'>1</span> {
-        <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>TraversingError</span>::<span class='ident'>MultipleNode</span>(<span class='ident'>path</span>[<span class='ident'>path</span>.<span class='ident'>len</span>() <span class='op'>-</span> <span class='number'>1</span>].<span class='ident'>to_owned</span>()));
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">traverse_single_optional</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Element</span>,
+                                    <span class="ident">path</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>])
+                                    <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Element</span><span class="op">&gt;</span>, <span class="ident">TraversingError</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">vec</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">traverse</span>(<span class="ident">node</span>, <span class="ident">path</span>, <span class="bool-val">true</span>));
+    <span class="kw">if</span> <span class="ident">vec</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">1</span> {
+        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TraversingError</span>::<span class="ident">MultipleNode</span>(<span class="ident">path</span>[<span class="ident">path</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>].<span class="ident">to_owned</span>()));
     }
 
-    <span class='kw'>if</span> <span class='ident'>vec</span>.<span class='ident'>is_empty</span>() {
-        <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>);
+    <span class="kw">if</span> <span class="ident">vec</span>.<span class="ident">is_empty</span>() {
+        <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
     }
 
-    <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>vec</span>[<span class='number'>0</span>]))
+    <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">vec</span>[<span class="number">0</span>]))
 }
 
-<span class='attribute'>#[<span class='ident'>inline</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>traverse</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>node</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Element</span>,
-                    <span class='ident'>path</span>: <span class='kw-2'>&amp;</span>[<span class='kw-2'>&amp;</span><span class='ident'>str</span>],
-                    <span class='ident'>ignore_empty_leaf</span>: <span class='ident'>bool</span>)
-                    <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Element</span><span class='op'>&gt;</span>, <span class='ident'>TraversingError</span><span class='op'>&gt;</span> {
-    <span class='comment'>// println!(&quot;path.len() == {:?}&quot;, path.len());</span>
+<span class="attribute">#[<span class="ident">inline</span>]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">traverse</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Element</span>,
+                    <span class="ident">path</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>],
+                    <span class="ident">ignore_empty_leaf</span>: <span class="ident">bool</span>)
+                    <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Element</span><span class="op">&gt;</span>, <span class="ident">TraversingError</span><span class="op">&gt;</span> {
+    <span class="comment">// println!(&quot;path.len() == {:?}&quot;, path.len());</span>
 
-    <span class='kw'>if</span> <span class='ident'>path</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>0</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>vec</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>();
-        <span class='ident'>vec</span>.<span class='ident'>push</span>(<span class='ident'>node</span>);
-        <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='ident'>vec</span>);
+    <span class="kw">if</span> <span class="ident">path</span>.<span class="ident">is_empty</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">vec</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
+        <span class="ident">vec</span>.<span class="ident">push</span>(<span class="ident">node</span>);
+        <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">vec</span>);
     }
 
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>curnode</span> <span class='op'>=</span> <span class='ident'>node</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">curnode</span> <span class="op">=</span> <span class="ident">node</span>;
 
-    <span class='kw'>for</span> (<span class='ident'>x</span>, <span class='ident'>item</span>) <span class='kw'>in</span> <span class='ident'>path</span>.<span class='ident'>iter</span>().<span class='ident'>enumerate</span>() {
-        <span class='comment'>// println!(&quot;x == {}, path[x] == {}&quot;, x, path[x]);</span>
+    <span class="kw">for</span> (<span class="ident">x</span>, <span class="ident">item</span>) <span class="kw">in</span> <span class="ident">path</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+        <span class="comment">// println!(&quot;x == {}, path[x] == {}&quot;, x, path[x]);</span>
 
-        <span class='kw'>let</span> <span class='ident'>vec</span> <span class='op'>=</span> <span class='ident'>find_subnodes</span>(<span class='ident'>curnode</span>, <span class='ident'>item</span>);
-        <span class='kw'>if</span> <span class='ident'>vec</span>.<span class='ident'>is_empty</span>() {
-            <span class='kw'>if</span> (<span class='ident'>x</span> <span class='op'>+</span> <span class='number'>1</span>) <span class='op'>&gt;=</span> <span class='ident'>path</span>.<span class='ident'>len</span>() <span class='op'>&amp;&amp;</span> <span class='ident'>ignore_empty_leaf</span> {
-                <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='ident'>vec</span>);
-            } <span class='kw'>else</span> {
-                <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>TraversingError</span>::<span class='ident'>PathNotFound</span>((<span class='op'>*</span><span class='ident'>item</span>).<span class='ident'>to_owned</span>()));
+        <span class="kw">let</span> <span class="ident">vec</span> <span class="op">=</span> <span class="ident">find_subnodes</span>(<span class="ident">curnode</span>, <span class="ident">item</span>);
+        <span class="kw">if</span> <span class="ident">vec</span>.<span class="ident">is_empty</span>() {
+            <span class="kw">if</span> (<span class="ident">x</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">&gt;=</span> <span class="ident">path</span>.<span class="ident">len</span>() <span class="op">&amp;&amp;</span> <span class="ident">ignore_empty_leaf</span> {
+                <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">vec</span>);
+            } <span class="kw">else</span> {
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TraversingError</span>::<span class="ident">PathNotFound</span>((<span class="kw-2">*</span><span class="ident">item</span>).<span class="ident">to_owned</span>()));
             }
         }
 
-        <span class='kw'>if</span> <span class='ident'>vec</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='number'>1</span> <span class='op'>&amp;&amp;</span> (<span class='ident'>x</span> <span class='op'>+</span> <span class='number'>1</span>) <span class='op'>&lt;</span> <span class='ident'>path</span>.<span class='ident'>len</span>() {
-            <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>TraversingError</span>::<span class='ident'>MultipleNode</span>((<span class='op'>*</span><span class='ident'>item</span>).<span class='ident'>to_owned</span>()));
+        <span class="kw">if</span> <span class="ident">vec</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">1</span> <span class="op">&amp;&amp;</span> (<span class="ident">x</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">&lt;</span> <span class="ident">path</span>.<span class="ident">len</span>() {
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TraversingError</span>::<span class="ident">MultipleNode</span>((<span class="kw-2">*</span><span class="ident">item</span>).<span class="ident">to_owned</span>()));
         }
 
-        <span class='kw'>if</span> (<span class='ident'>x</span> <span class='op'>+</span> <span class='number'>1</span>) <span class='op'>&gt;=</span> <span class='ident'>path</span>.<span class='ident'>len</span>() {
-            <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='ident'>vec</span>);
+        <span class="kw">if</span> (<span class="ident">x</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">&gt;=</span> <span class="ident">path</span>.<span class="ident">len</span>() {
+            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">vec</span>);
         }
 
-        <span class='ident'>curnode</span> <span class='op'>=</span> <span class='ident'>vec</span>[<span class='number'>0</span>];
+        <span class="ident">curnode</span> <span class="op">=</span> <span class="ident">vec</span>[<span class="number">0</span>];
     }
 
-    <span class='macro'>unreachable</span><span class='macro'>!</span>();
+    <span class="macro">unreachable</span><span class="macro">!</span>();
 }
 
-<span class='attribute'>#[<span class='ident'>inline</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>find_subnodes</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>node</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Element</span>, <span class='ident'>subnode</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Element</span><span class='op'>&gt;</span> {
-    <span class='ident'>node</span>.<span class='ident'>children</span>
-        .<span class='ident'>iter</span>()
-        .<span class='ident'>filter</span>(<span class='op'>|</span><span class='ident'>x</span><span class='op'>|</span> {
-            <span class='kw'>match</span> <span class='op'>*</span><span class='op'>*</span><span class='ident'>x</span> {
-                <span class='ident'>ElementNode</span>(<span class='kw-2'>ref</span> <span class='ident'>mynode</span>) <span class='op'>=&gt;</span> <span class='ident'>mynode</span>.<span class='ident'>name</span> <span class='op'>==</span> <span class='ident'>subnode</span>,
-                _ <span class='op'>=&gt;</span> <span class='boolval'>false</span>,
-            }
-        })
-        .<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>x</span><span class='op'>|</span> {
-            <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>x</span> {
-                <span class='ident'>ElementNode</span>(<span class='kw-2'>ref</span> <span class='ident'>mynode</span>) <span class='op'>=&gt;</span> <span class='ident'>mynode</span>,
-                _ <span class='op'>=&gt;</span> <span class='macro'>unreachable</span><span class='macro'>!</span>(),
-            }
-        })
-        .<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span>_<span class='op'>&gt;&gt;</span>()
+<span class="attribute">#[<span class="ident">inline</span>]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">find_subnodes</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Element</span>, <span class="ident">subnode</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Element</span><span class="op">&gt;</span> {
+    <span class="ident">node</span>.<span class="ident">children</span>
+        .<span class="ident">iter</span>()
+        .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">x</span> {
+                    <span class="ident">ElementNode</span>(<span class="kw-2">ref</span> <span class="ident">mynode</span>) <span class="op">=&gt;</span> <span class="ident">mynode</span>.<span class="ident">name</span> <span class="op">==</span> <span class="ident">subnode</span>,
+                    _ <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+                })
+        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">x</span> {
+                 <span class="ident">ElementNode</span>(<span class="kw-2">ref</span> <span class="ident">mynode</span>) <span class="op">=&gt;</span> <span class="ident">mynode</span>,
+                 _ <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
+             })
+        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;&gt;</span>()
 }
 
-<span class='attribute'>#[<span class='ident'>inline</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>inner_text</span>(<span class='ident'>node</span>: <span class='kw-2'>&amp;</span><span class='ident'>Element</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>TraversingError</span><span class='op'>&gt;</span> {
-    <span class='kw'>for</span> <span class='ident'>child</span> <span class='kw'>in</span> <span class='kw-2'>&amp;</span><span class='ident'>node</span>.<span class='ident'>children</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>child</span> {
-            <span class='ident'>CharacterNode</span>(<span class='kw-2'>ref</span> <span class='ident'>txt</span>) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='ident'>txt</span>),
-            _ <span class='op'>=&gt;</span> <span class='kw'>continue</span>,
+<span class="attribute">#[<span class="ident">inline</span>]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inner_text</span>(<span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">TraversingError</span><span class="op">&gt;</span> {
+    <span class="kw">for</span> <span class="ident">child</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">node</span>.<span class="ident">children</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">child</span> {
+            <span class="ident">CharacterNode</span>(<span class="kw-2">ref</span> <span class="ident">txt</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">txt</span>),
+            _ <span class="op">=&gt;</span> <span class="kw">continue</span>,
         };
     }
 
-    <span class='prelude-val'>Err</span>(<span class='ident'>TraversingError</span>::<span class='ident'>TextNotFound</span>)
+    <span class="prelude-val">Err</span>(<span class="ident">TraversingError</span>::<span class="ident">TextNotFound</span>)
 }
 
-<span class='attribute'>#[<span class='ident'>inline</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>cast_optional</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>node</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Element</span>, <span class='ident'>path</span>: <span class='kw-2'>&amp;</span>[<span class='kw-2'>&amp;</span><span class='ident'>str</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>TraversingError</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>FromStringOptional</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>
+<span class="attribute">#[<span class="ident">inline</span>]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cast_optional</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Element</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">TraversingError</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">FromStringOptional</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
 {
-    <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>traverse_single_optional</span>(<span class='ident'>node</span>, <span class='ident'>path</span>)) {
-        <span class='prelude-val'>Some</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> {
-            <span class='kw'>match</span> <span class='ident'>inner_text</span>(<span class='ident'>e</span>) {
-                <span class='prelude-val'>Ok</span>(<span class='ident'>txt</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>T</span>::<span class='ident'>from_str_optional</span>(<span class='ident'>txt</span>)))),
-                <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>),
+    <span class="kw">match</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">traverse_single_optional</span>(<span class="ident">node</span>, <span class="ident">path</span>)) {
+        <span class="prelude-val">Some</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> {
+            <span class="kw">match</span> <span class="ident">inner_text</span>(<span class="ident">e</span>) {
+                <span class="prelude-val">Ok</span>(<span class="ident">txt</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">T</span>::<span class="ident">from_str_optional</span>(<span class="ident">txt</span>)))),
+                <span class="prelude-val">Err</span>(_) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
             }
         }
-        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>),
+        <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
     }
 }
 
-<span class='attribute'>#[<span class='ident'>inline</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>cast_must</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>node</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Element</span>, <span class='ident'>path</span>: <span class='kw-2'>&amp;</span>[<span class='kw-2'>&amp;</span><span class='ident'>str</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>TraversingError</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>FromStringOptional</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>
+<span class="attribute">#[<span class="ident">inline</span>]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cast_must</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Element</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">TraversingError</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">FromStringOptional</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
 {
-    <span class='kw'>let</span> <span class='ident'>node</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>traverse_single_must</span>(<span class='ident'>node</span>, <span class='ident'>path</span>));
-    <span class='kw'>let</span> <span class='ident'>itxt</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>inner_text</span>(<span class='ident'>node</span>));
-    <span class='prelude-val'>Ok</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>T</span>::<span class='ident'>from_str_optional</span>(<span class='ident'>itxt</span>)))
+    <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">traverse_single_must</span>(<span class="ident">node</span>, <span class="ident">path</span>));
+    <span class="kw">let</span> <span class="ident">itxt</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">inner_text</span>(<span class="ident">node</span>));
+    <span class="prelude-val">Ok</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">T</span>::<span class="ident">from_str_optional</span>(<span class="ident">itxt</span>)))
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='ident'>xml</span>::<span class='ident'>Element</span>;
-    <span class='kw'>use</span> <span class='ident'>chrono</span>::{<span class='ident'>Datelike</span>, <span class='ident'>Timelike</span>};
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">test</span> {
+    <span class="kw">use</span> <span class="ident">xml</span>::<span class="ident">Element</span>;
+    <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">Datelike</span>, <span class="ident">Timelike</span>};
 
-    <span class='kw'>const</span> <span class='ident'>XML</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot;?&gt;
+    <span class="kw">const</span> <span class="ident">XML</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot;?&gt;
 &lt;EnumerationResults \
                                ServiceEndpoint=\&quot;http://mindrust.blob.core.windows.net/\&quot;&gt;
   \
@@ -558,112 +552,112 @@
   &lt;NextMarker /&gt;
 &lt;/EnumerationResults&gt;&quot;</span>;
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_cast_optional_1</span>() {
-        <span class='kw'>let</span> <span class='ident'>elem</span>: <span class='ident'>Element</span> <span class='op'>=</span> <span class='ident'>XML</span>.<span class='ident'>parse</span>().<span class='ident'>unwrap</span>();
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_cast_optional_1</span>() {
+        <span class="kw">let</span> <span class="ident">elem</span>: <span class="ident">Element</span> <span class="op">=</span> <span class="ident">XML</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
 
-        <span class='kw'>let</span> <span class='ident'>sub1</span> <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>traverse</span>(<span class='kw-2'>&amp;</span><span class='ident'>elem</span>, <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Containers&quot;</span>, <span class='string'>&quot;Container&quot;</span>], <span class='boolval'>false</span>).<span class='ident'>unwrap</span>();
-
-        {
-            <span class='kw'>let</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>cast_optional</span>::<span class='op'>&lt;</span><span class='ident'>u64</span><span class='op'>&gt;</span>(<span class='ident'>sub1</span>[<span class='number'>0</span>], <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;SomeNumber&quot;</span>]).<span class='ident'>unwrap</span>();
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='number'>256u64</span>), <span class='ident'>num</span>);
-        }
+        <span class="kw">let</span> <span class="ident">sub1</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">traverse</span>(<span class="kw-2">&amp;</span><span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Containers&quot;</span>, <span class="string">&quot;Container&quot;</span>], <span class="bool-val">false</span>).<span class="ident">unwrap</span>();
 
         {
-            <span class='kw'>let</span> <span class='ident'>num2</span> <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>cast_optional</span>::<span class='op'>&lt;</span><span class='ident'>u64</span><span class='op'>&gt;</span>(<span class='ident'>sub1</span>[<span class='number'>1</span>], <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;SomeNumber&quot;</span>]).<span class='ident'>unwrap</span>();
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>num2</span>);
+            <span class="kw">let</span> <span class="ident">num</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">cast_optional</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>(<span class="ident">sub1</span>[<span class="number">0</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;SomeNumber&quot;</span>]).<span class="ident">unwrap</span>();
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="number">256u64</span>), <span class="ident">num</span>);
+        }
+
+        {
+            <span class="kw">let</span> <span class="ident">num2</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">cast_optional</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>(<span class="ident">sub1</span>[<span class="number">1</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;SomeNumber&quot;</span>]).<span class="ident">unwrap</span>();
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">None</span>, <span class="ident">num2</span>);
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_first_1</span>() {
-        <span class='kw'>let</span> <span class='ident'>elem</span>: <span class='ident'>Element</span> <span class='op'>=</span> <span class='ident'>XML</span>.<span class='ident'>parse</span>().<span class='ident'>unwrap</span>();
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_first_1</span>() {
+        <span class="kw">let</span> <span class="ident">elem</span>: <span class="ident">Element</span> <span class="op">=</span> <span class="ident">XML</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
 
-        <span class='kw'>let</span> <span class='ident'>sub1</span> <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>find_subnodes</span>(<span class='kw-2'>&amp;</span><span class='ident'>elem</span>, <span class='string'>&quot;Containers&quot;</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>1</span>, <span class='ident'>sub1</span>.<span class='ident'>len</span>());
+        <span class="kw">let</span> <span class="ident">sub1</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">find_subnodes</span>(<span class="kw-2">&amp;</span><span class="ident">elem</span>, <span class="string">&quot;Containers&quot;</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">1</span>, <span class="ident">sub1</span>.<span class="ident">len</span>());
 
-        <span class='kw'>let</span> <span class='ident'>sub2</span> <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>find_subnodes</span>(<span class='kw-2'>&amp;</span><span class='ident'>sub1</span>[<span class='number'>0</span>], <span class='string'>&quot;Container&quot;</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>2</span>, <span class='ident'>sub2</span>.<span class='ident'>len</span>());
+        <span class="kw">let</span> <span class="ident">sub2</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">find_subnodes</span>(<span class="kw-2">&amp;</span><span class="ident">sub1</span>[<span class="number">0</span>], <span class="string">&quot;Container&quot;</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">2</span>, <span class="ident">sub2</span>.<span class="ident">len</span>());
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_inner_2</span>() {
-        <span class='kw'>let</span> <span class='ident'>elem</span>: <span class='ident'>Element</span> <span class='op'>=</span> <span class='ident'>XML</span>.<span class='ident'>parse</span>().<span class='ident'>unwrap</span>();
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_inner_2</span>() {
+        <span class="kw">let</span> <span class="ident">elem</span>: <span class="ident">Element</span> <span class="op">=</span> <span class="ident">XML</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>sub</span> <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>find_subnodes</span>(<span class='kw-2'>&amp;</span><span class='ident'>elem</span>, <span class='string'>&quot;Containers&quot;</span>);
-        <span class='ident'>sub</span> <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>find_subnodes</span>(<span class='kw-2'>&amp;</span><span class='ident'>sub</span>[<span class='number'>0</span>], <span class='string'>&quot;Container&quot;</span>);
-        <span class='ident'>sub</span> <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>find_subnodes</span>(<span class='kw-2'>&amp;</span><span class='ident'>sub</span>[<span class='number'>0</span>], <span class='string'>&quot;Properties&quot;</span>);
-        <span class='ident'>sub</span> <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>find_subnodes</span>(<span class='kw-2'>&amp;</span><span class='ident'>sub</span>[<span class='number'>0</span>], <span class='string'>&quot;LeaseStatus&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sub</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">find_subnodes</span>(<span class="kw-2">&amp;</span><span class="ident">elem</span>, <span class="string">&quot;Containers&quot;</span>);
+        <span class="ident">sub</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">find_subnodes</span>(<span class="kw-2">&amp;</span><span class="ident">sub</span>[<span class="number">0</span>], <span class="string">&quot;Container&quot;</span>);
+        <span class="ident">sub</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">find_subnodes</span>(<span class="kw-2">&amp;</span><span class="ident">sub</span>[<span class="number">0</span>], <span class="string">&quot;Properties&quot;</span>);
+        <span class="ident">sub</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">find_subnodes</span>(<span class="kw-2">&amp;</span><span class="ident">sub</span>[<span class="number">0</span>], <span class="string">&quot;LeaseStatus&quot;</span>);
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='ident'>inner</span>) <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>inner_text</span>(<span class='kw-2'>&amp;</span><span class='ident'>sub</span>[<span class='number'>0</span>]) {
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>inner</span>, <span class='string'>&quot;unlocked&quot;</span>);
-        } <span class='kw'>else</span> {
-            <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;should have found CharacterNode&quot;</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">inner</span>) <span class="op">=</span> <span class="kw">super</span>::<span class="ident">inner_text</span>(<span class="kw-2">&amp;</span><span class="ident">sub</span>[<span class="number">0</span>]) {
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">inner</span>, <span class="string">&quot;unlocked&quot;</span>);
+        } <span class="kw">else</span> {
+            <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;should have found CharacterNode&quot;</span>);
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_traverse_1</span>() {
-        <span class='kw'>let</span> <span class='ident'>elem</span>: <span class='ident'>Element</span> <span class='op'>=</span> <span class='ident'>XML</span>.<span class='ident'>parse</span>().<span class='ident'>unwrap</span>();
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_traverse_1</span>() {
+        <span class="kw">let</span> <span class="ident">elem</span>: <span class="ident">Element</span> <span class="op">=</span> <span class="ident">XML</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>traverse</span>(<span class='kw-2'>&amp;</span><span class='ident'>elem</span>, <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Containers&quot;</span>, <span class='string'>&quot;Container&quot;</span>], <span class='boolval'>false</span>).<span class='ident'>unwrap</span>();
-        <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>traverse</span>(<span class='ident'>res</span>[<span class='number'>0</span>], <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;LeaseStatus&quot;</span>], <span class='boolval'>false</span>).<span class='ident'>unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">res</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">traverse</span>(<span class="kw-2">&amp;</span><span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Containers&quot;</span>, <span class="string">&quot;Container&quot;</span>], <span class="bool-val">false</span>).<span class="ident">unwrap</span>();
+        <span class="ident">res</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">traverse</span>(<span class="ident">res</span>[<span class="number">0</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;LeaseStatus&quot;</span>], <span class="bool-val">false</span>).<span class="ident">unwrap</span>();
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='ident'>inner</span>) <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>inner_text</span>(<span class='kw-2'>&amp;</span><span class='ident'>res</span>[<span class='number'>0</span>]) {
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>inner</span>, <span class='string'>&quot;unlocked&quot;</span>);
-        } <span class='kw'>else</span> {
-            <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;should have found CharacterNode&quot;</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">inner</span>) <span class="op">=</span> <span class="kw">super</span>::<span class="ident">inner_text</span>(<span class="kw-2">&amp;</span><span class="ident">res</span>[<span class="number">0</span>]) {
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">inner</span>, <span class="string">&quot;unlocked&quot;</span>);
+        } <span class="kw">else</span> {
+            <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;should have found CharacterNode&quot;</span>);
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_traverse_2</span>() {
-        <span class='kw'>let</span> <span class='ident'>elem</span>: <span class='ident'>Element</span> <span class='op'>=</span> <span class='ident'>XML</span>.<span class='ident'>parse</span>().<span class='ident'>unwrap</span>();
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_traverse_2</span>() {
+        <span class="kw">let</span> <span class="ident">elem</span>: <span class="ident">Element</span> <span class="op">=</span> <span class="ident">XML</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>traverse</span>(<span class='kw-2'>&amp;</span><span class='ident'>elem</span>, <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Containers&quot;</span>, <span class='string'>&quot;Container&quot;</span>], <span class='boolval'>false</span>).<span class='ident'>unwrap</span>();
-        <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>traverse</span>(<span class='ident'>res</span>[<span class='number'>1</span>], <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;LeaseStatus&quot;</span>], <span class='boolval'>false</span>).<span class='ident'>unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">res</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">traverse</span>(<span class="kw-2">&amp;</span><span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Containers&quot;</span>, <span class="string">&quot;Container&quot;</span>], <span class="bool-val">false</span>).<span class="ident">unwrap</span>();
+        <span class="ident">res</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">traverse</span>(<span class="ident">res</span>[<span class="number">1</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;LeaseStatus&quot;</span>], <span class="bool-val">false</span>).<span class="ident">unwrap</span>();
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='ident'>inner</span>) <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>inner_text</span>(<span class='kw-2'>&amp;</span><span class='ident'>res</span>[<span class='number'>0</span>]) {
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>inner</span>, <span class='string'>&quot;locked&quot;</span>);
-        } <span class='kw'>else</span> {
-            <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;should have found CharacterNode&quot;</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">inner</span>) <span class="op">=</span> <span class="kw">super</span>::<span class="ident">inner_text</span>(<span class="kw-2">&amp;</span><span class="ident">res</span>[<span class="number">0</span>]) {
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">inner</span>, <span class="string">&quot;locked&quot;</span>);
+        } <span class="kw">else</span> {
+            <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;should have found CharacterNode&quot;</span>);
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_traverse_single_must_1</span>() {
-        <span class='kw'>let</span> <span class='ident'>elem</span>: <span class='ident'>Element</span> <span class='op'>=</span> <span class='ident'>XML</span>.<span class='ident'>parse</span>().<span class='ident'>unwrap</span>();
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_traverse_single_must_1</span>() {
+        <span class="kw">let</span> <span class="ident">elem</span>: <span class="ident">Element</span> <span class="op">=</span> <span class="ident">XML</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
 
-        <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>traverse</span>(<span class='kw-2'>&amp;</span><span class='ident'>elem</span>, <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Containers&quot;</span>, <span class='string'>&quot;Container&quot;</span>], <span class='boolval'>false</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>res_final</span> <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>traverse_single_must</span>(<span class='ident'>res</span>[<span class='number'>1</span>], <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;LeaseStatus&quot;</span>])
-                            .<span class='ident'>unwrap</span>();
+        <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">traverse</span>(<span class="kw-2">&amp;</span><span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Containers&quot;</span>, <span class="string">&quot;Container&quot;</span>], <span class="bool-val">false</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">res_final</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">traverse_single_must</span>(<span class="ident">res</span>[<span class="number">1</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;LeaseStatus&quot;</span>])
+            .<span class="ident">unwrap</span>();
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='ident'>inner</span>) <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>inner_text</span>(<span class='ident'>res_final</span>) {
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>inner</span>, <span class='string'>&quot;locked&quot;</span>);
-        } <span class='kw'>else</span> {
-            <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;should have found CharacterNode&quot;</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">inner</span>) <span class="op">=</span> <span class="kw">super</span>::<span class="ident">inner_text</span>(<span class="ident">res_final</span>) {
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">inner</span>, <span class="string">&quot;locked&quot;</span>);
+        } <span class="kw">else</span> {
+            <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;should have found CharacterNode&quot;</span>);
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_traverse_single_optional_1</span>() {
-        <span class='kw'>let</span> <span class='ident'>elem</span>: <span class='ident'>Element</span> <span class='op'>=</span> <span class='ident'>XML</span>.<span class='ident'>parse</span>().<span class='ident'>unwrap</span>();
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_traverse_single_optional_1</span>() {
+        <span class="kw">let</span> <span class="ident">elem</span>: <span class="ident">Element</span> <span class="op">=</span> <span class="ident">XML</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
 
-        <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>traverse</span>(<span class='kw-2'>&amp;</span><span class='ident'>elem</span>, <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Containers&quot;</span>, <span class='string'>&quot;Container&quot;</span>], <span class='boolval'>false</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>res_final</span> <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>traverse_single_optional</span>(<span class='ident'>res</span>[<span class='number'>1</span>], <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;Pinocchio&quot;</span>])
-                            .<span class='ident'>unwrap</span>();
+        <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">traverse</span>(<span class="kw-2">&amp;</span><span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Containers&quot;</span>, <span class="string">&quot;Container&quot;</span>], <span class="bool-val">false</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">res_final</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">traverse_single_optional</span>(<span class="ident">res</span>[<span class="number">1</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;Pinocchio&quot;</span>])
+            .<span class="ident">unwrap</span>();
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>res_final</span>, <span class='prelude-val'>None</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">res_final</span>, <span class="prelude-val">None</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_from_azure_time</span>() {
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>from_azure_time</span>(<span class='string'>&quot;Sun, 27 Sep 2009 17:26:40 GMT&quot;</span>).<span class='ident'>unwrap</span>();
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_from_azure_time</span>() {
+        <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">from_azure_time</span>(<span class="string">&quot;Sun, 27 Sep 2009 17:26:40 GMT&quot;</span>).<span class="ident">unwrap</span>();
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>day</span>(), <span class='number'>27</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>month</span>(), <span class='number'>9</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>hour</span>(), <span class='number'>17</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>second</span>(), <span class='number'>40</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">t</span>.<span class="ident">day</span>(), <span class="number">27</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">t</span>.<span class="ident">month</span>(), <span class="number">9</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">t</span>.<span class="ident">hour</span>(), <span class="number">17</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">t</span>.<span class="ident">second</span>(), <span class="number">40</span>);
     }
 }
 </pre>
@@ -690,6 +684,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -710,7 +706,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -721,11 +717,9 @@
     <script>
         window.rootPath = "../../../../";
         window.currentCrate = "azure_sdk_for_rust";
-        window.playgroundUrl = "";
     </script>
     <script src="../../../../jquery.js"></script>
     <script src="../../../../main.js"></script>
-    
     <script defer src="../../../../search-index.js"></script>
 </body>
 </html>

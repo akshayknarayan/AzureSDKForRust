@@ -9,13 +9,15 @@
 
     <title>chrono::naive - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc mod">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>chrono</a></p><script>window.sidebarCurrent = {name: 'naive', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+        <p class='location'>Module naive</p><div class="block items"><ul><li><a href="#modules">Modules</a></li></ul></div><p class='location'><a href='../index.html'>chrono</a></p><script>window.sidebarCurrent = {name: 'naive', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -41,45 +43,40 @@
         </form>
     </nav>
 
-    <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>chrono</a>::<wbr><a class='mod' href=''>naive</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-449' class='srclink' href='../../src/chrono/lib.rs.html#307-315' title='goto source code'>[src]</a></span></h1>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>chrono</a>::<wbr><a class="mod" href=''>naive</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/chrono/lib.rs.html#395-404' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Date and time types which do not concern about the timezones.</p>
 
-<p>They are primarily building blocks for other types (e.g. <code>TimeZone</code>),
+<p>They are primarily building blocks for other types
+(e.g. <a href="../offset/trait.TimeZone.html"><code>TimeZone</code></a>),
 but can be also used for the simpler date and time handling.</p>
 </div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='mod' href='date/index.html'
-                               title='chrono::naive::date'>date</a></td>
-                        <td class='docblock short'>
-                             <p>ISO 8601 calendar date without timezone.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='mod' href='datetime/index.html'
-                               title='chrono::naive::datetime'>datetime</a></td>
-                        <td class='docblock short'>
-                             <p>ISO 8601 date and time without timezone.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='mod' href='time/index.html'
-                               title='chrono::naive::time'>time</a></td>
-                        <td class='docblock short'>
-                             <p>ISO 8601 time without timezone.</p>
-
-                        </td>
-                    </tr>
-                </table></section>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="date/index.html"
+                                  title='mod chrono::naive::date'>date</a></td>
+                           <td class='docblock-short'>
+                                <p>ISO 8601 calendar date without timezone.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="datetime/index.html"
+                                  title='mod chrono::naive::datetime'>datetime</a></td>
+                           <td class='docblock-short'>
+                                <p>ISO 8601 date and time without timezone.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="time/index.html"
+                                  title='mod chrono::naive::time'>time</a></td>
+                           <td class='docblock-short'>
+                                <p>ISO 8601 time without timezone.</p>
+                           </td>
+                       </tr></table></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -102,6 +99,8 @@ but can be also used for the simpler date and time handling.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -122,7 +121,7 @@ but can be also used for the simpler date and time handling.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -133,11 +132,9 @@ but can be also used for the simpler date and time handling.</p>
     <script>
         window.rootPath = "../../";
         window.currentCrate = "chrono";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

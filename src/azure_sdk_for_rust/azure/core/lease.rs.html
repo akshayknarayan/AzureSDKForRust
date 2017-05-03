@@ -4,18 +4,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `src/azure/core/lease.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/mindflavor/src/rust/AzureSDKForRust/src/azure/core/lease.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lease.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../../main.css">
+    
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -41,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1"> 1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
 <span id="2"> 2</span>
 <span id="3"> 3</span>
 <span id="4"> 4</span>
@@ -67,33 +69,33 @@
 <span id="24">24</span>
 <span id="25">25</span>
 <span id="26">26</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>str</span>::<span class='ident'>FromStr</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
-<span class='kw'>use</span> <span class='ident'>azure</span>::<span class='ident'>core</span>::<span class='ident'>enumerations</span>;
-<span class='kw'>use</span> <span class='ident'>azure</span>::<span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>TraversingError</span>;
-<span class='kw'>use</span> <span class='ident'>azure</span>::<span class='ident'>core</span>::<span class='ident'>parsing</span>::<span class='ident'>FromStringOptional</span>;
-<span class='kw'>use</span> <span class='ident'>uuid</span>::<span class='ident'>Uuid</span>;
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">enumerations</span>;
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">errors</span>::<span class="ident">TraversingError</span>;
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">parsing</span>::<span class="ident">FromStringOptional</span>;
+<span class="kw">use</span> <span class="ident">uuid</span>::<span class="ident">Uuid</span>;
 
-<span class='macro'>create_enum</span><span class='macro'>!</span>(<span class='ident'>LeaseStatus</span>, (<span class='ident'>Locked</span>, <span class='string'>&quot;locked&quot;</span>), (<span class='ident'>Unlocked</span>, <span class='string'>&quot;unlocked&quot;</span>));
+<span class="macro">create_enum</span><span class="macro">!</span>(<span class="ident">LeaseStatus</span>, (<span class="ident">Locked</span>, <span class="string">&quot;locked&quot;</span>), (<span class="ident">Unlocked</span>, <span class="string">&quot;unlocked&quot;</span>));
 
-<span class='macro'>create_enum</span><span class='macro'>!</span>(<span class='ident'>LeaseState</span>,
-             (<span class='ident'>Available</span>, <span class='string'>&quot;available&quot;</span>),
-             (<span class='ident'>Leased</span>, <span class='string'>&quot;leased&quot;</span>),
-             (<span class='ident'>Expired</span>, <span class='string'>&quot;expired&quot;</span>),
-             (<span class='ident'>Breaking</span>, <span class='string'>&quot;breaking&quot;</span>),
-             (<span class='ident'>Broken</span>, <span class='string'>&quot;broken&quot;</span>));
+<span class="macro">create_enum</span><span class="macro">!</span>(<span class="ident">LeaseState</span>,
+             (<span class="ident">Available</span>, <span class="string">&quot;available&quot;</span>),
+             (<span class="ident">Leased</span>, <span class="string">&quot;leased&quot;</span>),
+             (<span class="ident">Expired</span>, <span class="string">&quot;expired&quot;</span>),
+             (<span class="ident">Breaking</span>, <span class="string">&quot;breaking&quot;</span>),
+             (<span class="ident">Broken</span>, <span class="string">&quot;broken&quot;</span>));
 
-<span class='macro'>create_enum</span><span class='macro'>!</span>(<span class='ident'>LeaseDuration</span>, (<span class='ident'>Infinite</span>, <span class='string'>&quot;infinite&quot;</span>), (<span class='ident'>Fixed</span>, <span class='string'>&quot;fixed&quot;</span>));
+<span class="macro">create_enum</span><span class="macro">!</span>(<span class="ident">LeaseDuration</span>, (<span class="ident">Infinite</span>, <span class="string">&quot;infinite&quot;</span>), (<span class="ident">Fixed</span>, <span class="string">&quot;fixed&quot;</span>));
 
-<span class='macro'>create_enum</span><span class='macro'>!</span>(<span class='ident'>LeaseAction</span>,
-             (<span class='ident'>Acquire</span>, <span class='string'>&quot;acquire&quot;</span>),
-             (<span class='ident'>Renew</span>, <span class='string'>&quot;renew &quot;</span>),
-             (<span class='ident'>Change</span>, <span class='string'>&quot;change&quot;</span>),
-             (<span class='ident'>Release</span>, <span class='string'>&quot;release &quot;</span>),
-             (<span class='ident'>Break</span>, <span class='string'>&quot;break&quot;</span>));
+<span class="macro">create_enum</span><span class="macro">!</span>(<span class="ident">LeaseAction</span>,
+             (<span class="ident">Acquire</span>, <span class="string">&quot;acquire&quot;</span>),
+             (<span class="ident">Renew</span>, <span class="string">&quot;renew &quot;</span>),
+             (<span class="ident">Change</span>, <span class="string">&quot;change&quot;</span>),
+             (<span class="ident">Release</span>, <span class="string">&quot;release &quot;</span>),
+             (<span class="ident">Break</span>, <span class="string">&quot;break&quot;</span>));
 
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>LeaseId</span> <span class='op'>=</span> <span class='ident'>Uuid</span>;
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">LeaseId</span> <span class="op">=</span> <span class="ident">Uuid</span>;
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -118,6 +120,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -138,7 +142,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -149,11 +153,9 @@
     <script>
         window.rootPath = "../../../../";
         window.currentCrate = "azure_sdk_for_rust";
-        window.playgroundUrl = "";
     </script>
     <script src="../../../../jquery.js"></script>
     <script src="../../../../main.js"></script>
-    
     <script defer src="../../../../search-index.js"></script>
 </body>
 </html>

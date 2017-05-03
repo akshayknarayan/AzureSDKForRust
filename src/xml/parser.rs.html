@@ -4,18 +4,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/RustyXML-0.1.1/src/parser.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/mindflavor/.cargo/registry/src/github.com-1ecc6299db9ec823/RustyXML-0.1.1/src/parser.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>parser.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -41,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -882,846 +884,846 @@
 <span id="839">839</span>
 <span id="840">840</span>
 <span id="841">841</span>
-</pre><pre class='rust '>
-<span class='comment'>// RustyXML</span>
-<span class='comment'>// Copyright (c) 2013-2015 Florian Zeitz</span>
-<span class='comment'>//</span>
-<span class='comment'>// This project is MIT licensed.</span>
-<span class='comment'>// Please see the COPYING file for more information.</span>
-<span class='comment'>//</span>
-<span class='comment'>// The parser herein is derived from OFXMLParser as included with</span>
-<span class='comment'>// ObjFW, Copyright (c) 2008-2013 Jonathan Schleifer.</span>
-<span class='comment'>// Permission to license this derived work under MIT license has been granted by ObjFW&#39;s author.</span>
+</pre><pre class="rust ">
+<span class="comment">// RustyXML</span>
+<span class="comment">// Copyright (c) 2013-2015 Florian Zeitz</span>
+<span class="comment">//</span>
+<span class="comment">// This project is MIT licensed.</span>
+<span class="comment">// Please see the COPYING file for more information.</span>
+<span class="comment">//</span>
+<span class="comment">// The parser herein is derived from OFXMLParser as included with</span>
+<span class="comment">// ObjFW, Copyright (c) 2008-2013 Jonathan Schleifer.</span>
+<span class="comment">// Permission to license this derived work under MIT license has been granted by ObjFW&#39;s author.</span>
 
-<span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>unescape</span>, <span class='ident'>StartTag</span>, <span class='ident'>EndTag</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::{<span class='ident'>HashMap</span>, <span class='ident'>VecDeque</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>::<span class='ident'>Error</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>Iterator</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
+<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">unescape</span>, <span class="ident">StartTag</span>, <span class="ident">EndTag</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::{<span class="ident">HashMap</span>, <span class="ident">VecDeque</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Iterator</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>Debug</span>)]</span>
-<span class='doccomment'>/// Events returned by the `Parser`</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Event</span> {
-    <span class='doccomment'>/// Event indicating processing information was found</span>
-    <span class='ident'>PI</span>(<span class='ident'>String</span>),
-    <span class='doccomment'>/// Event indicating a start tag was found</span>
-    <span class='ident'>ElementStart</span>(<span class='ident'>StartTag</span>),
-    <span class='doccomment'>/// Event indicating a end tag was found</span>
-    <span class='ident'>ElementEnd</span>(<span class='ident'>EndTag</span>),
-    <span class='doccomment'>/// Event indicating character data was found</span>
-    <span class='ident'>Characters</span>(<span class='ident'>String</span>),
-    <span class='doccomment'>/// Event indicating CDATA was found</span>
-    <span class='ident'>CDATA</span>(<span class='ident'>String</span>),
-    <span class='doccomment'>/// Event indicating a comment was found</span>
-    <span class='ident'>Comment</span>(<span class='ident'>String</span>)
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Debug</span>)]</span>
+<span class="doccomment">/// Events returned by the `Parser`</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Event</span> {
+    <span class="doccomment">/// Event indicating processing information was found</span>
+    <span class="ident">PI</span>(<span class="ident">String</span>),
+    <span class="doccomment">/// Event indicating a start tag was found</span>
+    <span class="ident">ElementStart</span>(<span class="ident">StartTag</span>),
+    <span class="doccomment">/// Event indicating a end tag was found</span>
+    <span class="ident">ElementEnd</span>(<span class="ident">EndTag</span>),
+    <span class="doccomment">/// Event indicating character data was found</span>
+    <span class="ident">Characters</span>(<span class="ident">String</span>),
+    <span class="doccomment">/// Event indicating CDATA was found</span>
+    <span class="ident">CDATA</span>(<span class="ident">String</span>),
+    <span class="doccomment">/// Event indicating a comment was found</span>
+    <span class="ident">Comment</span>(<span class="ident">String</span>)
 }
 
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>PartialEq</span>, <span class='ident'>Debug</span>, <span class='ident'>Clone</span>)]</span>
-<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>missing_copy_implementations</span>)]</span>
-<span class='doccomment'>/// The structure returned, when erroneous XML is read</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ParserError</span> {
-    <span class='doccomment'>/// The line number at which the error occurred</span>
-    <span class='kw'>pub</span> <span class='ident'>line</span>: <span class='ident'>u32</span>,
-    <span class='doccomment'>/// The column number at which the error occurred</span>
-    <span class='kw'>pub</span> <span class='ident'>col</span>: <span class='ident'>u32</span>,
-    <span class='doccomment'>/// A message describing the type of the error</span>
-    <span class='kw'>pub</span> <span class='ident'>msg</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">PartialEq</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_copy_implementations</span>)]</span>
+<span class="doccomment">/// The structure returned, when erroneous XML is read</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ParserError</span> {
+    <span class="doccomment">/// The line number at which the error occurred</span>
+    <span class="kw">pub</span> <span class="ident">line</span>: <span class="ident">u32</span>,
+    <span class="doccomment">/// The column number at which the error occurred</span>
+    <span class="kw">pub</span> <span class="ident">col</span>: <span class="ident">u32</span>,
+    <span class="doccomment">/// A message describing the type of the error</span>
+    <span class="kw">pub</span> <span class="ident">msg</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>
 }
 
-<span class='kw'>impl</span> <span class='ident'>Error</span> <span class='kw'>for</span> <span class='ident'>ParserError</span> {
-    <span class='kw'>fn</span> <span class='ident'>description</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
-        <span class='self'>self</span>.<span class='ident'>msg</span>
+<span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">ParserError</span> {
+    <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+        <span class="self">self</span>.<span class="ident">msg</span>
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>ParserError</span> {
-    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;Parse error; Line: {}, Column: {}, Reason: {}&quot;</span>, <span class='self'>self</span>.<span class='ident'>line</span>, <span class='self'>self</span>.<span class='ident'>col</span>, <span class='self'>self</span>.<span class='ident'>msg</span>)
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">ParserError</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;Parse error; Line: {}, Column: {}, Reason: {}&quot;</span>, <span class="self">self</span>.<span class="ident">line</span>, <span class="self">self</span>.<span class="ident">col</span>, <span class="self">self</span>.<span class="ident">msg</span>)
     }
 }
 
-<span class='comment'>// Event based parser</span>
-<span class='kw'>enum</span> <span class='ident'>State</span> {
-    <span class='ident'>OutsideTag</span>,
-    <span class='ident'>TagOpened</span>,
-    <span class='ident'>InProcessingInstructions</span>,
-    <span class='ident'>InTagName</span>,
-    <span class='ident'>InCloseTagName</span>,
-    <span class='ident'>InTag</span>,
-    <span class='ident'>InAttrName</span>,
-    <span class='ident'>InAttrValue</span>,
-    <span class='ident'>ExpectDelimiter</span>,
-    <span class='ident'>ExpectClose</span>,
-    <span class='ident'>ExpectSpaceOrClose</span>,
-    <span class='ident'>InExclamationMark</span>,
-    <span class='ident'>InCDATAOpening</span>,
-    <span class='ident'>InCDATA</span>,
-    <span class='ident'>InCommentOpening</span>,
-    <span class='ident'>InComment1</span>,
-    <span class='ident'>InComment2</span>,
-    <span class='ident'>InDoctype</span>
+<span class="comment">// Event based parser</span>
+<span class="kw">enum</span> <span class="ident">State</span> {
+    <span class="ident">OutsideTag</span>,
+    <span class="ident">TagOpened</span>,
+    <span class="ident">InProcessingInstructions</span>,
+    <span class="ident">InTagName</span>,
+    <span class="ident">InCloseTagName</span>,
+    <span class="ident">InTag</span>,
+    <span class="ident">InAttrName</span>,
+    <span class="ident">InAttrValue</span>,
+    <span class="ident">ExpectDelimiter</span>,
+    <span class="ident">ExpectClose</span>,
+    <span class="ident">ExpectSpaceOrClose</span>,
+    <span class="ident">InExclamationMark</span>,
+    <span class="ident">InCDATAOpening</span>,
+    <span class="ident">InCDATA</span>,
+    <span class="ident">InCommentOpening</span>,
+    <span class="ident">InComment1</span>,
+    <span class="ident">InComment2</span>,
+    <span class="ident">InDoctype</span>
 }
 
-<span class='doccomment'>/// A streaming XML parser</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Data is fed to the parser using the `feed_str()` method.</span>
-<span class='doccomment'>/// The `Event`s, and `ParserError`s generated while parsing the string</span>
-<span class='doccomment'>/// can be requested by iterating over the parser</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ~~~</span>
-<span class='doccomment'>/// use xml::Parser;</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// let mut p = Parser::new();</span>
-<span class='doccomment'>/// p.feed_str(&quot;&lt;a href=&#39;http://rust-lang.org&#39;&gt;Rust&lt;/a&gt;&quot;);</span>
-<span class='doccomment'>/// for event in p {</span>
-<span class='doccomment'>///     match event {</span>
-<span class='doccomment'>///        // [...]</span>
-<span class='doccomment'>///        _ =&gt; ()</span>
-<span class='doccomment'>///     }</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>/// ~~~</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Parser</span> {
-    <span class='ident'>line</span>: <span class='ident'>u32</span>,
-    <span class='ident'>col</span>: <span class='ident'>u32</span>,
-    <span class='ident'>has_error</span>: <span class='ident'>bool</span>,
-    <span class='ident'>data</span>: <span class='ident'>VecDeque</span><span class='op'>&lt;</span><span class='ident'>char</span><span class='op'>&gt;</span>,
-    <span class='ident'>buf</span>: <span class='ident'>String</span>,
-    <span class='ident'>namespaces</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>String</span>, <span class='ident'>String</span><span class='op'>&gt;&gt;</span>,
-    <span class='ident'>attributes</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span>(<span class='ident'>String</span>, <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>, <span class='ident'>String</span>)<span class='op'>&gt;</span>,
-    <span class='ident'>st</span>: <span class='ident'>State</span>,
-    <span class='ident'>name</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>, <span class='ident'>String</span>)<span class='op'>&gt;</span>,
-    <span class='ident'>attr</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>, <span class='ident'>String</span>)<span class='op'>&gt;</span>,
-    <span class='ident'>delim</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>char</span><span class='op'>&gt;</span>,
-    <span class='ident'>level</span>: <span class='ident'>u8</span>
+<span class="doccomment">/// A streaming XML parser</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Data is fed to the parser using the `feed_str()` method.</span>
+<span class="doccomment">/// The `Event`s, and `ParserError`s generated while parsing the string</span>
+<span class="doccomment">/// can be requested by iterating over the parser</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ~~~</span>
+<span class="doccomment">/// use xml::Parser;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let mut p = Parser::new();</span>
+<span class="doccomment">/// p.feed_str(&quot;&lt;a href=&#39;http://rust-lang.org&#39;&gt;Rust&lt;/a&gt;&quot;);</span>
+<span class="doccomment">/// for event in p {</span>
+<span class="doccomment">///     match event {</span>
+<span class="doccomment">///        // [...]</span>
+<span class="doccomment">///        _ =&gt; ()</span>
+<span class="doccomment">///     }</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">/// ~~~</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Parser</span> {
+    <span class="ident">line</span>: <span class="ident">u32</span>,
+    <span class="ident">col</span>: <span class="ident">u32</span>,
+    <span class="ident">has_error</span>: <span class="ident">bool</span>,
+    <span class="ident">data</span>: <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">char</span><span class="op">&gt;</span>,
+    <span class="ident">buf</span>: <span class="ident">String</span>,
+    <span class="ident">namespaces</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;&gt;</span>,
+    <span class="ident">attributes</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">String</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">String</span>)<span class="op">&gt;</span>,
+    <span class="ident">st</span>: <span class="ident">State</span>,
+    <span class="ident">name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">String</span>)<span class="op">&gt;</span>,
+    <span class="ident">attr</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">String</span>)<span class="op">&gt;</span>,
+    <span class="ident">delim</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">char</span><span class="op">&gt;</span>,
+    <span class="ident">level</span>: <span class="ident">u8</span>
 }
 
-<span class='kw'>impl</span> <span class='ident'>Parser</span> {
-    <span class='doccomment'>/// Returns a new `Parser`</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>Parser</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ns</span> <span class='op'>=</span> <span class='ident'>HashMap</span>::<span class='ident'>with_capacity</span>(<span class='number'>2</span>);
-        <span class='comment'>// Add standard namespaces</span>
-        <span class='ident'>ns</span>.<span class='ident'>insert</span>(<span class='string'>&quot;xml&quot;</span>.<span class='ident'>to_string</span>(), <span class='string'>&quot;http://www.w3.org/XML/1998/namespace&quot;</span>.<span class='ident'>to_string</span>());
-        <span class='ident'>ns</span>.<span class='ident'>insert</span>(<span class='string'>&quot;xmlns&quot;</span>.<span class='ident'>to_string</span>(), <span class='string'>&quot;http://www.w3.org/2000/xmlns/&quot;</span>.<span class='ident'>to_string</span>());
+<span class="kw">impl</span> <span class="ident">Parser</span> {
+    <span class="doccomment">/// Returns a new `Parser`</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="ident">Parser</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ns</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">with_capacity</span>(<span class="number">2</span>);
+        <span class="comment">// Add standard namespaces</span>
+        <span class="ident">ns</span>.<span class="ident">insert</span>(<span class="string">&quot;xml&quot;</span>.<span class="ident">to_string</span>(), <span class="string">&quot;http://www.w3.org/XML/1998/namespace&quot;</span>.<span class="ident">to_string</span>());
+        <span class="ident">ns</span>.<span class="ident">insert</span>(<span class="string">&quot;xmlns&quot;</span>.<span class="ident">to_string</span>(), <span class="string">&quot;http://www.w3.org/2000/xmlns/&quot;</span>.<span class="ident">to_string</span>());
 
-        <span class='ident'>Parser</span> {
-            <span class='ident'>line</span>: <span class='number'>1</span>,
-            <span class='ident'>col</span>: <span class='number'>0</span>,
-            <span class='ident'>has_error</span>: <span class='boolval'>false</span>,
-            <span class='ident'>data</span>: <span class='ident'>VecDeque</span>::<span class='ident'>with_capacity</span>(<span class='number'>4096</span>),
-            <span class='ident'>buf</span>: <span class='ident'>String</span>::<span class='ident'>new</span>(),
-            <span class='ident'>namespaces</span>: <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>ns</span>],
-            <span class='ident'>attributes</span>: <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-            <span class='ident'>st</span>: <span class='ident'>State</span>::<span class='ident'>OutsideTag</span>,
-            <span class='ident'>name</span>: <span class='prelude-val'>None</span>,
-            <span class='ident'>attr</span>: <span class='prelude-val'>None</span>,
-            <span class='ident'>delim</span>: <span class='prelude-val'>None</span>,
-            <span class='ident'>level</span>: <span class='number'>0</span>
+        <span class="ident">Parser</span> {
+            <span class="ident">line</span>: <span class="number">1</span>,
+            <span class="ident">col</span>: <span class="number">0</span>,
+            <span class="ident">has_error</span>: <span class="bool-val">false</span>,
+            <span class="ident">data</span>: <span class="ident">VecDeque</span>::<span class="ident">with_capacity</span>(<span class="number">4096</span>),
+            <span class="ident">buf</span>: <span class="ident">String</span>::<span class="ident">new</span>(),
+            <span class="ident">namespaces</span>: <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">ns</span>],
+            <span class="ident">attributes</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+            <span class="ident">st</span>: <span class="ident">State</span>::<span class="ident">OutsideTag</span>,
+            <span class="ident">name</span>: <span class="prelude-val">None</span>,
+            <span class="ident">attr</span>: <span class="prelude-val">None</span>,
+            <span class="ident">delim</span>: <span class="prelude-val">None</span>,
+            <span class="ident">level</span>: <span class="number">0</span>
         }
     }
 
-    <span class='doccomment'>/// Feeds a string slice to the parser</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>feed_str</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>data</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) {
-        <span class='self'>self</span>.<span class='ident'>data</span>.<span class='ident'>extend</span>(<span class='ident'>data</span>.<span class='ident'>chars</span>());
+    <span class="doccomment">/// Feeds a string slice to the parser</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">feed_str</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
+        <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">extend</span>(<span class="ident">data</span>.<span class="ident">chars</span>());
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>Parser</span> {
-    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Event</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span>;
+<span class="kw">impl</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Parser</span> {
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Event</span>, <span class="ident">ParserError</span><span class="op">&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Event</span>, <span class='ident'>ParserError</span><span class='op'>&gt;&gt;</span> {
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>has_error</span> {
-            <span class='kw'>return</span> <span class='prelude-val'>None</span>;
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Event</span>, <span class="ident">ParserError</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">has_error</span> {
+            <span class="kw">return</span> <span class="prelude-val">None</span>;
         }
 
-        <span class='kw'>loop</span> {
-            <span class='kw'>let</span> <span class='ident'>c</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>data</span>.<span class='ident'>pop_front</span>() {
-                <span class='prelude-val'>Some</span>(<span class='ident'>c</span>) <span class='op'>=&gt;</span> <span class='ident'>c</span>,
-                <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>None</span>
+        <span class="kw">loop</span> {
+            <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">pop_front</span>() {
+                <span class="prelude-val">Some</span>(<span class="ident">c</span>) <span class="op">=&gt;</span> <span class="ident">c</span>,
+                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">None</span>
             };
 
-            <span class='kw'>if</span> <span class='ident'>c</span> <span class='op'>==</span> <span class='string'>&#39;\n&#39;</span> {
-                <span class='self'>self</span>.<span class='ident'>line</span> <span class='op'>+=</span> <span class='number'>1</span>;
-                <span class='self'>self</span>.<span class='ident'>col</span> <span class='op'>=</span> <span class='number'>0</span>;
-            } <span class='kw'>else</span> {
-                <span class='self'>self</span>.<span class='ident'>col</span> <span class='op'>+=</span> <span class='number'>1</span>;
+            <span class="kw">if</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">&#39;\n&#39;</span> {
+                <span class="self">self</span>.<span class="ident">line</span> <span class="op">+=</span> <span class="number">1</span>;
+                <span class="self">self</span>.<span class="ident">col</span> <span class="op">=</span> <span class="number">0</span>;
+            } <span class="kw">else</span> {
+                <span class="self">self</span>.<span class="ident">col</span> <span class="op">+=</span> <span class="number">1</span>;
             }
 
-            <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>parse_character</span>(<span class='ident'>c</span>) {
-                <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>) <span class='op'>=&gt;</span> <span class='kw'>continue</span>,
-                <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>event</span>)) <span class='op'>=&gt;</span> {
-                    <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='prelude-val'>Ok</span>(<span class='ident'>event</span>));
+            <span class="kw">match</span> <span class="self">self</span>.<span class="ident">parse_character</span>(<span class="ident">c</span>) {
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) <span class="op">=&gt;</span> <span class="kw">continue</span>,
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">event</span>)) <span class="op">=&gt;</span> {
+                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="ident">event</span>));
                 }
-                <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> {
-                    <span class='self'>self</span>.<span class='ident'>has_error</span> <span class='op'>=</span> <span class='boolval'>true</span>;
-                    <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='prelude-val'>Err</span>(<span class='ident'>e</span>));
+                <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> {
+                    <span class="self">self</span>.<span class="ident">has_error</span> <span class="op">=</span> <span class="bool-val">true</span>;
+                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">e</span>));
                 }
             }
         }
     }
 }
 
-<span class='attribute'>#[<span class='ident'>inline</span>]</span>
-<span class='comment'>// Parse a QName to get Prefix and LocalPart</span>
-<span class='kw'>fn</span> <span class='ident'>parse_qname</span>(<span class='ident'>qname</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> (<span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>, <span class='ident'>String</span>) {
-    <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>i</span>) <span class='op'>=</span> <span class='ident'>qname</span>.<span class='ident'>find</span>(<span class='string'>&#39;:&#39;</span>) {
-        (<span class='prelude-val'>Some</span>(<span class='ident'>qname</span>[..<span class='ident'>i</span>].<span class='ident'>to_string</span>()), <span class='ident'>qname</span>[<span class='ident'>i</span><span class='op'>+</span><span class='number'>1</span>..].<span class='ident'>to_string</span>())
-    } <span class='kw'>else</span> {
-        (<span class='prelude-val'>None</span>, <span class='ident'>qname</span>.<span class='ident'>to_string</span>())
+<span class="attribute">#[<span class="ident">inline</span>]</span>
+<span class="comment">// Parse a QName to get Prefix and LocalPart</span>
+<span class="kw">fn</span> <span class="ident">parse_qname</span>(<span class="ident">qname</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> (<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">String</span>) {
+    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">i</span>) <span class="op">=</span> <span class="ident">qname</span>.<span class="ident">find</span>(<span class="string">&#39;:&#39;</span>) {
+        (<span class="prelude-val">Some</span>(<span class="ident">qname</span>[..<span class="ident">i</span>].<span class="ident">to_string</span>()), <span class="ident">qname</span>[<span class="ident">i</span><span class="op">+</span><span class="number">1</span>..].<span class="ident">to_string</span>())
+    } <span class="kw">else</span> {
+        (<span class="prelude-val">None</span>, <span class="ident">qname</span>.<span class="ident">to_string</span>())
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Parser</span> {
-    <span class='comment'>// Get the namespace currently bound to a prefix.</span>
-    <span class='comment'>// Bindings are stored as a stack of HashMaps, we start searching in the top most HashMap</span>
-    <span class='comment'>// and traverse down until the prefix is found.</span>
-    <span class='kw'>fn</span> <span class='ident'>namespace_for_prefix</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>prefix</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
-        <span class='kw'>for</span> <span class='ident'>ns</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>namespaces</span>.<span class='ident'>iter</span>().<span class='ident'>rev</span>() {
-            <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>namespace</span>) <span class='op'>=</span> <span class='ident'>ns</span>.<span class='ident'>get</span>(<span class='ident'>prefix</span>) {
-                <span class='kw'>if</span> <span class='ident'>namespace</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>0</span> {
-                    <span class='kw'>return</span> <span class='prelude-val'>None</span>;
+<span class="kw">impl</span> <span class="ident">Parser</span> {
+    <span class="comment">// Get the namespace currently bound to a prefix.</span>
+    <span class="comment">// Bindings are stored as a stack of HashMaps, we start searching in the top most HashMap</span>
+    <span class="comment">// and traverse down until the prefix is found.</span>
+    <span class="kw">fn</span> <span class="ident">namespace_for_prefix</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">prefix</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="kw">for</span> <span class="ident">ns</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">namespaces</span>.<span class="ident">iter</span>().<span class="ident">rev</span>() {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">namespace</span>) <span class="op">=</span> <span class="ident">ns</span>.<span class="ident">get</span>(<span class="ident">prefix</span>) {
+                <span class="kw">if</span> <span class="ident">namespace</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span> {
+                    <span class="kw">return</span> <span class="prelude-val">None</span>;
                 }
-                <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='ident'>namespace</span>.<span class='ident'>clone</span>());
+                <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">namespace</span>.<span class="ident">clone</span>());
             }
         }
-        <span class='prelude-val'>None</span>
+        <span class="prelude-val">None</span>
     }
 
-    <span class='kw'>fn</span> <span class='ident'>error</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>msg</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span> {
-        <span class='prelude-val'>Err</span>(<span class='ident'>ParserError</span> { <span class='ident'>line</span>: <span class='self'>self</span>.<span class='ident'>line</span>, <span class='ident'>col</span>: <span class='self'>self</span>.<span class='ident'>col</span>, <span class='ident'>msg</span>: <span class='ident'>msg</span> })
+    <span class="kw">fn</span> <span class="ident">error</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">msg</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>, <span class="ident">ParserError</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Err</span>(<span class="ident">ParserError</span> { <span class="ident">line</span>: <span class="self">self</span>.<span class="ident">line</span>, <span class="ident">col</span>: <span class="self">self</span>.<span class="ident">col</span>, <span class="ident">msg</span>: <span class="ident">msg</span> })
     }
 
-    <span class='kw'>fn</span> <span class='ident'>parse_character</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>c</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span> {
-        <span class='comment'>// println(fmt!(&quot;Now in state: %?&quot;, self.st));</span>
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>st</span> {
-            <span class='ident'>State</span>::<span class='ident'>OutsideTag</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>outside_tag</span>(<span class='ident'>c</span>),
-            <span class='ident'>State</span>::<span class='ident'>TagOpened</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>tag_opened</span>(<span class='ident'>c</span>),
-            <span class='ident'>State</span>::<span class='ident'>InProcessingInstructions</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>in_processing_instructions</span>(<span class='ident'>c</span>),
-            <span class='ident'>State</span>::<span class='ident'>InTagName</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>in_tag_name</span>(<span class='ident'>c</span>),
-            <span class='ident'>State</span>::<span class='ident'>InCloseTagName</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>in_close_tag_name</span>(<span class='ident'>c</span>),
-            <span class='ident'>State</span>::<span class='ident'>InTag</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>in_tag</span>(<span class='ident'>c</span>),
-            <span class='ident'>State</span>::<span class='ident'>InAttrName</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>in_attr_name</span>(<span class='ident'>c</span>),
-            <span class='ident'>State</span>::<span class='ident'>InAttrValue</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>in_attr_value</span>(<span class='ident'>c</span>),
-            <span class='ident'>State</span>::<span class='ident'>ExpectDelimiter</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>expect_delimiter</span>(<span class='ident'>c</span>),
-            <span class='ident'>State</span>::<span class='ident'>ExpectClose</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>expect_close</span>(<span class='ident'>c</span>),
-            <span class='ident'>State</span>::<span class='ident'>ExpectSpaceOrClose</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>expect_space_or_close</span>(<span class='ident'>c</span>),
-            <span class='ident'>State</span>::<span class='ident'>InExclamationMark</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>in_exclamation_mark</span>(<span class='ident'>c</span>),
-            <span class='ident'>State</span>::<span class='ident'>InCDATAOpening</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>in_cdata_opening</span>(<span class='ident'>c</span>),
-            <span class='ident'>State</span>::<span class='ident'>InCDATA</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>in_cdata</span>(<span class='ident'>c</span>),
-            <span class='ident'>State</span>::<span class='ident'>InCommentOpening</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>in_comment_opening</span>(<span class='ident'>c</span>),
-            <span class='ident'>State</span>::<span class='ident'>InComment1</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>in_comment1</span>(<span class='ident'>c</span>),
-            <span class='ident'>State</span>::<span class='ident'>InComment2</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>in_comment2</span>(<span class='ident'>c</span>),
-            <span class='ident'>State</span>::<span class='ident'>InDoctype</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>in_doctype</span>(<span class='ident'>c</span>),
+    <span class="kw">fn</span> <span class="ident">parse_character</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">c</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>, <span class="ident">ParserError</span><span class="op">&gt;</span> {
+        <span class="comment">// println(fmt!(&quot;Now in state: %?&quot;, self.st));</span>
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">st</span> {
+            <span class="ident">State</span>::<span class="ident">OutsideTag</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">outside_tag</span>(<span class="ident">c</span>),
+            <span class="ident">State</span>::<span class="ident">TagOpened</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">tag_opened</span>(<span class="ident">c</span>),
+            <span class="ident">State</span>::<span class="ident">InProcessingInstructions</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">in_processing_instructions</span>(<span class="ident">c</span>),
+            <span class="ident">State</span>::<span class="ident">InTagName</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">in_tag_name</span>(<span class="ident">c</span>),
+            <span class="ident">State</span>::<span class="ident">InCloseTagName</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">in_close_tag_name</span>(<span class="ident">c</span>),
+            <span class="ident">State</span>::<span class="ident">InTag</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">in_tag</span>(<span class="ident">c</span>),
+            <span class="ident">State</span>::<span class="ident">InAttrName</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">in_attr_name</span>(<span class="ident">c</span>),
+            <span class="ident">State</span>::<span class="ident">InAttrValue</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">in_attr_value</span>(<span class="ident">c</span>),
+            <span class="ident">State</span>::<span class="ident">ExpectDelimiter</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">expect_delimiter</span>(<span class="ident">c</span>),
+            <span class="ident">State</span>::<span class="ident">ExpectClose</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">expect_close</span>(<span class="ident">c</span>),
+            <span class="ident">State</span>::<span class="ident">ExpectSpaceOrClose</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">expect_space_or_close</span>(<span class="ident">c</span>),
+            <span class="ident">State</span>::<span class="ident">InExclamationMark</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">in_exclamation_mark</span>(<span class="ident">c</span>),
+            <span class="ident">State</span>::<span class="ident">InCDATAOpening</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">in_cdata_opening</span>(<span class="ident">c</span>),
+            <span class="ident">State</span>::<span class="ident">InCDATA</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">in_cdata</span>(<span class="ident">c</span>),
+            <span class="ident">State</span>::<span class="ident">InCommentOpening</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">in_comment_opening</span>(<span class="ident">c</span>),
+            <span class="ident">State</span>::<span class="ident">InComment1</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">in_comment1</span>(<span class="ident">c</span>),
+            <span class="ident">State</span>::<span class="ident">InComment2</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">in_comment2</span>(<span class="ident">c</span>),
+            <span class="ident">State</span>::<span class="ident">InDoctype</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">in_doctype</span>(<span class="ident">c</span>),
         }
     }
 
-    <span class='comment'>// Outside any tag, or other construct</span>
-    <span class='comment'>// &#39;&lt;&#39; =&gt; TagOpened, producing Event::Characters</span>
-    <span class='kw'>fn</span> <span class='ident'>outside_tag</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>c</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='ident'>c</span> {
-            <span class='string'>&#39;&lt;&#39;</span> <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='number'>0</span> <span class='op'>=&gt;</span> {
-                <span class='self'>self</span>.<span class='ident'>st</span> <span class='op'>=</span> <span class='ident'>State</span>::<span class='ident'>TagOpened</span>;
-                <span class='kw'>let</span> <span class='ident'>buf</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>unescape</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>buf</span>) {
-                    <span class='prelude-val'>Ok</span>(<span class='ident'>unescaped</span>) <span class='op'>=&gt;</span> <span class='ident'>unescaped</span>,
-                    <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>error</span>(<span class='string'>&quot;Found invalid entity&quot;</span>)
+    <span class="comment">// Outside any tag, or other construct</span>
+    <span class="comment">// &#39;&lt;&#39; =&gt; TagOpened, producing Event::Characters</span>
+    <span class="kw">fn</span> <span class="ident">outside_tag</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">c</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>, <span class="ident">ParserError</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="ident">c</span> {
+            <span class="string">&#39;&lt;&#39;</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">0</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">st</span> <span class="op">=</span> <span class="ident">State</span>::<span class="ident">TagOpened</span>;
+                <span class="kw">let</span> <span class="ident">buf</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">unescape</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">buf</span>) {
+                    <span class="prelude-val">Ok</span>(<span class="ident">unescaped</span>) <span class="op">=&gt;</span> <span class="ident">unescaped</span>,
+                    <span class="prelude-val">Err</span>(_) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="self">self</span>.<span class="ident">error</span>(<span class="string">&quot;Found invalid entity&quot;</span>)
                 };
-                <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>truncate</span>(<span class='number'>0</span>);
-                <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Event</span>::<span class='ident'>Characters</span>(<span class='ident'>buf</span>)));
+                <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">truncate</span>(<span class="number">0</span>);
+                <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Event</span>::<span class="ident">Characters</span>(<span class="ident">buf</span>)));
             }
-            <span class='string'>&#39;&lt;&#39;</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>st</span> <span class='op'>=</span> <span class='ident'>State</span>::<span class='ident'>TagOpened</span>,
-            _ <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>push</span>(<span class='ident'>c</span>)
+            <span class="string">&#39;&lt;&#39;</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">st</span> <span class="op">=</span> <span class="ident">State</span>::<span class="ident">TagOpened</span>,
+            _ <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">push</span>(<span class="ident">c</span>)
         }
-        <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>)
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
     }
 
-    <span class='comment'>// Character following a &#39;&lt;&#39;, starting a tag or other construct</span>
-    <span class='comment'>// &#39;?&#39; =&gt; InProcessingInstructions</span>
-    <span class='comment'>// &#39;!&#39; =&gt; InExclamationMark</span>
-    <span class='comment'>// &#39;/&#39; =&gt; InCloseTagName</span>
-    <span class='comment'>//  _  =&gt; InTagName</span>
-    <span class='kw'>fn</span> <span class='ident'>tag_opened</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>c</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>st</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>c</span> {
-            <span class='string'>&#39;?&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>State</span>::<span class='ident'>InProcessingInstructions</span>,
-            <span class='string'>&#39;!&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>State</span>::<span class='ident'>InExclamationMark</span>,
-            <span class='string'>&#39;/&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>State</span>::<span class='ident'>InCloseTagName</span>,
-            _ <span class='op'>=&gt;</span> {
-                <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>push</span>(<span class='ident'>c</span>);
-                <span class='ident'>State</span>::<span class='ident'>InTagName</span>
+    <span class="comment">// Character following a &#39;&lt;&#39;, starting a tag or other construct</span>
+    <span class="comment">// &#39;?&#39; =&gt; InProcessingInstructions</span>
+    <span class="comment">// &#39;!&#39; =&gt; InExclamationMark</span>
+    <span class="comment">// &#39;/&#39; =&gt; InCloseTagName</span>
+    <span class="comment">//  _  =&gt; InTagName</span>
+    <span class="kw">fn</span> <span class="ident">tag_opened</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">c</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>, <span class="ident">ParserError</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">st</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">c</span> {
+            <span class="string">&#39;?&#39;</span> <span class="op">=&gt;</span> <span class="ident">State</span>::<span class="ident">InProcessingInstructions</span>,
+            <span class="string">&#39;!&#39;</span> <span class="op">=&gt;</span> <span class="ident">State</span>::<span class="ident">InExclamationMark</span>,
+            <span class="string">&#39;/&#39;</span> <span class="op">=&gt;</span> <span class="ident">State</span>::<span class="ident">InCloseTagName</span>,
+            _ <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">push</span>(<span class="ident">c</span>);
+                <span class="ident">State</span>::<span class="ident">InTagName</span>
             }
         };
-        <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>)
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
     }
 
-    <span class='comment'>// Inside a processing instruction</span>
-    <span class='comment'>// &#39;?&#39; &#39;&gt;&#39; =&gt; OutsideTag, producing PI</span>
-    <span class='kw'>fn</span> <span class='ident'>in_processing_instructions</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>c</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='ident'>c</span> {
-            <span class='string'>&#39;?&#39;</span> <span class='op'>=&gt;</span> {
-                <span class='self'>self</span>.<span class='ident'>level</span> <span class='op'>=</span> <span class='number'>1</span>;
-                <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>push</span>(<span class='ident'>c</span>);
+    <span class="comment">// Inside a processing instruction</span>
+    <span class="comment">// &#39;?&#39; &#39;&gt;&#39; =&gt; OutsideTag, producing PI</span>
+    <span class="kw">fn</span> <span class="ident">in_processing_instructions</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">c</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>, <span class="ident">ParserError</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="ident">c</span> {
+            <span class="string">&#39;?&#39;</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">level</span> <span class="op">=</span> <span class="number">1</span>;
+                <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">push</span>(<span class="ident">c</span>);
             }
-            <span class='string'>&#39;&gt;&#39;</span> <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>level</span> <span class='op'>==</span> <span class='number'>1</span> <span class='op'>=&gt;</span> {
-                <span class='self'>self</span>.<span class='ident'>level</span> <span class='op'>=</span> <span class='number'>0</span>;
-                <span class='self'>self</span>.<span class='ident'>st</span> <span class='op'>=</span> <span class='ident'>State</span>::<span class='ident'>OutsideTag</span>;
-                <span class='kw'>let</span> _ <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>pop</span>();
-                <span class='kw'>let</span> <span class='ident'>buf</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>replace</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>buf</span>, <span class='ident'>String</span>::<span class='ident'>new</span>());
-                <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Event</span>::<span class='ident'>PI</span>(<span class='ident'>buf</span>)));
+            <span class="string">&#39;&gt;&#39;</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">level</span> <span class="op">==</span> <span class="number">1</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">level</span> <span class="op">=</span> <span class="number">0</span>;
+                <span class="self">self</span>.<span class="ident">st</span> <span class="op">=</span> <span class="ident">State</span>::<span class="ident">OutsideTag</span>;
+                <span class="kw">let</span> _ <span class="op">=</span> <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">pop</span>();
+                <span class="kw">let</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">buf</span>, <span class="ident">String</span>::<span class="ident">new</span>());
+                <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Event</span>::<span class="ident">PI</span>(<span class="ident">buf</span>)));
             }
-            _ <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>push</span>(<span class='ident'>c</span>)
+            _ <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">push</span>(<span class="ident">c</span>)
         }
-        <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>)
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
     }
 
-    <span class='comment'>// Inside a tag name (opening tag)</span>
-    <span class='comment'>// &#39;/&#39; =&gt; ExpectClose, producing Event::ElementStart</span>
-    <span class='comment'>// &#39;&gt;&#39; =&gt; OutsideTag, producing Event::ElementStart</span>
-    <span class='comment'>// &#39; &#39; or &#39;\t&#39; or &#39;\r&#39; or &#39;\n&#39; =&gt; InTag</span>
-    <span class='kw'>fn</span> <span class='ident'>in_tag_name</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>c</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='ident'>c</span> {
-            <span class='string'>&#39;/&#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;&gt;&#39;</span> <span class='op'>=&gt;</span> {
-                <span class='kw'>let</span> (<span class='ident'>prefix</span>, <span class='ident'>name</span>) <span class='op'>=</span> <span class='ident'>parse_qname</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>buf</span>);
-                <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>truncate</span>(<span class='number'>0</span>);
-                <span class='kw'>let</span> <span class='ident'>ns</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>prefix</span> {
-                    <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>namespace_for_prefix</span>(<span class='string'>&quot;&quot;</span>),
-                    <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>pre</span>) <span class='op'>=&gt;</span> <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>namespace_for_prefix</span>(<span class='kw-2'>&amp;</span><span class='ident'>pre</span>) {
-                        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>error</span>(<span class='string'>&quot;Unbound namespace prefix in tag name&quot;</span>),
-                        <span class='ident'>ns</span> <span class='op'>=&gt;</span> <span class='ident'>ns</span>
+    <span class="comment">// Inside a tag name (opening tag)</span>
+    <span class="comment">// &#39;/&#39; =&gt; ExpectClose, producing Event::ElementStart</span>
+    <span class="comment">// &#39;&gt;&#39; =&gt; OutsideTag, producing Event::ElementStart</span>
+    <span class="comment">// &#39; &#39; or &#39;\t&#39; or &#39;\r&#39; or &#39;\n&#39; =&gt; InTag</span>
+    <span class="kw">fn</span> <span class="ident">in_tag_name</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">c</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>, <span class="ident">ParserError</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="ident">c</span> {
+            <span class="string">&#39;/&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;&gt;&#39;</span> <span class="op">=&gt;</span> {
+                <span class="kw">let</span> (<span class="ident">prefix</span>, <span class="ident">name</span>) <span class="op">=</span> <span class="ident">parse_qname</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">buf</span>);
+                <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">truncate</span>(<span class="number">0</span>);
+                <span class="kw">let</span> <span class="ident">ns</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">prefix</span> {
+                    <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">namespace_for_prefix</span>(<span class="string">&quot;&quot;</span>),
+                    <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">pre</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">namespace_for_prefix</span>(<span class="kw-2">&amp;</span><span class="ident">pre</span>) {
+                        <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="self">self</span>.<span class="ident">error</span>(<span class="string">&quot;Unbound namespace prefix in tag name&quot;</span>),
+                        <span class="ident">ns</span> <span class="op">=&gt;</span> <span class="ident">ns</span>
                     }
                 };
 
-                <span class='self'>self</span>.<span class='ident'>namespaces</span>.<span class='ident'>push</span>(<span class='ident'>HashMap</span>::<span class='ident'>new</span>());
-                <span class='self'>self</span>.<span class='ident'>st</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>c</span> <span class='op'>==</span> <span class='string'>&#39;/&#39;</span> {
-                    <span class='self'>self</span>.<span class='ident'>name</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>((<span class='ident'>prefix</span>.<span class='ident'>clone</span>(), <span class='ident'>name</span>.<span class='ident'>clone</span>()));
-                    <span class='ident'>State</span>::<span class='ident'>ExpectClose</span>
-                } <span class='kw'>else</span> {
-                    <span class='ident'>State</span>::<span class='ident'>OutsideTag</span>
+                <span class="self">self</span>.<span class="ident">namespaces</span>.<span class="ident">push</span>(<span class="ident">HashMap</span>::<span class="ident">new</span>());
+                <span class="self">self</span>.<span class="ident">st</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">&#39;/&#39;</span> {
+                    <span class="self">self</span>.<span class="ident">name</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">prefix</span>.<span class="ident">clone</span>(), <span class="ident">name</span>.<span class="ident">clone</span>()));
+                    <span class="ident">State</span>::<span class="ident">ExpectClose</span>
+                } <span class="kw">else</span> {
+                    <span class="ident">State</span>::<span class="ident">OutsideTag</span>
                 };
 
-                <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Event</span>::<span class='ident'>ElementStart</span>(<span class='ident'>StartTag</span> {
-                    <span class='ident'>name</span>: <span class='ident'>name</span>,
-                    <span class='ident'>ns</span>: <span class='ident'>ns</span>,
-                    <span class='ident'>prefix</span>: <span class='ident'>prefix</span>,
-                    <span class='ident'>attributes</span>: <span class='ident'>HashMap</span>::<span class='ident'>new</span>()
+                <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Event</span>::<span class="ident">ElementStart</span>(<span class="ident">StartTag</span> {
+                    <span class="ident">name</span>: <span class="ident">name</span>,
+                    <span class="ident">ns</span>: <span class="ident">ns</span>,
+                    <span class="ident">prefix</span>: <span class="ident">prefix</span>,
+                    <span class="ident">attributes</span>: <span class="ident">HashMap</span>::<span class="ident">new</span>()
                 })));
             }
-            <span class='string'>&#39; &#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;\t&#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;\r&#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;\n&#39;</span> <span class='op'>=&gt;</span> {
-                <span class='self'>self</span>.<span class='ident'>namespaces</span>.<span class='ident'>push</span>(<span class='ident'>HashMap</span>::<span class='ident'>new</span>());
-                <span class='self'>self</span>.<span class='ident'>name</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>parse_qname</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>buf</span>));
-                <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>truncate</span>(<span class='number'>0</span>);
-                <span class='self'>self</span>.<span class='ident'>st</span> <span class='op'>=</span> <span class='ident'>State</span>::<span class='ident'>InTag</span>;
+            <span class="string">&#39; &#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\t&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\r&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\n&#39;</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">namespaces</span>.<span class="ident">push</span>(<span class="ident">HashMap</span>::<span class="ident">new</span>());
+                <span class="self">self</span>.<span class="ident">name</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">parse_qname</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">buf</span>));
+                <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">truncate</span>(<span class="number">0</span>);
+                <span class="self">self</span>.<span class="ident">st</span> <span class="op">=</span> <span class="ident">State</span>::<span class="ident">InTag</span>;
             }
-            _ <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>push</span>(<span class='ident'>c</span>)
+            _ <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">push</span>(<span class="ident">c</span>)
         }
-        <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>)
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
     }
 
-    <span class='comment'>// Inside a tag name (closing tag)</span>
-    <span class='comment'>// &#39;&gt;&#39; =&gt; OutsideTag, producing ElementEnd</span>
-    <span class='comment'>// &#39; &#39; or &#39;\t&#39; or &#39;\r&#39; or &#39;\n&#39; =&gt; ExpectSpaceOrClose, producing ElementEnd</span>
-    <span class='kw'>fn</span> <span class='ident'>in_close_tag_name</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>c</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='ident'>c</span> {
-            <span class='string'>&#39; &#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;\t&#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;\r&#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;\n&#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;&gt;&#39;</span> <span class='op'>=&gt;</span> {
-                <span class='kw'>let</span> (<span class='ident'>prefix</span>, <span class='ident'>name</span>) <span class='op'>=</span> <span class='ident'>parse_qname</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>buf</span>);
-                <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>truncate</span>(<span class='number'>0</span>);
+    <span class="comment">// Inside a tag name (closing tag)</span>
+    <span class="comment">// &#39;&gt;&#39; =&gt; OutsideTag, producing ElementEnd</span>
+    <span class="comment">// &#39; &#39; or &#39;\t&#39; or &#39;\r&#39; or &#39;\n&#39; =&gt; ExpectSpaceOrClose, producing ElementEnd</span>
+    <span class="kw">fn</span> <span class="ident">in_close_tag_name</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">c</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>, <span class="ident">ParserError</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="ident">c</span> {
+            <span class="string">&#39; &#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\t&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\r&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\n&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;&gt;&#39;</span> <span class="op">=&gt;</span> {
+                <span class="kw">let</span> (<span class="ident">prefix</span>, <span class="ident">name</span>) <span class="op">=</span> <span class="ident">parse_qname</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">buf</span>);
+                <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">truncate</span>(<span class="number">0</span>);
 
-                <span class='kw'>let</span> <span class='ident'>ns</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>prefix</span> {
-                    <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>namespace_for_prefix</span>(<span class='string'>&quot;&quot;</span>),
-                    <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>pre</span>) <span class='op'>=&gt;</span> <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>namespace_for_prefix</span>(<span class='kw-2'>&amp;</span><span class='ident'>pre</span>) {
-                        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>error</span>(<span class='string'>&quot;Unbound namespace prefix in tag name&quot;</span>),
-                        <span class='ident'>ns</span> <span class='op'>=&gt;</span> <span class='ident'>ns</span>
+                <span class="kw">let</span> <span class="ident">ns</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">prefix</span> {
+                    <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">namespace_for_prefix</span>(<span class="string">&quot;&quot;</span>),
+                    <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">pre</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">namespace_for_prefix</span>(<span class="kw-2">&amp;</span><span class="ident">pre</span>) {
+                        <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="self">self</span>.<span class="ident">error</span>(<span class="string">&quot;Unbound namespace prefix in tag name&quot;</span>),
+                        <span class="ident">ns</span> <span class="op">=&gt;</span> <span class="ident">ns</span>
                     }
                 };
 
-                <span class='self'>self</span>.<span class='ident'>namespaces</span>.<span class='ident'>pop</span>();
-                <span class='self'>self</span>.<span class='ident'>st</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>c</span> <span class='op'>==</span> <span class='string'>&#39;&gt;&#39;</span> {
-                    <span class='ident'>State</span>::<span class='ident'>OutsideTag</span>
-                } <span class='kw'>else</span> {
-                    <span class='ident'>State</span>::<span class='ident'>ExpectSpaceOrClose</span>
+                <span class="self">self</span>.<span class="ident">namespaces</span>.<span class="ident">pop</span>();
+                <span class="self">self</span>.<span class="ident">st</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">&#39;&gt;&#39;</span> {
+                    <span class="ident">State</span>::<span class="ident">OutsideTag</span>
+                } <span class="kw">else</span> {
+                    <span class="ident">State</span>::<span class="ident">ExpectSpaceOrClose</span>
                 };
 
-                <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Event</span>::<span class='ident'>ElementEnd</span>(<span class='ident'>EndTag</span> { <span class='ident'>name</span>: <span class='ident'>name</span>, <span class='ident'>ns</span>: <span class='ident'>ns</span>, <span class='ident'>prefix</span>: <span class='ident'>prefix</span> })))
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Event</span>::<span class="ident">ElementEnd</span>(<span class="ident">EndTag</span> { <span class="ident">name</span>: <span class="ident">name</span>, <span class="ident">ns</span>: <span class="ident">ns</span>, <span class="ident">prefix</span>: <span class="ident">prefix</span> })))
             }
-            _ <span class='op'>=&gt;</span> {
-                <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>push</span>(<span class='ident'>c</span>);
-                <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>)
+            _ <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">push</span>(<span class="ident">c</span>);
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
             }
         }
     }
 
-    <span class='comment'>// Inside a tag, parsing attributes</span>
-    <span class='comment'>// &#39;/&#39; =&gt; ExpectClose, producing StartTag</span>
-    <span class='comment'>// &#39;&gt;&#39; =&gt; OutsideTag, producing StartTag</span>
-    <span class='comment'>// &#39; &#39; or &#39;\t&#39; or &#39;\r&#39; or &#39;\n&#39; =&gt; InAttrName</span>
-    <span class='kw'>fn</span> <span class='ident'>in_tag</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>c</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='ident'>c</span> {
-            <span class='string'>&#39;/&#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;&gt;&#39;</span> <span class='op'>=&gt;</span> {
-                <span class='kw'>let</span> <span class='ident'>attributes</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>replace</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>attributes</span>, <span class='ident'>Vec</span>::<span class='ident'>new</span>());
-                <span class='kw'>let</span> (<span class='ident'>prefix</span>, <span class='ident'>name</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>name</span>.<span class='ident'>take</span>().<span class='ident'>expect</span>(<span class='string'>&quot;Internal error: No element name set&quot;</span>);
-                <span class='kw'>let</span> <span class='ident'>ns</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>prefix</span> {
-                    <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>namespace_for_prefix</span>(<span class='string'>&quot;&quot;</span>),
-                    <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>pre</span>) <span class='op'>=&gt;</span> <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>namespace_for_prefix</span>(<span class='kw-2'>&amp;</span><span class='ident'>pre</span>) {
-                        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>error</span>(<span class='string'>&quot;Unbound namespace prefix in tag name&quot;</span>),
-                        <span class='ident'>ns</span> <span class='op'>=&gt;</span> <span class='ident'>ns</span>
+    <span class="comment">// Inside a tag, parsing attributes</span>
+    <span class="comment">// &#39;/&#39; =&gt; ExpectClose, producing StartTag</span>
+    <span class="comment">// &#39;&gt;&#39; =&gt; OutsideTag, producing StartTag</span>
+    <span class="comment">// &#39; &#39; or &#39;\t&#39; or &#39;\r&#39; or &#39;\n&#39; =&gt; InAttrName</span>
+    <span class="kw">fn</span> <span class="ident">in_tag</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">c</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>, <span class="ident">ParserError</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="ident">c</span> {
+            <span class="string">&#39;/&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;&gt;&#39;</span> <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">attributes</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">attributes</span>, <span class="ident">Vec</span>::<span class="ident">new</span>());
+                <span class="kw">let</span> (<span class="ident">prefix</span>, <span class="ident">name</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">take</span>().<span class="ident">expect</span>(<span class="string">&quot;Internal error: No element name set&quot;</span>);
+                <span class="kw">let</span> <span class="ident">ns</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">prefix</span> {
+                    <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">namespace_for_prefix</span>(<span class="string">&quot;&quot;</span>),
+                    <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">pre</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">namespace_for_prefix</span>(<span class="kw-2">&amp;</span><span class="ident">pre</span>) {
+                        <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="self">self</span>.<span class="ident">error</span>(<span class="string">&quot;Unbound namespace prefix in tag name&quot;</span>),
+                        <span class="ident">ns</span> <span class="op">=&gt;</span> <span class="ident">ns</span>
                     }
                 };
 
-                <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>attributes_map</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span>(<span class='ident'>String</span>, <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>), <span class='ident'>String</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>HashMap</span>::<span class='ident'>new</span>();
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">attributes_map</span>: <span class="ident">HashMap</span><span class="op">&lt;</span>(<span class="ident">String</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>), <span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
 
-                <span class='comment'>// At this point attribute namespaces are really just prefixes,</span>
-                <span class='comment'>// map them to the actual namespace</span>
-                <span class='kw'>for</span> (<span class='ident'>name</span>, <span class='ident'>ns</span>, <span class='ident'>value</span>) <span class='kw'>in</span> <span class='ident'>attributes</span> {
-                    <span class='kw'>let</span> <span class='ident'>ns</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>ns</span> {
-                        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
-                        <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>prefix</span>) <span class='op'>=&gt;</span> <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>namespace_for_prefix</span>(<span class='kw-2'>&amp;</span><span class='ident'>prefix</span>) {
-                            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>error</span>(<span class='string'>&quot;Unbound namespace prefix in attribute name&quot;</span>),
-                            <span class='ident'>ns</span> <span class='op'>=&gt;</span> <span class='ident'>ns</span>
+                <span class="comment">// At this point attribute namespaces are really just prefixes,</span>
+                <span class="comment">// map them to the actual namespace</span>
+                <span class="kw">for</span> (<span class="ident">name</span>, <span class="ident">ns</span>, <span class="ident">value</span>) <span class="kw">in</span> <span class="ident">attributes</span> {
+                    <span class="kw">let</span> <span class="ident">ns</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">ns</span> {
+                        <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+                        <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">prefix</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">namespace_for_prefix</span>(<span class="kw-2">&amp;</span><span class="ident">prefix</span>) {
+                            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="self">self</span>.<span class="ident">error</span>(<span class="string">&quot;Unbound namespace prefix in attribute name&quot;</span>),
+                            <span class="ident">ns</span> <span class="op">=&gt;</span> <span class="ident">ns</span>
                         }
                     };
-                    <span class='kw'>if</span> <span class='ident'>attributes_map</span>.<span class='ident'>insert</span>((<span class='ident'>name</span>, <span class='ident'>ns</span>), <span class='ident'>value</span>).<span class='ident'>is_some</span>() {
-                        <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>error</span>(<span class='string'>&quot;Duplicate attribute&quot;</span>);
+                    <span class="kw">if</span> <span class="ident">attributes_map</span>.<span class="ident">insert</span>((<span class="ident">name</span>, <span class="ident">ns</span>), <span class="ident">value</span>).<span class="ident">is_some</span>() {
+                        <span class="kw">return</span> <span class="self">self</span>.<span class="ident">error</span>(<span class="string">&quot;Duplicate attribute&quot;</span>);
                     }
                 }
 
-                <span class='self'>self</span>.<span class='ident'>st</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>c</span> <span class='op'>==</span> <span class='string'>&#39;/&#39;</span> {
-                    <span class='self'>self</span>.<span class='ident'>name</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>((<span class='ident'>prefix</span>.<span class='ident'>clone</span>(), <span class='ident'>name</span>.<span class='ident'>clone</span>()));
-                    <span class='ident'>State</span>::<span class='ident'>ExpectClose</span>
-                } <span class='kw'>else</span> {
-                    <span class='ident'>State</span>::<span class='ident'>OutsideTag</span>
+                <span class="self">self</span>.<span class="ident">st</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">&#39;/&#39;</span> {
+                    <span class="self">self</span>.<span class="ident">name</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">prefix</span>.<span class="ident">clone</span>(), <span class="ident">name</span>.<span class="ident">clone</span>()));
+                    <span class="ident">State</span>::<span class="ident">ExpectClose</span>
+                } <span class="kw">else</span> {
+                    <span class="ident">State</span>::<span class="ident">OutsideTag</span>
                 };
 
-                <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Event</span>::<span class='ident'>ElementStart</span>(<span class='ident'>StartTag</span> {
-                    <span class='ident'>name</span>: <span class='ident'>name</span>,
-                    <span class='ident'>ns</span>: <span class='ident'>ns</span>,
-                    <span class='ident'>prefix</span>: <span class='ident'>prefix</span>,
-                    <span class='ident'>attributes</span>: <span class='ident'>attributes_map</span>
+                <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Event</span>::<span class="ident">ElementStart</span>(<span class="ident">StartTag</span> {
+                    <span class="ident">name</span>: <span class="ident">name</span>,
+                    <span class="ident">ns</span>: <span class="ident">ns</span>,
+                    <span class="ident">prefix</span>: <span class="ident">prefix</span>,
+                    <span class="ident">attributes</span>: <span class="ident">attributes_map</span>
                 })));
             }
-            <span class='string'>&#39; &#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;\t&#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;\r&#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;\n&#39;</span> <span class='op'>=&gt;</span> (),
-            _ <span class='op'>=&gt;</span> {
-                <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>push</span>(<span class='ident'>c</span>);
-                <span class='self'>self</span>.<span class='ident'>st</span> <span class='op'>=</span> <span class='ident'>State</span>::<span class='ident'>InAttrName</span>;
+            <span class="string">&#39; &#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\t&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\r&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\n&#39;</span> <span class="op">=&gt;</span> (),
+            _ <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">push</span>(<span class="ident">c</span>);
+                <span class="self">self</span>.<span class="ident">st</span> <span class="op">=</span> <span class="ident">State</span>::<span class="ident">InAttrName</span>;
             }
         }
-        <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>)
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
     }
 
-    <span class='comment'>// Inside an attribute name</span>
-    <span class='comment'>// &#39;=&#39; =&gt; ExpectDelimiter</span>
-    <span class='kw'>fn</span> <span class='ident'>in_attr_name</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>c</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='ident'>c</span> {
-            <span class='string'>&#39;=&#39;</span> <span class='op'>=&gt;</span> {
-                <span class='self'>self</span>.<span class='ident'>level</span> <span class='op'>=</span> <span class='number'>0</span>;
-                <span class='self'>self</span>.<span class='ident'>attr</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>parse_qname</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>buf</span>));
-                <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>truncate</span>(<span class='number'>0</span>);
-                <span class='self'>self</span>.<span class='ident'>st</span> <span class='op'>=</span> <span class='ident'>State</span>::<span class='ident'>ExpectDelimiter</span>;
+    <span class="comment">// Inside an attribute name</span>
+    <span class="comment">// &#39;=&#39; =&gt; ExpectDelimiter</span>
+    <span class="kw">fn</span> <span class="ident">in_attr_name</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">c</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>, <span class="ident">ParserError</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="ident">c</span> {
+            <span class="string">&#39;=&#39;</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">level</span> <span class="op">=</span> <span class="number">0</span>;
+                <span class="self">self</span>.<span class="ident">attr</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">parse_qname</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">buf</span>));
+                <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">truncate</span>(<span class="number">0</span>);
+                <span class="self">self</span>.<span class="ident">st</span> <span class="op">=</span> <span class="ident">State</span>::<span class="ident">ExpectDelimiter</span>;
             }
-            <span class='string'>&#39; &#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;\t&#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;\r&#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;\n&#39;</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>level</span> <span class='op'>=</span> <span class='number'>1</span>,
-            _ <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>level</span> <span class='op'>==</span> <span class='number'>0</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>push</span>(<span class='ident'>c</span>),
-            _ <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>error</span>(<span class='string'>&quot;Space occured in attribute name&quot;</span>)
+            <span class="string">&#39; &#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\t&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\r&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\n&#39;</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">level</span> <span class="op">=</span> <span class="number">1</span>,
+            _ <span class="kw">if</span> <span class="self">self</span>.<span class="ident">level</span> <span class="op">==</span> <span class="number">0</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">push</span>(<span class="ident">c</span>),
+            _ <span class="op">=&gt;</span> <span class="kw">return</span> <span class="self">self</span>.<span class="ident">error</span>(<span class="string">&quot;Space occured in attribute name&quot;</span>)
         }
-        <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>)
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
     }
 
-    <span class='comment'>// Inside an attribute value</span>
-    <span class='comment'>// delimiter =&gt; InTag, adds attribute</span>
-    <span class='kw'>fn</span> <span class='ident'>in_attr_value</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>c</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span> {
-        <span class='kw'>if</span> <span class='ident'>c</span> <span class='op'>==</span> <span class='self'>self</span>.<span class='ident'>delim</span>.<span class='ident'>expect</span>(<span class='string'>&quot;Internal error: In attribute value, but no delimiter set&quot;</span>) {
-            <span class='self'>self</span>.<span class='ident'>delim</span> <span class='op'>=</span> <span class='prelude-val'>None</span>;
-            <span class='self'>self</span>.<span class='ident'>st</span> <span class='op'>=</span> <span class='ident'>State</span>::<span class='ident'>InTag</span>;
-            <span class='kw'>let</span> <span class='ident'>attr</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>attr</span>.<span class='ident'>take</span>();
-            <span class='kw'>let</span> (<span class='ident'>prefix</span>, <span class='ident'>name</span>) <span class='op'>=</span>
-                <span class='ident'>attr</span>.<span class='ident'>expect</span>(<span class='string'>&quot;Internal error: In attribute value, but no attribute name set&quot;</span>);
-            <span class='kw'>let</span> <span class='ident'>value</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>unescape</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>buf</span>) {
-                <span class='prelude-val'>Ok</span>(<span class='ident'>unescaped</span>) <span class='op'>=&gt;</span> <span class='ident'>unescaped</span>,
-                <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>error</span>(<span class='string'>&quot;Found invalid entity&quot;</span>)
+    <span class="comment">// Inside an attribute value</span>
+    <span class="comment">// delimiter =&gt; InTag, adds attribute</span>
+    <span class="kw">fn</span> <span class="ident">in_attr_value</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">c</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>, <span class="ident">ParserError</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="ident">c</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">delim</span>.<span class="ident">expect</span>(<span class="string">&quot;Internal error: In attribute value, but no delimiter set&quot;</span>) {
+            <span class="self">self</span>.<span class="ident">delim</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+            <span class="self">self</span>.<span class="ident">st</span> <span class="op">=</span> <span class="ident">State</span>::<span class="ident">InTag</span>;
+            <span class="kw">let</span> <span class="ident">attr</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">attr</span>.<span class="ident">take</span>();
+            <span class="kw">let</span> (<span class="ident">prefix</span>, <span class="ident">name</span>) <span class="op">=</span>
+                <span class="ident">attr</span>.<span class="ident">expect</span>(<span class="string">&quot;Internal error: In attribute value, but no attribute name set&quot;</span>);
+            <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">unescape</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">buf</span>) {
+                <span class="prelude-val">Ok</span>(<span class="ident">unescaped</span>) <span class="op">=&gt;</span> <span class="ident">unescaped</span>,
+                <span class="prelude-val">Err</span>(_) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="self">self</span>.<span class="ident">error</span>(<span class="string">&quot;Found invalid entity&quot;</span>)
             };
-            <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>truncate</span>(<span class='number'>0</span>);
+            <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">truncate</span>(<span class="number">0</span>);
 
-            <span class='kw'>let</span> <span class='ident'>last</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>namespaces</span>.<span class='ident'>last_mut</span>().<span class='ident'>expect</span>(<span class='string'>&quot;Internal error: Empty namespace stack&quot;</span>);
-            <span class='kw'>match</span> <span class='ident'>prefix</span> {
-                <span class='prelude-val'>None</span> <span class='kw'>if</span> <span class='ident'>name</span> <span class='op'>==</span> <span class='string'>&quot;xmlns&quot;</span> <span class='op'>=&gt;</span> {
-                    <span class='ident'>last</span>.<span class='ident'>insert</span>(<span class='ident'>String</span>::<span class='ident'>new</span>(), <span class='ident'>value</span>.<span class='ident'>clone</span>());
+            <span class="kw">let</span> <span class="ident">last</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">namespaces</span>.<span class="ident">last_mut</span>().<span class="ident">expect</span>(<span class="string">&quot;Internal error: Empty namespace stack&quot;</span>);
+            <span class="kw">match</span> <span class="ident">prefix</span> {
+                <span class="prelude-val">None</span> <span class="kw">if</span> <span class="ident">name</span> <span class="op">==</span> <span class="string">&quot;xmlns&quot;</span> <span class="op">=&gt;</span> {
+                    <span class="ident">last</span>.<span class="ident">insert</span>(<span class="ident">String</span>::<span class="ident">new</span>(), <span class="ident">value</span>.<span class="ident">clone</span>());
                 }
-                <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>prefix</span>) <span class='kw'>if</span> <span class='op'>*</span><span class='ident'>prefix</span> <span class='op'>==</span> <span class='string'>&quot;xmlns&quot;</span> <span class='op'>=&gt;</span> {
-                    <span class='ident'>last</span>.<span class='ident'>insert</span>(<span class='ident'>name</span>.<span class='ident'>clone</span>(), <span class='ident'>value</span>.<span class='ident'>clone</span>());
+                <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">prefix</span>) <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">prefix</span> <span class="op">==</span> <span class="string">&quot;xmlns&quot;</span> <span class="op">=&gt;</span> {
+                    <span class="ident">last</span>.<span class="ident">insert</span>(<span class="ident">name</span>.<span class="ident">clone</span>(), <span class="ident">value</span>.<span class="ident">clone</span>());
                 }
-                _ <span class='op'>=&gt;</span> ()
+                _ <span class="op">=&gt;</span> ()
             }
 
-            <span class='self'>self</span>.<span class='ident'>attributes</span>.<span class='ident'>push</span>((<span class='ident'>name</span>, <span class='ident'>prefix</span>, <span class='ident'>value</span>));
-        } <span class='kw'>else</span> {
-            <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>push</span>(<span class='ident'>c</span>);
+            <span class="self">self</span>.<span class="ident">attributes</span>.<span class="ident">push</span>((<span class="ident">name</span>, <span class="ident">prefix</span>, <span class="ident">value</span>));
+        } <span class="kw">else</span> {
+            <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">push</span>(<span class="ident">c</span>);
         }
-        <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>)
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
     }
 
-    <span class='comment'>// Looking for an attribute value delimiter</span>
-    <span class='comment'>// &#39;&quot;&#39; or &#39;\&#39;&#39; =&gt; InAttrValue, sets delimiter</span>
-    <span class='kw'>fn</span> <span class='ident'>expect_delimiter</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>c</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='ident'>c</span> {
-            <span class='string'>&#39;&quot;&#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;\&#39;&#39;</span> <span class='op'>=&gt;</span> {
-                <span class='self'>self</span>.<span class='ident'>delim</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>c</span>);
-                <span class='self'>self</span>.<span class='ident'>st</span> <span class='op'>=</span> <span class='ident'>State</span>::<span class='ident'>InAttrValue</span>;
+    <span class="comment">// Looking for an attribute value delimiter</span>
+    <span class="comment">// &#39;&quot;&#39; or &#39;\&#39;&#39; =&gt; InAttrValue, sets delimiter</span>
+    <span class="kw">fn</span> <span class="ident">expect_delimiter</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">c</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>, <span class="ident">ParserError</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="ident">c</span> {
+            <span class="string">&#39;&quot;&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\&#39;&#39;</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">delim</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">c</span>);
+                <span class="self">self</span>.<span class="ident">st</span> <span class="op">=</span> <span class="ident">State</span>::<span class="ident">InAttrValue</span>;
             }
-            <span class='string'>&#39; &#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;\t&#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;\r&#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;\n&#39;</span> <span class='op'>=&gt;</span> (),
-            _ <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>error</span>(<span class='string'>&quot;Attribute value not enclosed in &#39; or \&quot;&quot;</span>)
+            <span class="string">&#39; &#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\t&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\r&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\n&#39;</span> <span class="op">=&gt;</span> (),
+            _ <span class="op">=&gt;</span> <span class="kw">return</span> <span class="self">self</span>.<span class="ident">error</span>(<span class="string">&quot;Attribute value not enclosed in &#39; or \&quot;&quot;</span>)
         }
-        <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>)
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
     }
 
-    <span class='comment'>// Expect closing &#39;&gt;&#39; of an empty-element tag (no whitespace allowed)</span>
-    <span class='comment'>// &#39;&gt;&#39; =&gt; OutsideTag</span>
-    <span class='kw'>fn</span> <span class='ident'>expect_close</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>c</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='ident'>c</span> {
-            <span class='string'>&#39;&gt;&#39;</span> <span class='op'>=&gt;</span> {
-                <span class='self'>self</span>.<span class='ident'>st</span> <span class='op'>=</span> <span class='ident'>State</span>::<span class='ident'>OutsideTag</span>;
-                <span class='kw'>let</span> (<span class='ident'>prefix</span>, <span class='ident'>name</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>name</span>.<span class='ident'>take</span>().<span class='ident'>expect</span>(<span class='string'>&quot;Internal error: No element name set&quot;</span>);
-                <span class='kw'>let</span> <span class='ident'>ns</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>prefix</span> {
-                    <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>namespace_for_prefix</span>(<span class='string'>&quot;&quot;</span>),
-                    <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>pre</span>) <span class='op'>=&gt;</span> <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>namespace_for_prefix</span>(<span class='kw-2'>&amp;</span><span class='ident'>pre</span>) {
-                        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>error</span>(<span class='string'>&quot;Unbound namespace prefix in tag name&quot;</span>),
-                        <span class='ident'>ns</span> <span class='op'>=&gt;</span> <span class='ident'>ns</span>
+    <span class="comment">// Expect closing &#39;&gt;&#39; of an empty-element tag (no whitespace allowed)</span>
+    <span class="comment">// &#39;&gt;&#39; =&gt; OutsideTag</span>
+    <span class="kw">fn</span> <span class="ident">expect_close</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">c</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>, <span class="ident">ParserError</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="ident">c</span> {
+            <span class="string">&#39;&gt;&#39;</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">st</span> <span class="op">=</span> <span class="ident">State</span>::<span class="ident">OutsideTag</span>;
+                <span class="kw">let</span> (<span class="ident">prefix</span>, <span class="ident">name</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">take</span>().<span class="ident">expect</span>(<span class="string">&quot;Internal error: No element name set&quot;</span>);
+                <span class="kw">let</span> <span class="ident">ns</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">prefix</span> {
+                    <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">namespace_for_prefix</span>(<span class="string">&quot;&quot;</span>),
+                    <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">pre</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">namespace_for_prefix</span>(<span class="kw-2">&amp;</span><span class="ident">pre</span>) {
+                        <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="self">self</span>.<span class="ident">error</span>(<span class="string">&quot;Unbound namespace prefix in tag name&quot;</span>),
+                        <span class="ident">ns</span> <span class="op">=&gt;</span> <span class="ident">ns</span>
                     }
                 };
-                <span class='self'>self</span>.<span class='ident'>namespaces</span>.<span class='ident'>pop</span>();
-                <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Event</span>::<span class='ident'>ElementEnd</span>(<span class='ident'>EndTag</span> { <span class='ident'>name</span>: <span class='ident'>name</span>, <span class='ident'>ns</span>: <span class='ident'>ns</span>, <span class='ident'>prefix</span>: <span class='ident'>prefix</span> })))
+                <span class="self">self</span>.<span class="ident">namespaces</span>.<span class="ident">pop</span>();
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Event</span>::<span class="ident">ElementEnd</span>(<span class="ident">EndTag</span> { <span class="ident">name</span>: <span class="ident">name</span>, <span class="ident">ns</span>: <span class="ident">ns</span>, <span class="ident">prefix</span>: <span class="ident">prefix</span> })))
             }
-            _ <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>error</span>(<span class='string'>&quot;Expected &#39;&gt;&#39; to close tag&quot;</span>)
+            _ <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">error</span>(<span class="string">&quot;Expected &#39;&gt;&#39; to close tag&quot;</span>)
        }
     }
 
-    <span class='comment'>// Expect closing &#39;&gt;&#39; of a start tag</span>
-    <span class='comment'>// &#39;&gt;&#39; =&gt; OutsideTag</span>
-    <span class='kw'>fn</span> <span class='ident'>expect_space_or_close</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>c</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='ident'>c</span> {
-            <span class='string'>&#39; &#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;\t&#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;\r&#39;</span>
-            <span class='op'>|</span> <span class='string'>&#39;\n&#39;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>),
-            <span class='string'>&#39;&gt;&#39;</span> <span class='op'>=&gt;</span> {
-                <span class='self'>self</span>.<span class='ident'>st</span> <span class='op'>=</span> <span class='ident'>State</span>::<span class='ident'>OutsideTag</span>;
-                <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>)
+    <span class="comment">// Expect closing &#39;&gt;&#39; of a start tag</span>
+    <span class="comment">// &#39;&gt;&#39; =&gt; OutsideTag</span>
+    <span class="kw">fn</span> <span class="ident">expect_space_or_close</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">c</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>, <span class="ident">ParserError</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="ident">c</span> {
+            <span class="string">&#39; &#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\t&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\r&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\n&#39;</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
+            <span class="string">&#39;&gt;&#39;</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">st</span> <span class="op">=</span> <span class="ident">State</span>::<span class="ident">OutsideTag</span>;
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
             }
-            _ <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>error</span>(<span class='string'>&quot;Expected &#39;&gt;&#39; to close tag, or LWS&quot;</span>)
+            _ <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">error</span>(<span class="string">&quot;Expected &#39;&gt;&#39; to close tag, or LWS&quot;</span>)
        }
     }
 
-    <span class='comment'>// After an &#39;!&#39; trying to determine the type of the following construct</span>
-    <span class='comment'>// &#39;-&#39; =&gt; InCommentOpening</span>
-    <span class='comment'>// &#39;[&#39; =&gt; InCDATAOpening</span>
-    <span class='comment'>// &#39;D&#39; =&gt; InDoctype</span>
-    <span class='kw'>fn</span> <span class='ident'>in_exclamation_mark</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>c</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>st</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>c</span> {
-            <span class='string'>&#39;-&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>State</span>::<span class='ident'>InCommentOpening</span>,
-            <span class='string'>&#39;[&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>State</span>::<span class='ident'>InCDATAOpening</span>,
-            <span class='string'>&#39;D&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>State</span>::<span class='ident'>InDoctype</span>,
-            _ <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>error</span>(<span class='string'>&quot;Malformed XML&quot;</span>)
+    <span class="comment">// After an &#39;!&#39; trying to determine the type of the following construct</span>
+    <span class="comment">// &#39;-&#39; =&gt; InCommentOpening</span>
+    <span class="comment">// &#39;[&#39; =&gt; InCDATAOpening</span>
+    <span class="comment">// &#39;D&#39; =&gt; InDoctype</span>
+    <span class="kw">fn</span> <span class="ident">in_exclamation_mark</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">c</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>, <span class="ident">ParserError</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">st</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">c</span> {
+            <span class="string">&#39;-&#39;</span> <span class="op">=&gt;</span> <span class="ident">State</span>::<span class="ident">InCommentOpening</span>,
+            <span class="string">&#39;[&#39;</span> <span class="op">=&gt;</span> <span class="ident">State</span>::<span class="ident">InCDATAOpening</span>,
+            <span class="string">&#39;D&#39;</span> <span class="op">=&gt;</span> <span class="ident">State</span>::<span class="ident">InDoctype</span>,
+            _ <span class="op">=&gt;</span> <span class="kw">return</span> <span class="self">self</span>.<span class="ident">error</span>(<span class="string">&quot;Malformed XML&quot;</span>)
         };
-        <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>)
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
     }
 
-    <span class='comment'>// Opening sequence of Event::CDATA</span>
-    <span class='comment'>// &#39;C&#39; &#39;D&#39; &#39;A&#39; &#39;T&#39; &#39;A&#39; &#39;[&#39; =&gt; InCDATA</span>
-    <span class='kw'>fn</span> <span class='ident'>in_cdata_opening</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>c</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span> {
-        <span class='kw'>static</span> <span class='ident'>CDATA_PATTERN</span>: [<span class='ident'>char</span>; <span class='number'>6</span>] <span class='op'>=</span> [<span class='string'>&#39;C&#39;</span>, <span class='string'>&#39;D&#39;</span>, <span class='string'>&#39;A&#39;</span>, <span class='string'>&#39;T&#39;</span>, <span class='string'>&#39;A&#39;</span>, <span class='string'>&#39;[&#39;</span>];
-        <span class='kw'>if</span> <span class='ident'>c</span> <span class='op'>==</span> <span class='ident'>CDATA_PATTERN</span>[<span class='self'>self</span>.<span class='ident'>level</span> <span class='kw'>as</span> <span class='ident'>usize</span>] {
-            <span class='self'>self</span>.<span class='ident'>level</span> <span class='op'>+=</span> <span class='number'>1</span>;
-        } <span class='kw'>else</span> {
-            <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>error</span>(<span class='string'>&quot;Invalid CDATA opening sequence&quot;</span>)
+    <span class="comment">// Opening sequence of Event::CDATA</span>
+    <span class="comment">// &#39;C&#39; &#39;D&#39; &#39;A&#39; &#39;T&#39; &#39;A&#39; &#39;[&#39; =&gt; InCDATA</span>
+    <span class="kw">fn</span> <span class="ident">in_cdata_opening</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">c</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>, <span class="ident">ParserError</span><span class="op">&gt;</span> {
+        <span class="kw">static</span> <span class="ident">CDATA_PATTERN</span>: [<span class="ident">char</span>; <span class="number">6</span>] <span class="op">=</span> [<span class="string">&#39;C&#39;</span>, <span class="string">&#39;D&#39;</span>, <span class="string">&#39;A&#39;</span>, <span class="string">&#39;T&#39;</span>, <span class="string">&#39;A&#39;</span>, <span class="string">&#39;[&#39;</span>];
+        <span class="kw">if</span> <span class="ident">c</span> <span class="op">==</span> <span class="ident">CDATA_PATTERN</span>[<span class="self">self</span>.<span class="ident">level</span> <span class="kw">as</span> <span class="ident">usize</span>] {
+            <span class="self">self</span>.<span class="ident">level</span> <span class="op">+=</span> <span class="number">1</span>;
+        } <span class="kw">else</span> {
+            <span class="kw">return</span> <span class="self">self</span>.<span class="ident">error</span>(<span class="string">&quot;Invalid CDATA opening sequence&quot;</span>)
         }
 
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>level</span> <span class='op'>==</span> <span class='number'>6</span> {
-            <span class='self'>self</span>.<span class='ident'>level</span> <span class='op'>=</span> <span class='number'>0</span>;
-            <span class='self'>self</span>.<span class='ident'>st</span> <span class='op'>=</span> <span class='ident'>State</span>::<span class='ident'>InCDATA</span>;
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">level</span> <span class="op">==</span> <span class="number">6</span> {
+            <span class="self">self</span>.<span class="ident">level</span> <span class="op">=</span> <span class="number">0</span>;
+            <span class="self">self</span>.<span class="ident">st</span> <span class="op">=</span> <span class="ident">State</span>::<span class="ident">InCDATA</span>;
         }
-        <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>)
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
     }
 
-    <span class='comment'>// Inside CDATA</span>
-    <span class='comment'>// &#39;]&#39; &#39;]&#39; &#39;&gt;&#39; =&gt; OutsideTag, producing Event::CDATA</span>
-    <span class='kw'>fn</span> <span class='ident'>in_cdata</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>c</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='ident'>c</span> {
-            <span class='string'>&#39;]&#39;</span> <span class='op'>=&gt;</span> {
-                <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>push</span>(<span class='ident'>c</span>);
-                <span class='self'>self</span>.<span class='ident'>level</span> <span class='op'>+=</span> <span class='number'>1</span>;
+    <span class="comment">// Inside CDATA</span>
+    <span class="comment">// &#39;]&#39; &#39;]&#39; &#39;&gt;&#39; =&gt; OutsideTag, producing Event::CDATA</span>
+    <span class="kw">fn</span> <span class="ident">in_cdata</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">c</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>, <span class="ident">ParserError</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="ident">c</span> {
+            <span class="string">&#39;]&#39;</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">push</span>(<span class="ident">c</span>);
+                <span class="self">self</span>.<span class="ident">level</span> <span class="op">+=</span> <span class="number">1</span>;
             }
-            <span class='string'>&#39;&gt;&#39;</span> <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>level</span> <span class='op'>&gt;=</span> <span class='number'>2</span> <span class='op'>=&gt;</span> {
-                <span class='self'>self</span>.<span class='ident'>st</span> <span class='op'>=</span> <span class='ident'>State</span>::<span class='ident'>OutsideTag</span>;
-                <span class='self'>self</span>.<span class='ident'>level</span> <span class='op'>=</span> <span class='number'>0</span>;
-                <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>len</span>();
-                <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>truncate</span>(<span class='ident'>len</span> <span class='op'>-</span> <span class='number'>2</span>);
-                <span class='kw'>let</span> <span class='ident'>buf</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>replace</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>buf</span>, <span class='ident'>String</span>::<span class='ident'>new</span>());
-                <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Event</span>::<span class='ident'>CDATA</span>(<span class='ident'>buf</span>)))
+            <span class="string">&#39;&gt;&#39;</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">level</span> <span class="op">&gt;=</span> <span class="number">2</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">st</span> <span class="op">=</span> <span class="ident">State</span>::<span class="ident">OutsideTag</span>;
+                <span class="self">self</span>.<span class="ident">level</span> <span class="op">=</span> <span class="number">0</span>;
+                <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">len</span>();
+                <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">truncate</span>(<span class="ident">len</span> <span class="op">-</span> <span class="number">2</span>);
+                <span class="kw">let</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">buf</span>, <span class="ident">String</span>::<span class="ident">new</span>());
+                <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Event</span>::<span class="ident">CDATA</span>(<span class="ident">buf</span>)))
             }
-            _ <span class='op'>=&gt;</span> {
-                <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>push</span>(<span class='ident'>c</span>);
-                <span class='self'>self</span>.<span class='ident'>level</span> <span class='op'>=</span> <span class='number'>0</span>;
+            _ <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">push</span>(<span class="ident">c</span>);
+                <span class="self">self</span>.<span class="ident">level</span> <span class="op">=</span> <span class="number">0</span>;
             }
         }
-        <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>)
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
     }
 
-    <span class='comment'>// Opening sequence of a comment</span>
-    <span class='comment'>// &#39;-&#39; =&gt; InComment1</span>
-    <span class='kw'>fn</span> <span class='ident'>in_comment_opening</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>c</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span> {
-        <span class='kw'>if</span> <span class='ident'>c</span> <span class='op'>==</span> <span class='string'>&#39;-&#39;</span> {
-            <span class='self'>self</span>.<span class='ident'>st</span> <span class='op'>=</span> <span class='ident'>State</span>::<span class='ident'>InComment1</span>;
-            <span class='self'>self</span>.<span class='ident'>level</span> <span class='op'>=</span> <span class='number'>0</span>;
-            <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>)
-        } <span class='kw'>else</span> {
-            <span class='self'>self</span>.<span class='ident'>error</span>(<span class='string'>&quot;Expected 2nd &#39;-&#39; to start comment&quot;</span>)
+    <span class="comment">// Opening sequence of a comment</span>
+    <span class="comment">// &#39;-&#39; =&gt; InComment1</span>
+    <span class="kw">fn</span> <span class="ident">in_comment_opening</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">c</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>, <span class="ident">ParserError</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">&#39;-&#39;</span> {
+            <span class="self">self</span>.<span class="ident">st</span> <span class="op">=</span> <span class="ident">State</span>::<span class="ident">InComment1</span>;
+            <span class="self">self</span>.<span class="ident">level</span> <span class="op">=</span> <span class="number">0</span>;
+            <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
+        } <span class="kw">else</span> {
+            <span class="self">self</span>.<span class="ident">error</span>(<span class="string">&quot;Expected 2nd &#39;-&#39; to start comment&quot;</span>)
         }
     }
 
-    <span class='comment'>// Inside a comment</span>
-    <span class='comment'>// &#39;-&#39; &#39;-&#39; =&gt; InComment2</span>
-    <span class='kw'>fn</span> <span class='ident'>in_comment1</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>c</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span> {
-        <span class='kw'>if</span> <span class='ident'>c</span> <span class='op'>==</span> <span class='string'>&#39;-&#39;</span> {
-            <span class='self'>self</span>.<span class='ident'>level</span> <span class='op'>+=</span> <span class='number'>1</span>;
-        } <span class='kw'>else</span> {
-            <span class='self'>self</span>.<span class='ident'>level</span> <span class='op'>=</span> <span class='number'>0</span>;
+    <span class="comment">// Inside a comment</span>
+    <span class="comment">// &#39;-&#39; &#39;-&#39; =&gt; InComment2</span>
+    <span class="kw">fn</span> <span class="ident">in_comment1</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">c</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>, <span class="ident">ParserError</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">&#39;-&#39;</span> {
+            <span class="self">self</span>.<span class="ident">level</span> <span class="op">+=</span> <span class="number">1</span>;
+        } <span class="kw">else</span> {
+            <span class="self">self</span>.<span class="ident">level</span> <span class="op">=</span> <span class="number">0</span>;
         }
 
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>level</span> <span class='op'>==</span> <span class='number'>2</span> {
-            <span class='self'>self</span>.<span class='ident'>level</span> <span class='op'>=</span> <span class='number'>0</span>;
-            <span class='self'>self</span>.<span class='ident'>st</span> <span class='op'>=</span> <span class='ident'>State</span>::<span class='ident'>InComment2</span>;
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">level</span> <span class="op">==</span> <span class="number">2</span> {
+            <span class="self">self</span>.<span class="ident">level</span> <span class="op">=</span> <span class="number">0</span>;
+            <span class="self">self</span>.<span class="ident">st</span> <span class="op">=</span> <span class="ident">State</span>::<span class="ident">InComment2</span>;
         }
 
-        <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>push</span>(<span class='ident'>c</span>);
+        <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">push</span>(<span class="ident">c</span>);
 
-        <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>)
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
     }
 
-    <span class='comment'>// Closing a comment</span>
-    <span class='comment'>// &#39;&gt;&#39; =&gt; OutsideTag, producing Comment</span>
-    <span class='kw'>fn</span> <span class='ident'>in_comment2</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>c</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span> {
-        <span class='kw'>if</span> <span class='ident'>c</span> <span class='op'>!=</span> <span class='string'>&#39;&gt;&#39;</span> {
-            <span class='self'>self</span>.<span class='ident'>error</span>(<span class='string'>&quot;No more than one adjacent &#39;-&#39; allowed in a comment&quot;</span>)
-        } <span class='kw'>else</span> {
-            <span class='self'>self</span>.<span class='ident'>st</span> <span class='op'>=</span> <span class='ident'>State</span>::<span class='ident'>OutsideTag</span>;
-            <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>len</span>();
-            <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>truncate</span>(<span class='ident'>len</span> <span class='op'>-</span> <span class='number'>2</span>);
-            <span class='kw'>let</span> <span class='ident'>buf</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>replace</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>buf</span>, <span class='ident'>String</span>::<span class='ident'>new</span>());
-            <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Event</span>::<span class='ident'>Comment</span>(<span class='ident'>buf</span>)))
+    <span class="comment">// Closing a comment</span>
+    <span class="comment">// &#39;&gt;&#39; =&gt; OutsideTag, producing Comment</span>
+    <span class="kw">fn</span> <span class="ident">in_comment2</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">c</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>, <span class="ident">ParserError</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="ident">c</span> <span class="op">!=</span> <span class="string">&#39;&gt;&#39;</span> {
+            <span class="self">self</span>.<span class="ident">error</span>(<span class="string">&quot;No more than one adjacent &#39;-&#39; allowed in a comment&quot;</span>)
+        } <span class="kw">else</span> {
+            <span class="self">self</span>.<span class="ident">st</span> <span class="op">=</span> <span class="ident">State</span>::<span class="ident">OutsideTag</span>;
+            <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">len</span>();
+            <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">truncate</span>(<span class="ident">len</span> <span class="op">-</span> <span class="number">2</span>);
+            <span class="kw">let</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">buf</span>, <span class="ident">String</span>::<span class="ident">new</span>());
+            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Event</span>::<span class="ident">Comment</span>(<span class="ident">buf</span>)))
         }
     }
 
-    <span class='comment'>// Inside a doctype</span>
-    <span class='comment'>// &#39;&gt;&#39; after appropriate opening =&gt; OutsideTag</span>
-    <span class='kw'>fn</span> <span class='ident'>in_doctype</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>c</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span> {
-        <span class='kw'>static</span> <span class='ident'>DOCTYPE_PATTERN</span>: [<span class='ident'>char</span>; <span class='number'>6</span>] <span class='op'>=</span> [<span class='string'>&#39;O&#39;</span>, <span class='string'>&#39;C&#39;</span>, <span class='string'>&#39;T&#39;</span>, <span class='string'>&#39;Y&#39;</span>, <span class='string'>&#39;P&#39;</span>, <span class='string'>&#39;E&#39;</span>];
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>level</span> {
-            <span class='number'>0</span>...<span class='number'>5</span> <span class='op'>=&gt;</span> <span class='kw'>if</span> <span class='ident'>c</span> <span class='op'>==</span> <span class='ident'>DOCTYPE_PATTERN</span>[<span class='self'>self</span>.<span class='ident'>level</span> <span class='kw'>as</span> <span class='ident'>usize</span>] {
-                <span class='self'>self</span>.<span class='ident'>level</span> <span class='op'>+=</span> <span class='number'>1</span>;
-            } <span class='kw'>else</span> {
-                <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>error</span>(<span class='string'>&quot;Invalid DOCTYPE&quot;</span>);
+    <span class="comment">// Inside a doctype</span>
+    <span class="comment">// &#39;&gt;&#39; after appropriate opening =&gt; OutsideTag</span>
+    <span class="kw">fn</span> <span class="ident">in_doctype</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">c</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>, <span class="ident">ParserError</span><span class="op">&gt;</span> {
+        <span class="kw">static</span> <span class="ident">DOCTYPE_PATTERN</span>: [<span class="ident">char</span>; <span class="number">6</span>] <span class="op">=</span> [<span class="string">&#39;O&#39;</span>, <span class="string">&#39;C&#39;</span>, <span class="string">&#39;T&#39;</span>, <span class="string">&#39;Y&#39;</span>, <span class="string">&#39;P&#39;</span>, <span class="string">&#39;E&#39;</span>];
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">level</span> {
+            <span class="number">0</span>...<span class="number">5</span> <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">c</span> <span class="op">==</span> <span class="ident">DOCTYPE_PATTERN</span>[<span class="self">self</span>.<span class="ident">level</span> <span class="kw">as</span> <span class="ident">usize</span>] {
+                <span class="self">self</span>.<span class="ident">level</span> <span class="op">+=</span> <span class="number">1</span>;
+            } <span class="kw">else</span> {
+                <span class="kw">return</span> <span class="self">self</span>.<span class="ident">error</span>(<span class="string">&quot;Invalid DOCTYPE&quot;</span>);
             },
-            <span class='number'>6</span> <span class='op'>=&gt;</span> {
-                <span class='kw'>match</span> <span class='ident'>c</span> {
-                    <span class='string'>&#39; &#39;</span>
-                    <span class='op'>|</span> <span class='string'>&#39;\t&#39;</span>
-                    <span class='op'>|</span> <span class='string'>&#39;\r&#39;</span>
-                    <span class='op'>|</span> <span class='string'>&#39;\n&#39;</span> <span class='op'>=&gt;</span> (),
-                    _ <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>error</span>(<span class='string'>&quot;Invalid DOCTYPE&quot;</span>)
+            <span class="number">6</span> <span class="op">=&gt;</span> {
+                <span class="kw">match</span> <span class="ident">c</span> {
+                    <span class="string">&#39; &#39;</span>
+                    <span class="op">|</span> <span class="string">&#39;\t&#39;</span>
+                    <span class="op">|</span> <span class="string">&#39;\r&#39;</span>
+                    <span class="op">|</span> <span class="string">&#39;\n&#39;</span> <span class="op">=&gt;</span> (),
+                    _ <span class="op">=&gt;</span> <span class="kw">return</span> <span class="self">self</span>.<span class="ident">error</span>(<span class="string">&quot;Invalid DOCTYPE&quot;</span>)
                 }
-                <span class='self'>self</span>.<span class='ident'>level</span> <span class='op'>+=</span> <span class='number'>1</span>;
+                <span class="self">self</span>.<span class="ident">level</span> <span class="op">+=</span> <span class="number">1</span>;
             }
-            _ <span class='kw'>if</span> <span class='ident'>c</span> <span class='op'>==</span> <span class='string'>&#39;&gt;&#39;</span> <span class='op'>=&gt;</span> {
-                <span class='self'>self</span>.<span class='ident'>level</span> <span class='op'>=</span> <span class='number'>0</span>;
-                <span class='self'>self</span>.<span class='ident'>st</span> <span class='op'>=</span> <span class='ident'>State</span>::<span class='ident'>OutsideTag</span>;
+            _ <span class="kw">if</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">&#39;&gt;&#39;</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">level</span> <span class="op">=</span> <span class="number">0</span>;
+                <span class="self">self</span>.<span class="ident">st</span> <span class="op">=</span> <span class="ident">State</span>::<span class="ident">OutsideTag</span>;
             }
-            _ <span class='op'>=&gt;</span> ()
+            _ <span class="op">=&gt;</span> ()
         }
-        <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>)
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
     }
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>parser_tests</span> {
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>HashMap</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">parser_tests</span> {
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>;
 
-    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>Parser</span>;
-    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>super</span>::{<span class='ident'>Event</span>, <span class='ident'>ParserError</span>, <span class='ident'>StartTag</span>, <span class='ident'>EndTag</span>};
+    <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Parser</span>;
+    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw">super</span>::{<span class="ident">Event</span>, <span class="ident">ParserError</span>, <span class="ident">StartTag</span>, <span class="ident">EndTag</span>};
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_start_tag</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='ident'>Parser</span>::<span class='ident'>new</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>0u8</span>;
-        <span class='ident'>p</span>.<span class='ident'>feed_str</span>(<span class='string'>&quot;&lt;a&gt;&quot;</span>);
-        <span class='kw'>for</span> <span class='ident'>event</span> <span class='kw'>in</span> <span class='ident'>p</span> {
-            <span class='ident'>i</span> <span class='op'>+=</span> <span class='number'>1</span>;
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>event</span>, <span class='prelude-val'>Ok</span>(<span class='ident'>Event</span>::<span class='ident'>ElementStart</span>(<span class='ident'>StartTag</span> {
-                <span class='ident'>name</span>: <span class='string'>&quot;a&quot;</span>.<span class='ident'>to_string</span>(),
-                <span class='ident'>ns</span>: <span class='prelude-val'>None</span>,
-                <span class='ident'>prefix</span>: <span class='prelude-val'>None</span>,
-                <span class='ident'>attributes</span>: <span class='ident'>HashMap</span>::<span class='ident'>new</span>()
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_start_tag</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">Parser</span>::<span class="ident">new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0u8</span>;
+        <span class="ident">p</span>.<span class="ident">feed_str</span>(<span class="string">&quot;&lt;a&gt;&quot;</span>);
+        <span class="kw">for</span> <span class="ident">event</span> <span class="kw">in</span> <span class="ident">p</span> {
+            <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">event</span>, <span class="prelude-val">Ok</span>(<span class="ident">Event</span>::<span class="ident">ElementStart</span>(<span class="ident">StartTag</span> {
+                <span class="ident">name</span>: <span class="string">&quot;a&quot;</span>.<span class="ident">to_string</span>(),
+                <span class="ident">ns</span>: <span class="prelude-val">None</span>,
+                <span class="ident">prefix</span>: <span class="prelude-val">None</span>,
+                <span class="ident">attributes</span>: <span class="ident">HashMap</span>::<span class="ident">new</span>()
             })));
         }
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>i</span>, <span class='number'>1u8</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">i</span>, <span class="number">1u8</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_end_tag</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='ident'>Parser</span>::<span class='ident'>new</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>0u8</span>;
-        <span class='ident'>p</span>.<span class='ident'>feed_str</span>(<span class='string'>&quot;&lt;/a&gt;&quot;</span>);
-        <span class='kw'>for</span> <span class='ident'>event</span> <span class='kw'>in</span> <span class='ident'>p</span> {
-            <span class='ident'>i</span> <span class='op'>+=</span> <span class='number'>1</span>;
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>event</span>, <span class='prelude-val'>Ok</span>(<span class='ident'>Event</span>::<span class='ident'>ElementEnd</span>(<span class='ident'>EndTag</span> {
-                <span class='ident'>name</span>: <span class='string'>&quot;a&quot;</span>.<span class='ident'>to_string</span>(),
-                <span class='ident'>ns</span>: <span class='prelude-val'>None</span>,
-                <span class='ident'>prefix</span>: <span class='prelude-val'>None</span>
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_end_tag</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">Parser</span>::<span class="ident">new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0u8</span>;
+        <span class="ident">p</span>.<span class="ident">feed_str</span>(<span class="string">&quot;&lt;/a&gt;&quot;</span>);
+        <span class="kw">for</span> <span class="ident">event</span> <span class="kw">in</span> <span class="ident">p</span> {
+            <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">event</span>, <span class="prelude-val">Ok</span>(<span class="ident">Event</span>::<span class="ident">ElementEnd</span>(<span class="ident">EndTag</span> {
+                <span class="ident">name</span>: <span class="string">&quot;a&quot;</span>.<span class="ident">to_string</span>(),
+                <span class="ident">ns</span>: <span class="prelude-val">None</span>,
+                <span class="ident">prefix</span>: <span class="prelude-val">None</span>
             })));
         }
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>i</span>, <span class='number'>1u8</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">i</span>, <span class="number">1u8</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_self_closing_with_space</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='ident'>Parser</span>::<span class='ident'>new</span>();
-        <span class='ident'>p</span>.<span class='ident'>feed_str</span>(<span class='string'>&quot;&lt;register /&gt;&quot;</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_self_closing_with_space</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">Parser</span>::<span class="ident">new</span>();
+        <span class="ident">p</span>.<span class="ident">feed_str</span>(<span class="string">&quot;&lt;register /&gt;&quot;</span>);
 
-        <span class='kw'>let</span> <span class='ident'>v</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Event</span>, <span class='ident'>ParserError</span><span class='op'>&gt;&gt;</span> <span class='op'>=</span> <span class='ident'>p</span>.<span class='ident'>collect</span>();
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='macro'>vec</span><span class='macro'>!</span>[
-            <span class='prelude-val'>Ok</span>(<span class='ident'>Event</span>::<span class='ident'>ElementStart</span>(<span class='ident'>StartTag</span> {
-                <span class='ident'>name</span>: <span class='string'>&quot;register&quot;</span>.<span class='ident'>to_string</span>(),
-                <span class='ident'>ns</span>: <span class='prelude-val'>None</span>,
-                <span class='ident'>prefix</span>: <span class='prelude-val'>None</span>,
-                <span class='ident'>attributes</span>: <span class='ident'>HashMap</span>::<span class='ident'>new</span>()
+        <span class="kw">let</span> <span class="ident">v</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Event</span>, <span class="ident">ParserError</span><span class="op">&gt;&gt;</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">collect</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">v</span>, <span class="macro">vec</span><span class="macro">!</span>[
+            <span class="prelude-val">Ok</span>(<span class="ident">Event</span>::<span class="ident">ElementStart</span>(<span class="ident">StartTag</span> {
+                <span class="ident">name</span>: <span class="string">&quot;register&quot;</span>.<span class="ident">to_string</span>(),
+                <span class="ident">ns</span>: <span class="prelude-val">None</span>,
+                <span class="ident">prefix</span>: <span class="prelude-val">None</span>,
+                <span class="ident">attributes</span>: <span class="ident">HashMap</span>::<span class="ident">new</span>()
             })),
-            <span class='prelude-val'>Ok</span>(<span class='ident'>Event</span>::<span class='ident'>ElementEnd</span>(<span class='ident'>EndTag</span> {
-                <span class='ident'>name</span>: <span class='string'>&quot;register&quot;</span>.<span class='ident'>to_string</span>(),
-                <span class='ident'>ns</span>: <span class='prelude-val'>None</span>,
-                <span class='ident'>prefix</span>: <span class='prelude-val'>None</span>,
+            <span class="prelude-val">Ok</span>(<span class="ident">Event</span>::<span class="ident">ElementEnd</span>(<span class="ident">EndTag</span> {
+                <span class="ident">name</span>: <span class="string">&quot;register&quot;</span>.<span class="ident">to_string</span>(),
+                <span class="ident">ns</span>: <span class="prelude-val">None</span>,
+                <span class="ident">prefix</span>: <span class="prelude-val">None</span>,
             }))
         ]);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_self_closing_without_space</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='ident'>Parser</span>::<span class='ident'>new</span>();
-        <span class='ident'>p</span>.<span class='ident'>feed_str</span>(<span class='string'>&quot;&lt;register/&gt;&quot;</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_self_closing_without_space</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">Parser</span>::<span class="ident">new</span>();
+        <span class="ident">p</span>.<span class="ident">feed_str</span>(<span class="string">&quot;&lt;register/&gt;&quot;</span>);
 
-        <span class='kw'>let</span> <span class='ident'>v</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Event</span>, <span class='ident'>ParserError</span><span class='op'>&gt;&gt;</span> <span class='op'>=</span> <span class='ident'>p</span>.<span class='ident'>collect</span>();
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='macro'>vec</span><span class='macro'>!</span>[
-            <span class='prelude-val'>Ok</span>(<span class='ident'>Event</span>::<span class='ident'>ElementStart</span>(<span class='ident'>StartTag</span> {
-                <span class='ident'>name</span>: <span class='string'>&quot;register&quot;</span>.<span class='ident'>to_string</span>(),
-                <span class='ident'>ns</span>: <span class='prelude-val'>None</span>,
-                <span class='ident'>prefix</span>: <span class='prelude-val'>None</span>,
-                <span class='ident'>attributes</span>: <span class='ident'>HashMap</span>::<span class='ident'>new</span>()
+        <span class="kw">let</span> <span class="ident">v</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Event</span>, <span class="ident">ParserError</span><span class="op">&gt;&gt;</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">collect</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">v</span>, <span class="macro">vec</span><span class="macro">!</span>[
+            <span class="prelude-val">Ok</span>(<span class="ident">Event</span>::<span class="ident">ElementStart</span>(<span class="ident">StartTag</span> {
+                <span class="ident">name</span>: <span class="string">&quot;register&quot;</span>.<span class="ident">to_string</span>(),
+                <span class="ident">ns</span>: <span class="prelude-val">None</span>,
+                <span class="ident">prefix</span>: <span class="prelude-val">None</span>,
+                <span class="ident">attributes</span>: <span class="ident">HashMap</span>::<span class="ident">new</span>()
             })),
-            <span class='prelude-val'>Ok</span>(<span class='ident'>Event</span>::<span class='ident'>ElementEnd</span>(<span class='ident'>EndTag</span> {
-                <span class='ident'>name</span>: <span class='string'>&quot;register&quot;</span>.<span class='ident'>to_string</span>(),
-                <span class='ident'>ns</span>: <span class='prelude-val'>None</span>,
-                <span class='ident'>prefix</span>: <span class='prelude-val'>None</span>,
+            <span class="prelude-val">Ok</span>(<span class="ident">Event</span>::<span class="ident">ElementEnd</span>(<span class="ident">EndTag</span> {
+                <span class="ident">name</span>: <span class="string">&quot;register&quot;</span>.<span class="ident">to_string</span>(),
+                <span class="ident">ns</span>: <span class="prelude-val">None</span>,
+                <span class="ident">prefix</span>: <span class="prelude-val">None</span>,
             }))
         ]);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_self_closing_namespace</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='ident'>Parser</span>::<span class='ident'>new</span>();
-        <span class='ident'>p</span>.<span class='ident'>feed_str</span>(<span class='string'>&quot;&lt;foo:a xmlns:foo=&#39;urn:foo&#39;/&gt;&quot;</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_self_closing_namespace</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">Parser</span>::<span class="ident">new</span>();
+        <span class="ident">p</span>.<span class="ident">feed_str</span>(<span class="string">&quot;&lt;foo:a xmlns:foo=&#39;urn:foo&#39;/&gt;&quot;</span>);
 
-        <span class='kw'>let</span> <span class='ident'>v</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Event</span>, <span class='ident'>ParserError</span><span class='op'>&gt;&gt;</span> <span class='op'>=</span> <span class='ident'>p</span>.<span class='ident'>collect</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>attr</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span>(<span class='ident'>String</span>, <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>), <span class='ident'>String</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>HashMap</span>::<span class='ident'>new</span>();
-        <span class='ident'>attr</span>.<span class='ident'>insert</span>((<span class='string'>&quot;foo&quot;</span>.<span class='ident'>to_string</span>(), <span class='prelude-val'>Some</span>(<span class='string'>&quot;http://www.w3.org/2000/xmlns/&quot;</span>.<span class='ident'>to_string</span>())),
-                    <span class='string'>&quot;urn:foo&quot;</span>.<span class='ident'>to_string</span>());
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='macro'>vec</span><span class='macro'>!</span>[
-            <span class='prelude-val'>Ok</span>(<span class='ident'>Event</span>::<span class='ident'>ElementStart</span>(<span class='ident'>StartTag</span> {
-                <span class='ident'>name</span>: <span class='string'>&quot;a&quot;</span>.<span class='ident'>to_string</span>(),
-                <span class='ident'>ns</span>: <span class='prelude-val'>Some</span>(<span class='string'>&quot;urn:foo&quot;</span>.<span class='ident'>to_string</span>()),
-                <span class='ident'>prefix</span>: <span class='prelude-val'>Some</span>(<span class='string'>&quot;foo&quot;</span>.<span class='ident'>to_string</span>()),
-                <span class='ident'>attributes</span>: <span class='ident'>attr</span>,
+        <span class="kw">let</span> <span class="ident">v</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Event</span>, <span class="ident">ParserError</span><span class="op">&gt;&gt;</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">collect</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">attr</span>: <span class="ident">HashMap</span><span class="op">&lt;</span>(<span class="ident">String</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>), <span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
+        <span class="ident">attr</span>.<span class="ident">insert</span>((<span class="string">&quot;foo&quot;</span>.<span class="ident">to_string</span>(), <span class="prelude-val">Some</span>(<span class="string">&quot;http://www.w3.org/2000/xmlns/&quot;</span>.<span class="ident">to_string</span>())),
+                    <span class="string">&quot;urn:foo&quot;</span>.<span class="ident">to_string</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">v</span>, <span class="macro">vec</span><span class="macro">!</span>[
+            <span class="prelude-val">Ok</span>(<span class="ident">Event</span>::<span class="ident">ElementStart</span>(<span class="ident">StartTag</span> {
+                <span class="ident">name</span>: <span class="string">&quot;a&quot;</span>.<span class="ident">to_string</span>(),
+                <span class="ident">ns</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;urn:foo&quot;</span>.<span class="ident">to_string</span>()),
+                <span class="ident">prefix</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>.<span class="ident">to_string</span>()),
+                <span class="ident">attributes</span>: <span class="ident">attr</span>,
             })),
-            <span class='prelude-val'>Ok</span>(<span class='ident'>Event</span>::<span class='ident'>ElementEnd</span>(<span class='ident'>EndTag</span> {
-                <span class='ident'>name</span>: <span class='string'>&quot;a&quot;</span>.<span class='ident'>to_string</span>(),
-                <span class='ident'>ns</span>: <span class='prelude-val'>Some</span>(<span class='string'>&quot;urn:foo&quot;</span>.<span class='ident'>to_string</span>()),
-                <span class='ident'>prefix</span>: <span class='prelude-val'>Some</span>(<span class='string'>&quot;foo&quot;</span>.<span class='ident'>to_string</span>()),
+            <span class="prelude-val">Ok</span>(<span class="ident">Event</span>::<span class="ident">ElementEnd</span>(<span class="ident">EndTag</span> {
+                <span class="ident">name</span>: <span class="string">&quot;a&quot;</span>.<span class="ident">to_string</span>(),
+                <span class="ident">ns</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;urn:foo&quot;</span>.<span class="ident">to_string</span>()),
+                <span class="ident">prefix</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>.<span class="ident">to_string</span>()),
             }))
         ]);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_pi</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='ident'>Parser</span>::<span class='ident'>new</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>0u8</span>;
-        <span class='ident'>p</span>.<span class='ident'>feed_str</span>(<span class='string'>&quot;&lt;?xml version=&#39;1.0&#39; encoding=&#39;utf-8&#39;?&gt;&quot;</span>);
-        <span class='kw'>for</span> <span class='ident'>event</span> <span class='kw'>in</span> <span class='ident'>p</span> {
-            <span class='ident'>i</span> <span class='op'>+=</span> <span class='number'>1</span>;
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>event</span>, <span class='prelude-val'>Ok</span>(<span class='ident'>Event</span>::<span class='ident'>PI</span>(<span class='string'>&quot;xml version=&#39;1.0&#39; encoding=&#39;utf-8&#39;&quot;</span>.<span class='ident'>to_string</span>())));
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_pi</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">Parser</span>::<span class="ident">new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0u8</span>;
+        <span class="ident">p</span>.<span class="ident">feed_str</span>(<span class="string">&quot;&lt;?xml version=&#39;1.0&#39; encoding=&#39;utf-8&#39;?&gt;&quot;</span>);
+        <span class="kw">for</span> <span class="ident">event</span> <span class="kw">in</span> <span class="ident">p</span> {
+            <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">event</span>, <span class="prelude-val">Ok</span>(<span class="ident">Event</span>::<span class="ident">PI</span>(<span class="string">&quot;xml version=&#39;1.0&#39; encoding=&#39;utf-8&#39;&quot;</span>.<span class="ident">to_string</span>())));
         }
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>i</span>, <span class='number'>1u8</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">i</span>, <span class="number">1u8</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_comment</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='ident'>Parser</span>::<span class='ident'>new</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>0u8</span>;
-        <span class='ident'>p</span>.<span class='ident'>feed_str</span>(<span class='string'>&quot;&lt;!--Nothing to see--&gt;&quot;</span>);
-        <span class='kw'>for</span> <span class='ident'>event</span> <span class='kw'>in</span> <span class='ident'>p</span> {
-            <span class='ident'>i</span> <span class='op'>+=</span> <span class='number'>1</span>;
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>event</span>, <span class='prelude-val'>Ok</span>(<span class='ident'>Event</span>::<span class='ident'>Comment</span>(<span class='string'>&quot;Nothing to see&quot;</span>.<span class='ident'>to_string</span>())));
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_comment</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">Parser</span>::<span class="ident">new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0u8</span>;
+        <span class="ident">p</span>.<span class="ident">feed_str</span>(<span class="string">&quot;&lt;!--Nothing to see--&gt;&quot;</span>);
+        <span class="kw">for</span> <span class="ident">event</span> <span class="kw">in</span> <span class="ident">p</span> {
+            <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">event</span>, <span class="prelude-val">Ok</span>(<span class="ident">Event</span>::<span class="ident">Comment</span>(<span class="string">&quot;Nothing to see&quot;</span>.<span class="ident">to_string</span>())));
         }
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>i</span>, <span class='number'>1u8</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">i</span>, <span class="number">1u8</span>);
     }
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_cdata</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='ident'>Parser</span>::<span class='ident'>new</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>0u8</span>;
-        <span class='ident'>p</span>.<span class='ident'>feed_str</span>(<span class='string'>&quot;&lt;![CDATA[&lt;html&gt;&lt;head&gt;&lt;title&gt;x&lt;/title&gt;&lt;/head&gt;&lt;body/&gt;&lt;/html&gt;]]&gt;&quot;</span>);
-        <span class='kw'>for</span> <span class='ident'>event</span> <span class='kw'>in</span> <span class='ident'>p</span> {
-            <span class='ident'>i</span> <span class='op'>+=</span> <span class='number'>1</span>;
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>event</span>,
-                       <span class='prelude-val'>Ok</span>(<span class='ident'>Event</span>::<span class='ident'>CDATA</span>(<span class='string'>&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;x&lt;/title&gt;&lt;/head&gt;&lt;body/&gt;&lt;/html&gt;&quot;</span>.<span class='ident'>to_string</span>())));
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_cdata</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">Parser</span>::<span class="ident">new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0u8</span>;
+        <span class="ident">p</span>.<span class="ident">feed_str</span>(<span class="string">&quot;&lt;![CDATA[&lt;html&gt;&lt;head&gt;&lt;title&gt;x&lt;/title&gt;&lt;/head&gt;&lt;body/&gt;&lt;/html&gt;]]&gt;&quot;</span>);
+        <span class="kw">for</span> <span class="ident">event</span> <span class="kw">in</span> <span class="ident">p</span> {
+            <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">event</span>,
+                       <span class="prelude-val">Ok</span>(<span class="ident">Event</span>::<span class="ident">CDATA</span>(<span class="string">&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;x&lt;/title&gt;&lt;/head&gt;&lt;body/&gt;&lt;/html&gt;&quot;</span>.<span class="ident">to_string</span>())));
         }
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>i</span>, <span class='number'>1u8</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">i</span>, <span class="number">1u8</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_characters</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='ident'>Parser</span>::<span class='ident'>new</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>0u8</span>;
-        <span class='ident'>p</span>.<span class='ident'>feed_str</span>(<span class='string'>&quot;&lt;text&gt;Hello World, it&amp;apos;s a nice day&lt;/text&gt;&quot;</span>);
-        <span class='kw'>for</span> <span class='ident'>event</span> <span class='kw'>in</span> <span class='ident'>p</span> {
-            <span class='ident'>i</span> <span class='op'>+=</span> <span class='number'>1</span>;
-            <span class='kw'>if</span> <span class='ident'>i</span> <span class='op'>==</span> <span class='number'>2</span> {
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>event</span>,
-                           <span class='prelude-val'>Ok</span>(<span class='ident'>Event</span>::<span class='ident'>Characters</span>(<span class='string'>&quot;Hello World, it&#39;s a nice day&quot;</span>.<span class='ident'>to_string</span>())));
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_characters</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">Parser</span>::<span class="ident">new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0u8</span>;
+        <span class="ident">p</span>.<span class="ident">feed_str</span>(<span class="string">&quot;&lt;text&gt;Hello World, it&amp;apos;s a nice day&lt;/text&gt;&quot;</span>);
+        <span class="kw">for</span> <span class="ident">event</span> <span class="kw">in</span> <span class="ident">p</span> {
+            <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
+            <span class="kw">if</span> <span class="ident">i</span> <span class="op">==</span> <span class="number">2</span> {
+                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">event</span>,
+                           <span class="prelude-val">Ok</span>(<span class="ident">Event</span>::<span class="ident">Characters</span>(<span class="string">&quot;Hello World, it&#39;s a nice day&quot;</span>.<span class="ident">to_string</span>())));
             }
         }
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>i</span>, <span class='number'>3u8</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">i</span>, <span class="number">3u8</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_doctype</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='ident'>Parser</span>::<span class='ident'>new</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>0u8</span>;
-        <span class='ident'>p</span>.<span class='ident'>feed_str</span>(<span class='string'>&quot;&lt;!DOCTYPE html&gt;&quot;</span>);
-        <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='ident'>p</span> {
-            <span class='ident'>i</span> <span class='op'>+=</span> <span class='number'>1</span>;
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_doctype</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">Parser</span>::<span class="ident">new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0u8</span>;
+        <span class="ident">p</span>.<span class="ident">feed_str</span>(<span class="string">&quot;&lt;!DOCTYPE html&gt;&quot;</span>);
+        <span class="kw">for</span> _ <span class="kw">in</span> <span class="ident">p</span> {
+            <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
         }
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>i</span>, <span class='number'>0u8</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">i</span>, <span class="number">0u8</span>);
     }
 }
 </pre>
@@ -1748,6 +1750,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -1768,7 +1772,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -1779,11 +1783,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "xml";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

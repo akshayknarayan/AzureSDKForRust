@@ -4,18 +4,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `src/azure/storage/blob/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/mindflavor/src/rust/AzureSDKForRust/src/azure/storage/blob/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../../../main.css">
+    
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -41,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -701,665 +703,681 @@
 <span id="658">658</span>
 <span id="659">659</span>
 <span id="660">660</span>
-</pre><pre class='rust '>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>uuid</span>;
+<span id="661">661</span>
+<span id="662">662</span>
+<span id="663">663</span>
+<span id="664">664</span>
+<span id="665">665</span>
+<span id="666">666</span>
+<span id="667">667</span>
+<span id="668">668</span>
+</pre><pre class="rust ">
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">uuid</span>;
 
-<span class='kw'>mod</span> <span class='ident'>put_options</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>put_options</span>::{<span class='ident'>PutOptions</span>, <span class='ident'>PUT_OPTIONS_DEFAULT</span>};
+<span class="kw">mod</span> <span class="ident">put_options</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">put_options</span>::{<span class="ident">PutOptions</span>, <span class="ident">PUT_OPTIONS_DEFAULT</span>};
 
-<span class='kw'>mod</span> <span class='ident'>list_blob_options</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>list_blob_options</span>::{<span class='ident'>ListBlobOptions</span>, <span class='ident'>LIST_BLOB_OPTIONS_DEFAULT</span>};
+<span class="kw">mod</span> <span class="ident">list_blob_options</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">list_blob_options</span>::{<span class="ident">ListBlobOptions</span>, <span class="ident">LIST_BLOB_OPTIONS_DEFAULT</span>};
 
-<span class='kw'>mod</span> <span class='ident'>put_block_options</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>put_block_options</span>::{<span class='ident'>PutBlockOptions</span>, <span class='ident'>PUT_BLOCK_OPTIONS_DEFAULT</span>};
+<span class="kw">mod</span> <span class="ident">put_block_options</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">put_block_options</span>::{<span class="ident">PutBlockOptions</span>, <span class="ident">PUT_BLOCK_OPTIONS_DEFAULT</span>};
 
-<span class='kw'>mod</span> <span class='ident'>put_page_options</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>put_page_options</span>::{<span class='ident'>PutPageOptions</span>, <span class='ident'>PUT_PAGE_OPTIONS_DEFAULT</span>};
+<span class="kw">mod</span> <span class="ident">put_page_options</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">put_page_options</span>::{<span class="ident">PutPageOptions</span>, <span class="ident">PUT_PAGE_OPTIONS_DEFAULT</span>};
 
-<span class='kw'>mod</span> <span class='ident'>lease_blob_options</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>lease_blob_options</span>::{<span class='ident'>LeaseBlobOptions</span>, <span class='ident'>LEASE_BLOB_OPTIONS_DEFAULT</span>};
+<span class="kw">mod</span> <span class="ident">lease_blob_options</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">lease_blob_options</span>::{<span class="ident">LeaseBlobOptions</span>, <span class="ident">LEASE_BLOB_OPTIONS_DEFAULT</span>};
 
-<span class='kw'>use</span> <span class='ident'>chrono</span>::<span class='ident'>datetime</span>::<span class='ident'>DateTime</span>;
-<span class='kw'>use</span> <span class='ident'>chrono</span>::<span class='ident'>UTC</span>;
+<span class="kw">use</span> <span class="ident">chrono</span>::<span class="ident">datetime</span>::<span class="ident">DateTime</span>;
+<span class="kw">use</span> <span class="ident">chrono</span>::<span class="ident">UTC</span>;
 
-<span class='kw'>use</span> <span class='ident'>azure</span>::<span class='ident'>core</span>::<span class='ident'>lease</span>::{<span class='ident'>LeaseId</span>, <span class='ident'>LeaseStatus</span>, <span class='ident'>LeaseState</span>, <span class='ident'>LeaseDuration</span>, <span class='ident'>LeaseAction</span>};
-<span class='kw'>use</span> <span class='ident'>azure</span>::<span class='ident'>storage</span>::<span class='ident'>client</span>::<span class='ident'>Client</span>;
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">lease</span>::{<span class="ident">LeaseId</span>, <span class="ident">LeaseStatus</span>, <span class="ident">LeaseState</span>, <span class="ident">LeaseDuration</span>, <span class="ident">LeaseAction</span>};
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">storage</span>::<span class="ident">client</span>::<span class="ident">Client</span>;
 
-<span class='kw'>use</span> <span class='ident'>azure</span>::<span class='ident'>core</span>;
-<span class='kw'>use</span> <span class='ident'>azure</span>::<span class='ident'>core</span>::{<span class='ident'>XMSRange</span>, <span class='ident'>ContentMD5</span>, <span class='ident'>XMSLeaseStatus</span>, <span class='ident'>XMSLeaseDuration</span>, <span class='ident'>XMSLeaseState</span>,
-                  <span class='ident'>XMSLeaseId</span>, <span class='ident'>XMSRangeGetContentMD5</span>, <span class='ident'>XMSClientRequestId</span>, <span class='ident'>XMSLeaseAction</span>,
-                  <span class='ident'>XMSLeaseDurationSeconds</span>, <span class='ident'>XMSLeaseBreakPeriod</span>, <span class='ident'>XMSProposedLeaseId</span>};
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>;
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">storage</span>::<span class="ident">rest_client</span>::{<span class="ident">XMSRange</span>, <span class="ident">ContentMD5</span>, <span class="ident">XMSLeaseStatus</span>, <span class="ident">XMSLeaseDuration</span>,
+                                  <span class="ident">XMSLeaseState</span>, <span class="ident">XMSLeaseId</span>, <span class="ident">XMSRangeGetContentMD5</span>,
+                                  <span class="ident">XMSClientRequestId</span>, <span class="ident">XMSLeaseAction</span>, <span class="ident">XMSLeaseDurationSeconds</span>,
+                                  <span class="ident">XMSLeaseBreakPeriod</span>, <span class="ident">XMSProposedLeaseId</span>, <span class="ident">ETag</span>};
 
-<span class='kw'>use</span> <span class='ident'>azure</span>::<span class='ident'>core</span>::<span class='ident'>parsing</span>::{<span class='ident'>cast_must</span>, <span class='ident'>cast_optional</span>, <span class='ident'>from_azure_time</span>, <span class='ident'>traverse</span>};
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">parsing</span>::{<span class="ident">cast_must</span>, <span class="ident">cast_optional</span>, <span class="ident">from_azure_time</span>, <span class="ident">traverse</span>};
 
-<span class='kw'>use</span> <span class='ident'>xml</span>::<span class='ident'>Element</span>;
+<span class="kw">use</span> <span class="ident">xml</span>::<span class="ident">Element</span>;
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>str</span>::<span class='ident'>FromStr</span>;
-<span class='kw'>use</span> <span class='ident'>azure</span>::<span class='ident'>core</span>::<span class='ident'>enumerations</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">enumerations</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 
-<span class='kw'>use</span> <span class='ident'>azure</span>::<span class='ident'>core</span>::<span class='ident'>ETag</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Read</span>;
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Read</span>;
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">errors</span>::{<span class="ident">TraversingError</span>, <span class="ident">AzureError</span>, <span class="ident">check_status</span>};
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">parsing</span>::<span class="ident">FromStringOptional</span>;
 
-<span class='kw'>use</span> <span class='ident'>azure</span>::<span class='ident'>core</span>::<span class='ident'>errors</span>::{<span class='ident'>TraversingError</span>, <span class='ident'>AzureError</span>, <span class='ident'>check_status</span>};
-<span class='kw'>use</span> <span class='ident'>azure</span>::<span class='ident'>core</span>::<span class='ident'>parsing</span>::<span class='ident'>FromStringOptional</span>;
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">range</span>::<span class="ident">Range</span>;
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">ba512_range</span>::<span class="ident">BA512Range</span>;
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">incompletevector</span>::<span class="ident">IncompleteVector</span>;
 
-<span class='kw'>use</span> <span class='ident'>azure</span>::<span class='ident'>core</span>::<span class='ident'>range</span>::<span class='ident'>Range</span>;
-<span class='kw'>use</span> <span class='ident'>azure</span>::<span class='ident'>core</span>::<span class='ident'>ba512_range</span>::<span class='ident'>BA512Range</span>;
-<span class='kw'>use</span> <span class='ident'>azure</span>::<span class='ident'>core</span>::<span class='ident'>incompletevector</span>::<span class='ident'>IncompleteVector</span>;
+<span class="kw">use</span> <span class="ident">mime</span>::<span class="ident">Mime</span>;
 
-<span class='kw'>use</span> <span class='ident'>mime</span>::<span class='ident'>Mime</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">status</span>::<span class="ident">StatusCode</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::{<span class="ident">Headers</span>, <span class="ident">ContentType</span>, <span class="ident">ContentLength</span>, <span class="ident">LastModified</span>, <span class="ident">ContentEncoding</span>,
+                    <span class="ident">ContentLanguage</span>};
 
-<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>status</span>::<span class='ident'>StatusCode</span>;
-<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>header</span>::{<span class='ident'>Headers</span>, <span class='ident'>ContentType</span>, <span class='ident'>ContentLength</span>, <span class='ident'>LastModified</span>, <span class='ident'>ContentEncoding</span>,
-                    <span class='ident'>ContentLanguage</span>};
+<span class="kw">use</span> <span class="ident">base64</span>;
 
-<span class='kw'>use</span> <span class='ident'>serialize</span>::<span class='ident'>base64</span>::{<span class='ident'>STANDARD</span>, <span class='ident'>ToBase64</span>};
+<span class="kw">use</span> <span class="ident">uuid</span>::<span class="ident">Uuid</span>;
 
-<span class='kw'>use</span> <span class='ident'>uuid</span>::<span class='ident'>Uuid</span>;
+<span class="macro">create_enum</span><span class="macro">!</span>(<span class="ident">BlobType</span>,
+             (<span class="ident">BlockBlob</span>, <span class="string">&quot;BlockBlob&quot;</span>),
+             (<span class="ident">PageBlob</span>, <span class="string">&quot;PageBlob&quot;</span>),
+             (<span class="ident">AppendBlob</span>, <span class="string">&quot;AppendBlob&quot;</span>));
 
-<span class='macro'>create_enum</span><span class='macro'>!</span>(<span class='ident'>BlobType</span>,
-             (<span class='ident'>BlockBlob</span>, <span class='string'>&quot;BlockBlob&quot;</span>),
-             (<span class='ident'>PageBlob</span>, <span class='string'>&quot;PageBlob&quot;</span>),
-             (<span class='ident'>AppendBlob</span>, <span class='string'>&quot;AppendBlob&quot;</span>));
+<span class="macro">create_enum</span><span class="macro">!</span>(<span class="ident">CopyStatus</span>,
+             (<span class="ident">Pending</span>, <span class="string">&quot;pending&quot;</span>),
+             (<span class="ident">Success</span>, <span class="string">&quot;success&quot;</span>),
+             (<span class="ident">Aborted</span>, <span class="string">&quot;aborted&quot;</span>),
+             (<span class="ident">Failed</span>, <span class="string">&quot;failed&quot;</span>));
 
-<span class='macro'>create_enum</span><span class='macro'>!</span>(<span class='ident'>CopyStatus</span>,
-             (<span class='ident'>Pending</span>, <span class='string'>&quot;pending&quot;</span>),
-             (<span class='ident'>Success</span>, <span class='string'>&quot;success&quot;</span>),
-             (<span class='ident'>Aborted</span>, <span class='string'>&quot;aborted&quot;</span>),
-             (<span class='ident'>Failed</span>, <span class='string'>&quot;failed&quot;</span>));
+<span class="macro">create_enum</span><span class="macro">!</span>(<span class="ident">PageWriteType</span>, (<span class="ident">Update</span>, <span class="string">&quot;update&quot;</span>), (<span class="ident">Clear</span>, <span class="string">&quot;clear&quot;</span>));
 
-<span class='macro'>create_enum</span><span class='macro'>!</span>(<span class='ident'>PageWriteType</span>, (<span class='ident'>Update</span>, <span class='string'>&quot;update&quot;</span>), (<span class='ident'>Clear</span>, <span class='string'>&quot;clear&quot;</span>));
+<span class="macro">header</span><span class="macro">!</span> { (<span class="ident">XMSBlobContentLength</span>, <span class="string">&quot;x-ms-blob-content-length&quot;</span>) <span class="op">=&gt;</span> [<span class="ident">u64</span>] }
+<span class="macro">header</span><span class="macro">!</span> { (<span class="ident">XMSBlobSequenceNumber</span>, <span class="string">&quot;x-ms-blob-sequence-number&quot;</span>) <span class="op">=&gt;</span> [<span class="ident">u64</span>] }
+<span class="macro">header</span><span class="macro">!</span> { (<span class="ident">XMSBlobType</span>, <span class="string">&quot;x-ms-blob-type&quot;</span>) <span class="op">=&gt;</span> [<span class="ident">BlobType</span>] }
+<span class="macro">header</span><span class="macro">!</span> { (<span class="ident">XMSBlobContentDisposition</span>, <span class="string">&quot;x-ms-blob-content-disposition&quot;</span>) <span class="op">=&gt;</span> [<span class="ident">String</span>] }
+<span class="macro">header</span><span class="macro">!</span> { (<span class="ident">XMSPageWrite</span>, <span class="string">&quot;x-ms-page-write&quot;</span>) <span class="op">=&gt;</span> [<span class="ident">PageWriteType</span>] }
 
-<span class='macro'>header</span><span class='macro'>!</span> { (<span class='ident'>XMSBlobContentLength</span>, <span class='string'>&quot;x-ms-blob-content-length&quot;</span>) <span class='op'>=&gt;</span> [<span class='ident'>u64</span>] }
-<span class='macro'>header</span><span class='macro'>!</span> { (<span class='ident'>XMSBlobSequenceNumber</span>, <span class='string'>&quot;x-ms-blob-sequence-number&quot;</span>) <span class='op'>=&gt;</span> [<span class='ident'>u64</span>] }
-<span class='macro'>header</span><span class='macro'>!</span> { (<span class='ident'>XMSBlobType</span>, <span class='string'>&quot;x-ms-blob-type&quot;</span>) <span class='op'>=&gt;</span> [<span class='ident'>BlobType</span>] }
-<span class='macro'>header</span><span class='macro'>!</span> { (<span class='ident'>XMSBlobContentDisposition</span>, <span class='string'>&quot;x-ms-blob-content-disposition&quot;</span>) <span class='op'>=&gt;</span> [<span class='ident'>String</span>] }
-<span class='macro'>header</span><span class='macro'>!</span> { (<span class='ident'>XMSPageWrite</span>, <span class='string'>&quot;x-ms-page-write&quot;</span>) <span class='op'>=&gt;</span> [<span class='ident'>PageWriteType</span>] }
-
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Blob</span> {
-    <span class='kw'>pub</span> <span class='ident'>name</span>: <span class='ident'>String</span>,
-    <span class='kw'>pub</span> <span class='ident'>container_name</span>: <span class='ident'>String</span>,
-    <span class='kw'>pub</span> <span class='ident'>snapshot_time</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='ident'>UTC</span><span class='op'>&gt;&gt;</span>,
-    <span class='kw'>pub</span> <span class='ident'>last_modified</span>: <span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='ident'>UTC</span><span class='op'>&gt;</span>,
-    <span class='kw'>pub</span> <span class='ident'>etag</span>: <span class='ident'>String</span>,
-    <span class='kw'>pub</span> <span class='ident'>content_length</span>: <span class='ident'>u64</span>,
-    <span class='kw'>pub</span> <span class='ident'>content_type</span>: <span class='ident'>Mime</span>,
-    <span class='kw'>pub</span> <span class='ident'>content_encoding</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>,
-    <span class='kw'>pub</span> <span class='ident'>content_language</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>,
-    <span class='kw'>pub</span> <span class='ident'>content_md5</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>,
-    <span class='kw'>pub</span> <span class='ident'>cache_control</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>,
-    <span class='kw'>pub</span> <span class='ident'>x_ms_blob_sequence_number</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u64</span><span class='op'>&gt;</span>,
-    <span class='kw'>pub</span> <span class='ident'>blob_type</span>: <span class='ident'>BlobType</span>,
-    <span class='kw'>pub</span> <span class='ident'>lease_status</span>: <span class='ident'>LeaseStatus</span>,
-    <span class='kw'>pub</span> <span class='ident'>lease_state</span>: <span class='ident'>LeaseState</span>,
-    <span class='kw'>pub</span> <span class='ident'>lease_duration</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>LeaseDuration</span><span class='op'>&gt;</span>,
-    <span class='kw'>pub</span> <span class='ident'>copy_id</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>,
-    <span class='kw'>pub</span> <span class='ident'>copy_status</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>CopyStatus</span><span class='op'>&gt;</span>,
-    <span class='kw'>pub</span> <span class='ident'>copy_source</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>,
-    <span class='kw'>pub</span> <span class='ident'>copy_progress</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Range</span><span class='op'>&gt;</span>,
-    <span class='kw'>pub</span> <span class='ident'>copy_completion</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='ident'>UTC</span><span class='op'>&gt;&gt;</span>,
-    <span class='kw'>pub</span> <span class='ident'>copy_status_description</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>,
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Blob</span> {
+    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
+    <span class="kw">pub</span> <span class="ident">container_name</span>: <span class="ident">String</span>,
+    <span class="kw">pub</span> <span class="ident">snapshot_time</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">UTC</span><span class="op">&gt;&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">last_modified</span>: <span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">UTC</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">etag</span>: <span class="ident">String</span>,
+    <span class="kw">pub</span> <span class="ident">content_length</span>: <span class="ident">u64</span>,
+    <span class="kw">pub</span> <span class="ident">content_type</span>: <span class="ident">Mime</span>,
+    <span class="kw">pub</span> <span class="ident">content_encoding</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">content_language</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">content_md5</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">cache_control</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">x_ms_blob_sequence_number</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">blob_type</span>: <span class="ident">BlobType</span>,
+    <span class="kw">pub</span> <span class="ident">lease_status</span>: <span class="ident">LeaseStatus</span>,
+    <span class="kw">pub</span> <span class="ident">lease_state</span>: <span class="ident">LeaseState</span>,
+    <span class="kw">pub</span> <span class="ident">lease_duration</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">LeaseDuration</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">copy_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">copy_status</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CopyStatus</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">copy_source</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">copy_progress</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Range</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">copy_completion</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">UTC</span><span class="op">&gt;&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">copy_status_description</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>Blob</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse</span>(<span class='ident'>elem</span>: <span class='kw-2'>&amp;</span><span class='ident'>Element</span>, <span class='ident'>container_name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Blob</span>, <span class='ident'>AzureError</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_must</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>(<span class='ident'>elem</span>, <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Name&quot;</span>]));
-        <span class='kw'>let</span> <span class='ident'>snapshot_time</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_optional</span>::<span class='op'>&lt;</span><span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='ident'>UTC</span><span class='op'>&gt;&gt;</span>(<span class='ident'>elem</span>, <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Snapshot&quot;</span>]));
-        <span class='kw'>let</span> <span class='ident'>last_modified</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_must</span>::<span class='op'>&lt;</span><span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='ident'>UTC</span><span class='op'>&gt;&gt;</span>(<span class='ident'>elem</span>,
-                                                            <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;Last-Modified&quot;</span>]));
-        <span class='kw'>let</span> <span class='ident'>etag</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_must</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>(<span class='ident'>elem</span>, <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;Etag&quot;</span>]));
+<span class="kw">impl</span> <span class="ident">Blob</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse</span>(<span class="ident">elem</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>, <span class="ident">container_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Blob</span>, <span class="ident">AzureError</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_must</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>(<span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Name&quot;</span>]));
+        <span class="kw">let</span> <span class="ident">snapshot_time</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_optional</span>::<span class="op">&lt;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">UTC</span><span class="op">&gt;&gt;</span>(<span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Snapshot&quot;</span>]));
+        <span class="kw">let</span> <span class="ident">last_modified</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_must</span>::<span class="op">&lt;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">UTC</span><span class="op">&gt;&gt;</span>(<span class="ident">elem</span>,
+                                                            <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;Last-Modified&quot;</span>]));
+        <span class="kw">let</span> <span class="ident">etag</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_must</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>(<span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;Etag&quot;</span>]));
 
-        <span class='kw'>let</span> <span class='ident'>content_length</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_must</span>::<span class='op'>&lt;</span><span class='ident'>u64</span><span class='op'>&gt;</span>(<span class='ident'>elem</span>, <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;Content-Length&quot;</span>]));
+        <span class="kw">let</span> <span class="ident">content_length</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_must</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>(<span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;Content-Length&quot;</span>]));
 
-        <span class='kw'>let</span> <span class='ident'>content_type</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_must</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>(<span class='ident'>elem</span>, <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;Content-Type&quot;</span>]));
-        <span class='kw'>let</span> <span class='ident'>content_encoding</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_optional</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>(<span class='ident'>elem</span>,
-                                                            <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;Content-Encoding&quot;</span>]));
-        <span class='kw'>let</span> <span class='ident'>content_language</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_optional</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>(<span class='ident'>elem</span>,
-                                                            <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;Content-Language&quot;</span>]));
-        <span class='kw'>let</span> <span class='ident'>content_md5</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_optional</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>(<span class='ident'>elem</span>, <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;Content-MD5&quot;</span>]));
-        <span class='kw'>let</span> <span class='ident'>cache_control</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_optional</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>(<span class='ident'>elem</span>, <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;Cache-Control&quot;</span>]));
-        <span class='kw'>let</span> <span class='ident'>x_ms_blob_sequence_number</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_optional</span>::<span class='op'>&lt;</span><span class='ident'>u64</span><span class='op'>&gt;</span>(<span class='ident'>elem</span>,
-                                                                  <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>,
-                                                                    <span class='string'>&quot;x-ms-blob-sequence-number&quot;</span>]));
+        <span class="kw">let</span> <span class="ident">content_type</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_must</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>(<span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;Content-Type&quot;</span>]));
+        <span class="kw">let</span> <span class="ident">content_encoding</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_optional</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>(<span class="ident">elem</span>,
+                                                            <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;Content-Encoding&quot;</span>]));
+        <span class="kw">let</span> <span class="ident">content_language</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_optional</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>(<span class="ident">elem</span>,
+                                                            <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;Content-Language&quot;</span>]));
+        <span class="kw">let</span> <span class="ident">content_md5</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_optional</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>(<span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;Content-MD5&quot;</span>]));
+        <span class="kw">let</span> <span class="ident">cache_control</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_optional</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>(<span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;Cache-Control&quot;</span>]));
+        <span class="kw">let</span> <span class="ident">x_ms_blob_sequence_number</span> <span class="op">=</span>
+            <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_optional</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>(<span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;x-ms-blob-sequence-number&quot;</span>]));
 
-        <span class='kw'>let</span> <span class='ident'>blob_type</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_must</span>::<span class='op'>&lt;</span><span class='ident'>BlobType</span><span class='op'>&gt;</span>(<span class='ident'>elem</span>, <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;BlobType&quot;</span>]));
+        <span class="kw">let</span> <span class="ident">blob_type</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_must</span>::<span class="op">&lt;</span><span class="ident">BlobType</span><span class="op">&gt;</span>(<span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;BlobType&quot;</span>]));
 
-        <span class='kw'>let</span> <span class='ident'>lease_status</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_must</span>::<span class='op'>&lt;</span><span class='ident'>LeaseStatus</span><span class='op'>&gt;</span>(<span class='ident'>elem</span>, <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;LeaseStatus&quot;</span>]));
-        <span class='kw'>let</span> <span class='ident'>lease_state</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_must</span>::<span class='op'>&lt;</span><span class='ident'>LeaseState</span><span class='op'>&gt;</span>(<span class='ident'>elem</span>, <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;LeaseState&quot;</span>]));
-        <span class='kw'>let</span> <span class='ident'>lease_duration</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_optional</span>::<span class='op'>&lt;</span><span class='ident'>LeaseDuration</span><span class='op'>&gt;</span>(<span class='ident'>elem</span>,
-                                                                 <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;LeaseDuration&quot;</span>]));
-        <span class='kw'>let</span> <span class='ident'>copy_id</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_optional</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>(<span class='ident'>elem</span>, <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;CopyId&quot;</span>]));
-        <span class='kw'>let</span> <span class='ident'>copy_status</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_optional</span>::<span class='op'>&lt;</span><span class='ident'>CopyStatus</span><span class='op'>&gt;</span>(<span class='ident'>elem</span>, <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;CopyStatus&quot;</span>]));
-        <span class='kw'>let</span> <span class='ident'>copy_source</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_optional</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>(<span class='ident'>elem</span>, <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;CopySource&quot;</span>]));
-        <span class='kw'>let</span> <span class='ident'>copy_progress</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_optional</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>(<span class='ident'>elem</span>, <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>, <span class='string'>&quot;CopyProgress&quot;</span>]));
-        <span class='kw'>let</span> <span class='ident'>copy_completion</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_optional</span>::<span class='op'>&lt;</span><span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='ident'>UTC</span><span class='op'>&gt;&gt;</span>(<span class='ident'>elem</span>,
-                                                                  <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>,
-                                                                    <span class='string'>&quot;CopyCompletionTime&quot;</span>]));
-        <span class='kw'>let</span> <span class='ident'>copy_status_description</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_optional</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>(<span class='ident'>elem</span>,
-                                                                   <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Properties&quot;</span>,
-                                                                     <span class='string'>&quot;CopyStatusDescription&quot;</span>]));
+        <span class="kw">let</span> <span class="ident">lease_status</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_must</span>::<span class="op">&lt;</span><span class="ident">LeaseStatus</span><span class="op">&gt;</span>(<span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;LeaseStatus&quot;</span>]));
+        <span class="kw">let</span> <span class="ident">lease_state</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_must</span>::<span class="op">&lt;</span><span class="ident">LeaseState</span><span class="op">&gt;</span>(<span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;LeaseState&quot;</span>]));
+        <span class="kw">let</span> <span class="ident">lease_duration</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_optional</span>::<span class="op">&lt;</span><span class="ident">LeaseDuration</span><span class="op">&gt;</span>(<span class="ident">elem</span>,
+                                                                 <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;LeaseDuration&quot;</span>]));
+        <span class="kw">let</span> <span class="ident">copy_id</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_optional</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>(<span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;CopyId&quot;</span>]));
+        <span class="kw">let</span> <span class="ident">copy_status</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_optional</span>::<span class="op">&lt;</span><span class="ident">CopyStatus</span><span class="op">&gt;</span>(<span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;CopyStatus&quot;</span>]));
+        <span class="kw">let</span> <span class="ident">copy_source</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_optional</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>(<span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;CopySource&quot;</span>]));
+        <span class="kw">let</span> <span class="ident">copy_progress</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_optional</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>(<span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;CopyProgress&quot;</span>]));
+        <span class="kw">let</span> <span class="ident">copy_completion</span> <span class="op">=</span>
+            <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_optional</span>::<span class="op">&lt;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">UTC</span><span class="op">&gt;&gt;</span>(<span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;CopyCompletionTime&quot;</span>]));
+        <span class="kw">let</span> <span class="ident">copy_status_description</span> <span class="op">=</span>
+            <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_optional</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>(<span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;CopyStatusDescription&quot;</span>]));
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cp_bytes</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Range</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='prelude-val'>None</span>;
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>txt</span>) <span class='op'>=</span> <span class='ident'>copy_progress</span> {
-            <span class='ident'>cp_bytes</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>txt</span>.<span class='ident'>parse</span>::<span class='op'>&lt;</span><span class='ident'>Range</span><span class='op'>&gt;</span>()));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cp_bytes</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Range</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">txt</span>) <span class="op">=</span> <span class="ident">copy_progress</span> {
+            <span class="ident">cp_bytes</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">txt</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">Range</span><span class="op">&gt;</span>()));
         }
 
-        <span class='kw'>let</span> <span class='ident'>ctype</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>content_type</span>.<span class='ident'>parse</span>::<span class='op'>&lt;</span><span class='ident'>Mime</span><span class='op'>&gt;</span>());
+        <span class="kw">let</span> <span class="ident">ctype</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">content_type</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">Mime</span><span class="op">&gt;</span>());
 
-        <span class='prelude-val'>Ok</span>(<span class='ident'>Blob</span> {
-            <span class='ident'>name</span>: <span class='ident'>name</span>,
-            <span class='ident'>container_name</span>: <span class='ident'>container_name</span>.<span class='ident'>to_owned</span>(),
-            <span class='ident'>snapshot_time</span>: <span class='ident'>snapshot_time</span>,
-            <span class='ident'>last_modified</span>: <span class='ident'>last_modified</span>,
-            <span class='ident'>etag</span>: <span class='ident'>etag</span>,
-            <span class='ident'>content_length</span>: <span class='ident'>content_length</span>,
-            <span class='ident'>content_type</span>: <span class='ident'>ctype</span>,
-            <span class='ident'>content_encoding</span>: <span class='ident'>content_encoding</span>,
-            <span class='ident'>content_language</span>: <span class='ident'>content_language</span>,
-            <span class='ident'>content_md5</span>: <span class='ident'>content_md5</span>,
-            <span class='ident'>cache_control</span>: <span class='ident'>cache_control</span>,
-            <span class='ident'>x_ms_blob_sequence_number</span>: <span class='ident'>x_ms_blob_sequence_number</span>,
-            <span class='ident'>blob_type</span>: <span class='ident'>blob_type</span>,
-            <span class='ident'>lease_status</span>: <span class='ident'>lease_status</span>,
-            <span class='ident'>lease_state</span>: <span class='ident'>lease_state</span>,
-            <span class='ident'>lease_duration</span>: <span class='ident'>lease_duration</span>,
-            <span class='ident'>copy_id</span>: <span class='ident'>copy_id</span>,
-            <span class='ident'>copy_status</span>: <span class='ident'>copy_status</span>,
-            <span class='ident'>copy_source</span>: <span class='ident'>copy_source</span>,
-            <span class='ident'>copy_progress</span>: <span class='ident'>cp_bytes</span>,
-            <span class='ident'>copy_completion</span>: <span class='ident'>copy_completion</span>,
-            <span class='ident'>copy_status_description</span>: <span class='ident'>copy_status_description</span>,
-        })
+        <span class="prelude-val">Ok</span>(<span class="ident">Blob</span> {
+               <span class="ident">name</span>: <span class="ident">name</span>,
+               <span class="ident">container_name</span>: <span class="ident">container_name</span>.<span class="ident">to_owned</span>(),
+               <span class="ident">snapshot_time</span>: <span class="ident">snapshot_time</span>,
+               <span class="ident">last_modified</span>: <span class="ident">last_modified</span>,
+               <span class="ident">etag</span>: <span class="ident">etag</span>,
+               <span class="ident">content_length</span>: <span class="ident">content_length</span>,
+               <span class="ident">content_type</span>: <span class="ident">ctype</span>,
+               <span class="ident">content_encoding</span>: <span class="ident">content_encoding</span>,
+               <span class="ident">content_language</span>: <span class="ident">content_language</span>,
+               <span class="ident">content_md5</span>: <span class="ident">content_md5</span>,
+               <span class="ident">cache_control</span>: <span class="ident">cache_control</span>,
+               <span class="ident">x_ms_blob_sequence_number</span>: <span class="ident">x_ms_blob_sequence_number</span>,
+               <span class="ident">blob_type</span>: <span class="ident">blob_type</span>,
+               <span class="ident">lease_status</span>: <span class="ident">lease_status</span>,
+               <span class="ident">lease_state</span>: <span class="ident">lease_state</span>,
+               <span class="ident">lease_duration</span>: <span class="ident">lease_duration</span>,
+               <span class="ident">copy_id</span>: <span class="ident">copy_id</span>,
+               <span class="ident">copy_status</span>: <span class="ident">copy_status</span>,
+               <span class="ident">copy_source</span>: <span class="ident">copy_source</span>,
+               <span class="ident">copy_progress</span>: <span class="ident">cp_bytes</span>,
+               <span class="ident">copy_completion</span>: <span class="ident">copy_completion</span>,
+               <span class="ident">copy_status_description</span>: <span class="ident">copy_status_description</span>,
+           })
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_headers</span>(<span class='ident'>blob_name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>,
-                        <span class='ident'>container_name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>,
-                        <span class='ident'>h</span>: <span class='kw-2'>&amp;</span><span class='ident'>Headers</span>)
-                        <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Blob</span>, <span class='ident'>AzureError</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>content_type</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>h</span>.<span class='ident'>get</span>::<span class='op'>&lt;</span><span class='ident'>ContentType</span><span class='op'>&gt;</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>ct</span>) <span class='op'>=&gt;</span> (<span class='ident'>ct</span> <span class='kw'>as</span> <span class='kw-2'>&amp;</span><span class='ident'>Mime</span>).<span class='ident'>clone</span>(),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='string'>&quot;application/octet-stream&quot;</span>.<span class='ident'>parse</span>::<span class='op'>&lt;</span><span class='ident'>Mime</span><span class='op'>&gt;</span>()),
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_headers</span>(<span class="ident">blob_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+                        <span class="ident">container_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+                        <span class="ident">h</span>: <span class="kw-2">&amp;</span><span class="ident">Headers</span>)
+                        <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Blob</span>, <span class="ident">AzureError</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">content_type</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">h</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ContentType</span><span class="op">&gt;</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">ct</span>) <span class="op">=&gt;</span> (<span class="ident">ct</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">Mime</span>).<span class="ident">clone</span>(),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="macro">try</span><span class="macro">!</span>(<span class="string">&quot;application/octet-stream&quot;</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">Mime</span><span class="op">&gt;</span>()),
         };
-        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;content_type == {:?}&quot;</span>, <span class='ident'>content_type</span>);
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;content_type == {:?}&quot;</span>, <span class="ident">content_type</span>);
 
-        <span class='kw'>let</span> <span class='ident'>content_length</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>h</span>.<span class='ident'>get</span>::<span class='op'>&lt;</span><span class='ident'>ContentLength</span><span class='op'>&gt;</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>cl</span>) <span class='op'>=&gt;</span> (<span class='ident'>cl</span> <span class='kw'>as</span> <span class='kw-2'>&amp;</span><span class='ident'>u64</span>).<span class='ident'>clone</span>(),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>AzureError</span>::<span class='ident'>HeaderNotFound</span>(<span class='string'>&quot;Content-Length&quot;</span>.<span class='ident'>to_owned</span>())),
+        <span class="kw">let</span> <span class="ident">content_length</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">h</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ContentLength</span><span class="op">&gt;</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">cl</span>) <span class="op">=&gt;</span> <span class="kw-2">*</span>(<span class="ident">cl</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">u64</span>),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">AzureError</span>::<span class="ident">HeaderNotFound</span>(<span class="string">&quot;Content-Length&quot;</span>.<span class="ident">to_owned</span>())),
         };
-        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;content_length == {:?}&quot;</span>, <span class='ident'>content_length</span>);
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;content_length == {:?}&quot;</span>, <span class="ident">content_length</span>);
 
-        <span class='kw'>let</span> <span class='ident'>last_modified</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>h</span>.<span class='ident'>get</span>::<span class='op'>&lt;</span><span class='ident'>LastModified</span><span class='op'>&gt;</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>lm</span>) <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>from_azure_time</span>(<span class='kw-2'>&amp;</span><span class='ident'>lm</span>.<span class='ident'>to_string</span>())),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>AzureError</span>::<span class='ident'>HeaderNotFound</span>(<span class='string'>&quot;Last-Modified&quot;</span>.<span class='ident'>to_owned</span>())),
+        <span class="kw">let</span> <span class="ident">last_modified</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">h</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">LastModified</span><span class="op">&gt;</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">lm</span>) <span class="op">=&gt;</span> {
+                <span class="macro">try</span><span class="macro">!</span>(<span class="ident">from_azure_time</span>(<span class="kw-2">&amp;</span><span class="ident">lm</span>.<span class="ident">to_string</span>()))
+                <span class="comment">//{let te: TraversingError= e.into(); te}))</span>
+            }
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">AzureError</span>::<span class="ident">HeaderNotFound</span>(<span class="string">&quot;Last-Modified&quot;</span>.<span class="ident">to_owned</span>())),
         };
-        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;last_modified == {:?}&quot;</span>, <span class='ident'>last_modified</span>);
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;last_modified == {:?}&quot;</span>, <span class="ident">last_modified</span>);
 
-        <span class='kw'>let</span> <span class='ident'>etag</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>h</span>.<span class='ident'>get</span>::<span class='op'>&lt;</span><span class='ident'>ETag</span><span class='op'>&gt;</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>lm</span>) <span class='op'>=&gt;</span> <span class='ident'>lm</span>.<span class='ident'>to_string</span>(),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>AzureError</span>::<span class='ident'>HeaderNotFound</span>(<span class='string'>&quot;ETag&quot;</span>.<span class='ident'>to_owned</span>())),
+        <span class="kw">let</span> <span class="ident">etag</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">h</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ETag</span><span class="op">&gt;</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">lm</span>) <span class="op">=&gt;</span> <span class="ident">lm</span>.<span class="ident">to_string</span>(),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">AzureError</span>::<span class="ident">HeaderNotFound</span>(<span class="string">&quot;ETag&quot;</span>.<span class="ident">to_owned</span>())),
         };
-        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;etag == {:?}&quot;</span>, <span class='ident'>etag</span>);
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;etag == {:?}&quot;</span>, <span class="ident">etag</span>);
 
-        <span class='kw'>let</span> <span class='ident'>x_ms_blob_sequence_number</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>h</span>.<span class='ident'>get</span>::<span class='op'>&lt;</span><span class='ident'>XMSBlobSequenceNumber</span><span class='op'>&gt;</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>lm</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>((<span class='kw-2'>&amp;</span><span class='ident'>lm</span> <span class='kw'>as</span> <span class='kw-2'>&amp;</span><span class='ident'>u64</span>).<span class='ident'>clone</span>()),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
+        <span class="kw">let</span> <span class="ident">x_ms_blob_sequence_number</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">h</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">XMSBlobSequenceNumber</span><span class="op">&gt;</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">lm</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="kw-2">*</span>(<span class="ident">lm</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">u64</span>)),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
         };
-        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;x_ms_blob_sequence_number == {:?}&quot;</span>,
-                 <span class='ident'>x_ms_blob_sequence_number</span>);
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;x_ms_blob_sequence_number == {:?}&quot;</span>,
+               <span class="ident">x_ms_blob_sequence_number</span>);
 
-        <span class='kw'>let</span> <span class='ident'>blob_type</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>h</span>.<span class='ident'>get</span>::<span class='op'>&lt;</span><span class='ident'>XMSBlobType</span><span class='op'>&gt;</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>lm</span>) <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>((<span class='kw-2'>&amp;</span><span class='ident'>lm</span>.<span class='ident'>to_string</span>()).<span class='ident'>parse</span>::<span class='op'>&lt;</span><span class='ident'>BlobType</span><span class='op'>&gt;</span>()),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>AzureError</span>::<span class='ident'>HeaderNotFound</span>(<span class='string'>&quot;x-ms-blob-type&quot;</span>.<span class='ident'>to_owned</span>())),
+        <span class="kw">let</span> <span class="ident">blob_type</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">h</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">XMSBlobType</span><span class="op">&gt;</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">lm</span>) <span class="op">=&gt;</span> <span class="macro">try</span><span class="macro">!</span>((<span class="kw-2">&amp;</span><span class="ident">lm</span>.<span class="ident">to_string</span>()).<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">BlobType</span><span class="op">&gt;</span>()),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">AzureError</span>::<span class="ident">HeaderNotFound</span>(<span class="string">&quot;x-ms-blob-type&quot;</span>.<span class="ident">to_owned</span>())),
         };
-        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;blob_type == {:?}&quot;</span>, <span class='ident'>blob_type</span>);
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;blob_type == {:?}&quot;</span>, <span class="ident">blob_type</span>);
 
-        <span class='kw'>let</span> <span class='ident'>content_encoding</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>h</span>.<span class='ident'>get</span>::<span class='op'>&lt;</span><span class='ident'>ContentEncoding</span><span class='op'>&gt;</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>ce</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>ce</span>.<span class='ident'>to_string</span>()),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
+        <span class="kw">let</span> <span class="ident">content_encoding</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">h</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ContentEncoding</span><span class="op">&gt;</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">ce</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">ce</span>.<span class="ident">to_string</span>()),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
         };
-        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;content_encoding == {:?}&quot;</span>, <span class='ident'>content_encoding</span>);
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;content_encoding == {:?}&quot;</span>, <span class="ident">content_encoding</span>);
 
-        <span class='kw'>let</span> <span class='ident'>content_language</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>h</span>.<span class='ident'>get</span>::<span class='op'>&lt;</span><span class='ident'>ContentLanguage</span><span class='op'>&gt;</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>cl</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>cl</span>.<span class='ident'>to_string</span>()),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
+        <span class="kw">let</span> <span class="ident">content_language</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">h</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ContentLanguage</span><span class="op">&gt;</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">cl</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">cl</span>.<span class="ident">to_string</span>()),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
         };
-        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;content_language == {:?}&quot;</span>, <span class='ident'>content_language</span>);
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;content_language == {:?}&quot;</span>, <span class="ident">content_language</span>);
 
-        <span class='kw'>let</span> <span class='ident'>content_md5</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>h</span>.<span class='ident'>get</span>::<span class='op'>&lt;</span><span class='ident'>ContentMD5</span><span class='op'>&gt;</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>md5</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>md5</span>.<span class='ident'>to_string</span>()),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
+        <span class="kw">let</span> <span class="ident">content_md5</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">h</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ContentMD5</span><span class="op">&gt;</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">md5</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">md5</span>.<span class="ident">to_string</span>()),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
         };
-        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;content_md5 == {:?}&quot;</span>, <span class='ident'>content_md5</span>);
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;content_md5 == {:?}&quot;</span>, <span class="ident">content_md5</span>);
 
-        <span class='comment'>// TODO</span>
-        <span class='comment'>// let cache_control = match h.get::&lt;CacheControl&gt;() {</span>
-        <span class='comment'>//     Some(cc) =&gt; Some(cc.to_string()),</span>
-        <span class='comment'>//     None =&gt; None</span>
-        <span class='comment'>// };</span>
-        <span class='comment'>// println!(&quot;cache_control == {:?}&quot;, cache_control);</span>
+        <span class="comment">// TODO</span>
+        <span class="comment">// let cache_control = match h.get::&lt;CacheControl&gt;() {</span>
+        <span class="comment">//     Some(cc) =&gt; Some(cc.to_string()),</span>
+        <span class="comment">//     None =&gt; None</span>
+        <span class="comment">// };</span>
+        <span class="comment">// println!(&quot;cache_control == {:?}&quot;, cache_control);</span>
 
-        <span class='kw'>let</span> <span class='ident'>lease_status</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>h</span>.<span class='ident'>get</span>::<span class='op'>&lt;</span><span class='ident'>XMSLeaseStatus</span><span class='op'>&gt;</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>ls</span>) <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>ls</span>.<span class='ident'>to_string</span>().<span class='ident'>parse</span>::<span class='op'>&lt;</span><span class='ident'>LeaseStatus</span><span class='op'>&gt;</span>()),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>AzureError</span>::<span class='ident'>HeaderNotFound</span>(<span class='string'>&quot;x-ms-lease-status&quot;</span>.<span class='ident'>to_owned</span>())),
+        <span class="kw">let</span> <span class="ident">lease_status</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">h</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">XMSLeaseStatus</span><span class="op">&gt;</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">ls</span>) <span class="op">=&gt;</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">ls</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">LeaseStatus</span><span class="op">&gt;</span>()),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">AzureError</span>::<span class="ident">HeaderNotFound</span>(<span class="string">&quot;x-ms-lease-status&quot;</span>.<span class="ident">to_owned</span>())),
         };
-        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;lease_status == {:?}&quot;</span>, <span class='ident'>lease_status</span>);
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;lease_status == {:?}&quot;</span>, <span class="ident">lease_status</span>);
 
 
-        <span class='kw'>let</span> <span class='ident'>lease_state</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>h</span>.<span class='ident'>get</span>::<span class='op'>&lt;</span><span class='ident'>XMSLeaseState</span><span class='op'>&gt;</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>ls</span>) <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>ls</span>.<span class='ident'>to_string</span>().<span class='ident'>parse</span>::<span class='op'>&lt;</span><span class='ident'>LeaseState</span><span class='op'>&gt;</span>()),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>AzureError</span>::<span class='ident'>HeaderNotFound</span>(<span class='string'>&quot;x-ms-lease-state&quot;</span>.<span class='ident'>to_owned</span>())),
+        <span class="kw">let</span> <span class="ident">lease_state</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">h</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">XMSLeaseState</span><span class="op">&gt;</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">ls</span>) <span class="op">=&gt;</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">ls</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">LeaseState</span><span class="op">&gt;</span>()),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">AzureError</span>::<span class="ident">HeaderNotFound</span>(<span class="string">&quot;x-ms-lease-state&quot;</span>.<span class="ident">to_owned</span>())),
         };
-        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;lease_state == {:?}&quot;</span>, <span class='ident'>lease_state</span>);
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;lease_state == {:?}&quot;</span>, <span class="ident">lease_state</span>);
 
 
-        <span class='kw'>let</span> <span class='ident'>lease_duration</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>h</span>.<span class='ident'>get</span>::<span class='op'>&lt;</span><span class='ident'>XMSLeaseDuration</span><span class='op'>&gt;</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>ls</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>ls</span>.<span class='ident'>to_string</span>().<span class='ident'>parse</span>::<span class='op'>&lt;</span><span class='ident'>LeaseDuration</span><span class='op'>&gt;</span>())),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
+        <span class="kw">let</span> <span class="ident">lease_duration</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">h</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">XMSLeaseDuration</span><span class="op">&gt;</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">ls</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">ls</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">LeaseDuration</span><span class="op">&gt;</span>())),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
         };
-        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;lease_duration == {:?}&quot;</span>, <span class='ident'>lease_duration</span>);
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;lease_duration == {:?}&quot;</span>, <span class="ident">lease_duration</span>);
 
-        <span class='comment'>// TODO: get the remaining headers</span>
-        <span class='comment'>// (https://msdn.microsoft.com/en-us/library/azure/dd179440.aspx)</span>
+        <span class="comment">// TODO: get the remaining headers</span>
+        <span class="comment">// (https://msdn.microsoft.com/en-us/library/azure/dd179440.aspx)</span>
 
-        <span class='prelude-val'>Ok</span>(<span class='ident'>Blob</span> {
-            <span class='ident'>name</span>: <span class='ident'>blob_name</span>.<span class='ident'>to_owned</span>(),
-            <span class='ident'>container_name</span>: <span class='ident'>container_name</span>.<span class='ident'>to_owned</span>(),
-            <span class='ident'>snapshot_time</span>: <span class='prelude-val'>None</span>,
-            <span class='ident'>last_modified</span>: <span class='ident'>last_modified</span>,
-            <span class='ident'>etag</span>: <span class='ident'>etag</span>,
-            <span class='ident'>content_length</span>: <span class='ident'>content_length</span>,
-            <span class='ident'>content_type</span>: <span class='ident'>content_type</span>,
-            <span class='ident'>content_encoding</span>: <span class='ident'>content_encoding</span>,
-            <span class='ident'>content_language</span>: <span class='ident'>content_language</span>,
-            <span class='ident'>content_md5</span>: <span class='ident'>content_md5</span>,
-            <span class='ident'>cache_control</span>: <span class='prelude-val'>None</span>, <span class='comment'>// TODO</span>
-            <span class='ident'>x_ms_blob_sequence_number</span>: <span class='ident'>x_ms_blob_sequence_number</span>,
-            <span class='ident'>blob_type</span>: <span class='ident'>blob_type</span>,
-            <span class='ident'>lease_status</span>: <span class='ident'>lease_status</span>,
-            <span class='ident'>lease_state</span>: <span class='ident'>lease_state</span>,
-            <span class='ident'>lease_duration</span>: <span class='ident'>lease_duration</span>,
-            <span class='ident'>copy_id</span>: <span class='prelude-val'>None</span>, <span class='comment'>// TODO</span>
-            <span class='ident'>copy_status</span>: <span class='prelude-val'>None</span>, <span class='comment'>// TODO</span>
-            <span class='ident'>copy_source</span>: <span class='prelude-val'>None</span>, <span class='comment'>// TODO</span>
-            <span class='ident'>copy_progress</span>: <span class='prelude-val'>None</span>, <span class='comment'>// TODO</span>
-            <span class='ident'>copy_completion</span>: <span class='prelude-val'>None</span>, <span class='comment'>// TODO</span>
-            <span class='ident'>copy_status_description</span>: <span class='prelude-val'>None</span>, <span class='comment'>// TODO</span>
-        })
+        <span class="prelude-val">Ok</span>(<span class="ident">Blob</span> {
+               <span class="ident">name</span>: <span class="ident">blob_name</span>.<span class="ident">to_owned</span>(),
+               <span class="ident">container_name</span>: <span class="ident">container_name</span>.<span class="ident">to_owned</span>(),
+               <span class="ident">snapshot_time</span>: <span class="prelude-val">None</span>,
+               <span class="ident">last_modified</span>: <span class="ident">last_modified</span>,
+               <span class="ident">etag</span>: <span class="ident">etag</span>,
+               <span class="ident">content_length</span>: <span class="ident">content_length</span>,
+               <span class="ident">content_type</span>: <span class="ident">content_type</span>,
+               <span class="ident">content_encoding</span>: <span class="ident">content_encoding</span>,
+               <span class="ident">content_language</span>: <span class="ident">content_language</span>,
+               <span class="ident">content_md5</span>: <span class="ident">content_md5</span>,
+               <span class="ident">cache_control</span>: <span class="prelude-val">None</span>, <span class="comment">// TODO</span>
+               <span class="ident">x_ms_blob_sequence_number</span>: <span class="ident">x_ms_blob_sequence_number</span>,
+               <span class="ident">blob_type</span>: <span class="ident">blob_type</span>,
+               <span class="ident">lease_status</span>: <span class="ident">lease_status</span>,
+               <span class="ident">lease_state</span>: <span class="ident">lease_state</span>,
+               <span class="ident">lease_duration</span>: <span class="ident">lease_duration</span>,
+               <span class="ident">copy_id</span>: <span class="prelude-val">None</span>, <span class="comment">// TODO</span>
+               <span class="ident">copy_status</span>: <span class="prelude-val">None</span>, <span class="comment">// TODO</span>
+               <span class="ident">copy_source</span>: <span class="prelude-val">None</span>, <span class="comment">// TODO</span>
+               <span class="ident">copy_progress</span>: <span class="prelude-val">None</span>, <span class="comment">// TODO</span>
+               <span class="ident">copy_completion</span>: <span class="prelude-val">None</span>, <span class="comment">// TODO</span>
+               <span class="ident">copy_status_description</span>: <span class="prelude-val">None</span>, <span class="comment">// TODO</span>
+           })
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>list</span>(<span class='ident'>c</span>: <span class='kw-2'>&amp;</span><span class='ident'>Client</span>,
-                <span class='ident'>container_name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>,
-                <span class='ident'>lbo</span>: <span class='kw-2'>&amp;</span><span class='ident'>ListBlobOptions</span>)
-                <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>IncompleteVector</span><span class='op'>&lt;</span><span class='ident'>Blob</span><span class='op'>&gt;</span>, <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>AzureError</span><span class='op'>&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">list</span>(<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">Client</span>,
+                <span class="ident">container_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+                <span class="ident">lbo</span>: <span class="kw-2">&amp;</span><span class="ident">ListBlobOptions</span>)
+                <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">IncompleteVector</span><span class="op">&lt;</span><span class="ident">Blob</span><span class="op">&gt;</span>, <span class="ident">core</span>::<span class="ident">errors</span>::<span class="ident">AzureError</span><span class="op">&gt;</span> {
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>include</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
-        <span class='kw'>if</span> <span class='ident'>lbo</span>.<span class='ident'>include_snapshots</span> {
-            <span class='ident'>include</span> <span class='op'>=</span> <span class='ident'>include</span> <span class='op'>+</span> <span class='string'>&quot;snapshots&quot;</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">include</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
+        <span class="kw">if</span> <span class="ident">lbo</span>.<span class="ident">include_snapshots</span> {
+            <span class="ident">include</span> <span class="op">=</span> <span class="ident">include</span> <span class="op">+</span> <span class="string">&quot;snapshots&quot;</span>;
         }
-        <span class='kw'>if</span> <span class='ident'>lbo</span>.<span class='ident'>include_metadata</span> {
-            <span class='kw'>if</span> <span class='ident'>include</span>.<span class='ident'>is_empty</span>() {
-                <span class='ident'>include</span> <span class='op'>=</span> <span class='ident'>include</span> <span class='op'>+</span> <span class='string'>&quot;,&quot;</span>;
+        <span class="kw">if</span> <span class="ident">lbo</span>.<span class="ident">include_metadata</span> {
+            <span class="kw">if</span> <span class="ident">include</span>.<span class="ident">is_empty</span>() {
+                <span class="ident">include</span> <span class="op">=</span> <span class="ident">include</span> <span class="op">+</span> <span class="string">&quot;,&quot;</span>;
             }
-            <span class='ident'>include</span> <span class='op'>=</span> <span class='ident'>include</span> <span class='op'>+</span> <span class='string'>&quot;metadata&quot;</span>;
+            <span class="ident">include</span> <span class="op">=</span> <span class="ident">include</span> <span class="op">+</span> <span class="string">&quot;metadata&quot;</span>;
         }
-        <span class='kw'>if</span> <span class='ident'>lbo</span>.<span class='ident'>include_uncommittedblobs</span> {
-            <span class='kw'>if</span> <span class='ident'>include</span>.<span class='ident'>is_empty</span>() {
-                <span class='ident'>include</span> <span class='op'>=</span> <span class='ident'>include</span> <span class='op'>+</span> <span class='string'>&quot;,&quot;</span>;
+        <span class="kw">if</span> <span class="ident">lbo</span>.<span class="ident">include_uncommittedblobs</span> {
+            <span class="kw">if</span> <span class="ident">include</span>.<span class="ident">is_empty</span>() {
+                <span class="ident">include</span> <span class="op">=</span> <span class="ident">include</span> <span class="op">+</span> <span class="string">&quot;,&quot;</span>;
             }
-            <span class='ident'>include</span> <span class='op'>=</span> <span class='ident'>include</span> <span class='op'>+</span> <span class='string'>&quot;uncommittedblobs&quot;</span>;
+            <span class="ident">include</span> <span class="op">=</span> <span class="ident">include</span> <span class="op">+</span> <span class="string">&quot;uncommittedblobs&quot;</span>;
         }
-        <span class='kw'>if</span> <span class='ident'>lbo</span>.<span class='ident'>include_copy</span> {
-            <span class='kw'>if</span> <span class='ident'>include</span>.<span class='ident'>is_empty</span>() {
-                <span class='ident'>include</span> <span class='op'>=</span> <span class='ident'>include</span> <span class='op'>+</span> <span class='string'>&quot;,&quot;</span>;
+        <span class="kw">if</span> <span class="ident">lbo</span>.<span class="ident">include_copy</span> {
+            <span class="kw">if</span> <span class="ident">include</span>.<span class="ident">is_empty</span>() {
+                <span class="ident">include</span> <span class="op">=</span> <span class="ident">include</span> <span class="op">+</span> <span class="string">&quot;,&quot;</span>;
             }
-            <span class='ident'>include</span> <span class='op'>=</span> <span class='ident'>include</span> <span class='op'>+</span> <span class='string'>&quot;copy&quot;</span>;
+            <span class="ident">include</span> <span class="op">=</span> <span class="ident">include</span> <span class="op">+</span> <span class="string">&quot;copy&quot;</span>;
         }
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>uri</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}://{}.blob.core.windows.\
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">uri</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}://{}.blob.core.windows.\
                                net/{}?restype=container&amp;comp=list&amp;maxresults={}&quot;</span>,
-                              <span class='ident'>c</span>.<span class='ident'>auth_scheme</span>(),
-                              <span class='ident'>c</span>.<span class='ident'>account</span>(),
-                              <span class='ident'>container_name</span>,
-                              <span class='ident'>lbo</span>.<span class='ident'>max_results</span>);
+                              <span class="ident">c</span>.<span class="ident">auth_scheme</span>(),
+                              <span class="ident">c</span>.<span class="ident">account</span>(),
+                              <span class="ident">container_name</span>,
+                              <span class="ident">lbo</span>.<span class="ident">max_results</span>);
 
-        <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>include</span>.<span class='ident'>is_empty</span>() {
-            <span class='ident'>uri</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&amp;include={}&quot;</span>, <span class='ident'>uri</span>, <span class='ident'>include</span>);
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">include</span>.<span class="ident">is_empty</span>() {
+            <span class="ident">uri</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&amp;include={}&quot;</span>, <span class="ident">uri</span>, <span class="ident">include</span>);
         }
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>nm</span>) <span class='op'>=</span> <span class='ident'>lbo</span>.<span class='ident'>next_marker</span> {
-            <span class='ident'>uri</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&amp;marker={}&quot;</span>, <span class='ident'>uri</span>, <span class='ident'>nm</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">nm</span>) <span class="op">=</span> <span class="ident">lbo</span>.<span class="ident">next_marker</span> {
+            <span class="ident">uri</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&amp;marker={}&quot;</span>, <span class="ident">uri</span>, <span class="ident">nm</span>);
         }
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>pref</span>) <span class='op'>=</span> <span class='ident'>lbo</span>.<span class='ident'>prefix</span> {
-            <span class='ident'>uri</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&amp;prefix={}&quot;</span>, <span class='ident'>uri</span>, <span class='ident'>pref</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">pref</span>) <span class="op">=</span> <span class="ident">lbo</span>.<span class="ident">prefix</span> {
+            <span class="ident">uri</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&amp;prefix={}&quot;</span>, <span class="ident">uri</span>, <span class="ident">pref</span>);
         }
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>timeout</span>) <span class='op'>=</span> <span class='ident'>lbo</span>.<span class='ident'>timeout</span> {
-            <span class='ident'>uri</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&amp;timeout={}&quot;</span>, <span class='ident'>uri</span>, <span class='ident'>timeout</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">timeout</span>) <span class="op">=</span> <span class="ident">lbo</span>.<span class="ident">timeout</span> {
+            <span class="ident">uri</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&amp;timeout={}&quot;</span>, <span class="ident">uri</span>, <span class="ident">timeout</span>);
         }
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>resp</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>c</span>.<span class='ident'>perform_request</span>(<span class='kw-2'>&amp;</span><span class='ident'>uri</span>, <span class='ident'>core</span>::<span class='ident'>HTTPMethod</span>::<span class='ident'>Get</span>, <span class='kw-2'>&amp;</span><span class='ident'>Headers</span>::<span class='ident'>new</span>(), <span class='prelude-val'>None</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">c</span>.<span class="ident">perform_request</span>(<span class="kw-2">&amp;</span><span class="ident">uri</span>, <span class="ident">core</span>::<span class="ident">HTTPMethod</span>::<span class="ident">Get</span>, <span class="kw-2">&amp;</span><span class="ident">Headers</span>::<span class="ident">new</span>(), <span class="prelude-val">None</span>));
 
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>check_status</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>resp</span>, <span class='ident'>StatusCode</span>::<span class='prelude-val'>Ok</span>));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">check_status</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">resp</span>, <span class="ident">StatusCode</span>::<span class="prelude-val">Ok</span>));
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>resp_s</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>resp</span>.<span class='ident'>read_to_string</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>resp_s</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp_s</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">resp</span>.<span class="ident">read_to_string</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">resp_s</span>));
 
-        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;resp_s == {:?}\n\n&quot;</span>, <span class='ident'>resp_s</span>);
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;resp_s == {:?}\n\n&quot;</span>, <span class="ident">resp_s</span>);
 
-        <span class='kw'>let</span> <span class='ident'>sp</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>resp_s</span>;
-        <span class='kw'>let</span> <span class='ident'>elem</span>: <span class='ident'>Element</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>sp</span>.<span class='ident'>parse</span>());
+        <span class="kw">let</span> <span class="ident">sp</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">resp_s</span>;
+        <span class="kw">let</span> <span class="ident">elem</span>: <span class="ident">Element</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">sp</span>.<span class="ident">parse</span>());
 
-        <span class='kw'>let</span> <span class='ident'>next_marker</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cast_optional</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>elem</span>, <span class='kw-2'>&amp;</span>[<span class='string'>&quot;NextMarker&quot;</span>])) {
-            <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>nm</span>) <span class='kw'>if</span> <span class='ident'>nm</span> <span class='op'>==</span> <span class='string'>&quot;&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
-            <span class='prelude-val'>Some</span>(<span class='ident'>nm</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>nm</span>),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
+        <span class="kw">let</span> <span class="ident">next_marker</span> <span class="op">=</span> <span class="kw">match</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cast_optional</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;NextMarker&quot;</span>])) {
+            <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">nm</span>) <span class="kw">if</span> <span class="ident">nm</span> <span class="op">==</span> <span class="string">&quot;&quot;</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">nm</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">nm</span>),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
         };
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>v</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>();
-        <span class='kw'>for</span> <span class='ident'>node_blob</span> <span class='kw'>in</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>traverse</span>(<span class='kw-2'>&amp;</span><span class='ident'>elem</span>, <span class='kw-2'>&amp;</span>[<span class='string'>&quot;Blobs&quot;</span>, <span class='string'>&quot;Blob&quot;</span>], <span class='boolval'>true</span>)) {
-            <span class='comment'>// println!(&quot;{:?}&quot;, blob);</span>
-            <span class='ident'>v</span>.<span class='ident'>push</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Blob</span>::<span class='ident'>parse</span>(<span class='ident'>node_blob</span>, <span class='ident'>container_name</span>)));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
+        <span class="kw">for</span> <span class="ident">node_blob</span> <span class="kw">in</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">traverse</span>(<span class="kw-2">&amp;</span><span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Blobs&quot;</span>, <span class="string">&quot;Blob&quot;</span>], <span class="bool-val">true</span>)) {
+            <span class="comment">// println!(&quot;{:?}&quot;, blob);</span>
+            <span class="ident">v</span>.<span class="ident">push</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">Blob</span>::<span class="ident">parse</span>(<span class="ident">node_blob</span>, <span class="ident">container_name</span>)));
         }
 
-        <span class='prelude-val'>Ok</span>(<span class='ident'>IncompleteVector</span>::<span class='op'>&lt;</span><span class='ident'>Blob</span><span class='op'>&gt;</span>::<span class='ident'>new</span>(<span class='ident'>next_marker</span>, <span class='ident'>v</span>))
+        <span class="prelude-val">Ok</span>(<span class="ident">IncompleteVector</span>::<span class="op">&lt;</span><span class="ident">Blob</span><span class="op">&gt;</span>::<span class="ident">new</span>(<span class="ident">next_marker</span>, <span class="ident">v</span>))
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get</span>(<span class='ident'>c</span>: <span class='kw-2'>&amp;</span><span class='ident'>Client</span>,
-               <span class='ident'>container_name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>,
-               <span class='ident'>blob_name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>,
-               <span class='ident'>snapshot</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='ident'>UTC</span><span class='op'>&gt;&gt;</span>,
-               <span class='ident'>range</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Range</span><span class='op'>&gt;</span>,
-               <span class='ident'>lease_id</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>LeaseId</span><span class='op'>&gt;</span>)
-               <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(<span class='ident'>Blob</span>, <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Read</span><span class='op'>&gt;</span>), <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>AzureError</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>uri</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}://{}.blob.core.windows.net/{}/{}&quot;</span>,
-                              <span class='ident'>c</span>.<span class='ident'>auth_scheme</span>(),
-                              <span class='ident'>c</span>.<span class='ident'>account</span>(),
-                              <span class='ident'>container_name</span>,
-                              <span class='ident'>blob_name</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span>(<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">Client</span>,
+               <span class="ident">container_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+               <span class="ident">blob_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+               <span class="ident">snapshot</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">UTC</span><span class="op">&gt;&gt;</span>,
+               <span class="ident">range</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Range</span><span class="op">&gt;</span>,
+               <span class="ident">lease_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">LeaseId</span><span class="op">&gt;</span>)
+               <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Blob</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Read</span><span class="op">&gt;</span>), <span class="ident">core</span>::<span class="ident">errors</span>::<span class="ident">AzureError</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">uri</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}://{}.blob.core.windows.net/{}/{}&quot;</span>,
+                              <span class="ident">c</span>.<span class="ident">auth_scheme</span>(),
+                              <span class="ident">c</span>.<span class="ident">account</span>(),
+                              <span class="ident">container_name</span>,
+                              <span class="ident">blob_name</span>);
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>snapshot</span>) <span class='op'>=</span> <span class='ident'>snapshot</span> {
-            <span class='ident'>uri</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}?snapshot={}&quot;</span>, <span class='ident'>uri</span>, <span class='ident'>snapshot</span>.<span class='ident'>to_rfc2822</span>());
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">snapshot</span>) <span class="op">=</span> <span class="ident">snapshot</span> {
+            <span class="ident">uri</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}?snapshot={}&quot;</span>, <span class="ident">uri</span>, <span class="ident">snapshot</span>.<span class="ident">to_rfc2822</span>());
         }
 
-        <span class='kw'>let</span> <span class='ident'>uri</span> <span class='op'>=</span> <span class='ident'>uri</span>;
+        <span class="kw">let</span> <span class="ident">uri</span> <span class="op">=</span> <span class="ident">uri</span>;
 
-        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;uri == {:?}&quot;</span>, <span class='ident'>uri</span>);
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;uri == {:?}&quot;</span>, <span class="ident">uri</span>);
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>headers</span> <span class='op'>=</span> <span class='ident'>Headers</span>::<span class='ident'>new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">Headers</span>::<span class="ident">new</span>();
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>r</span>) <span class='op'>=</span> <span class='ident'>range</span> {
-            <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSRange</span>(<span class='ident'>r</span>.<span class='ident'>clone</span>()));
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">r</span>) <span class="op">=</span> <span class="ident">range</span> {
+            <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSRange</span>(<span class="kw-2">*</span><span class="ident">r</span>));
 
-            <span class='comment'>// if range is &lt; 4MB request md5</span>
-            <span class='kw'>if</span> <span class='ident'>r</span>.<span class='ident'>end</span> <span class='op'>-</span> <span class='ident'>r</span>.<span class='ident'>start</span> <span class='op'>&lt;=</span> <span class='number'>1024</span> <span class='op'>*</span> <span class='number'>1024</span> <span class='op'>*</span> <span class='number'>4</span> {
-                <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSRangeGetContentMD5</span>(<span class='boolval'>true</span>));
+            <span class="comment">// if range is &lt; 4MB request md5</span>
+            <span class="kw">if</span> <span class="ident">r</span>.<span class="ident">end</span> <span class="op">-</span> <span class="ident">r</span>.<span class="ident">start</span> <span class="op">&lt;=</span> <span class="number">1024</span> <span class="op">*</span> <span class="number">1024</span> <span class="op">*</span> <span class="number">4</span> {
+                <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSRangeGetContentMD5</span>(<span class="bool-val">true</span>));
             }
         }
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>l</span>) <span class='op'>=</span> <span class='ident'>lease_id</span> {
-            <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSLeaseId</span>(<span class='ident'>l</span>.<span class='ident'>clone</span>()));
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">l</span>) <span class="op">=</span> <span class="ident">lease_id</span> {
+            <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSLeaseId</span>(<span class="kw-2">*</span><span class="ident">l</span>));
         }
 
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>resp</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>c</span>.<span class='ident'>perform_request</span>(<span class='kw-2'>&amp;</span><span class='ident'>uri</span>, <span class='ident'>core</span>::<span class='ident'>HTTPMethod</span>::<span class='ident'>Get</span>, <span class='kw-2'>&amp;</span><span class='ident'>headers</span>, <span class='prelude-val'>None</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">c</span>.<span class="ident">perform_request</span>(<span class="kw-2">&amp;</span><span class="ident">uri</span>, <span class="ident">core</span>::<span class="ident">HTTPMethod</span>::<span class="ident">Get</span>, <span class="kw-2">&amp;</span><span class="ident">headers</span>, <span class="prelude-val">None</span>));
 
-        <span class='comment'>// if we have requested a range the response code should be 207 (partial content)</span>
-        <span class='comment'>// otherwise 200 (ok).</span>
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(_) <span class='op'>=</span> <span class='ident'>range</span> {
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>check_status</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>resp</span>, <span class='ident'>StatusCode</span>::<span class='ident'>PartialContent</span>));
-        } <span class='kw'>else</span> {
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>check_status</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>resp</span>, <span class='ident'>StatusCode</span>::<span class='prelude-val'>Ok</span>));
+        <span class="comment">// if we have requested a range the response code should be 207 (partial content)</span>
+        <span class="comment">// otherwise 200 (ok).</span>
+        <span class="kw">if</span> <span class="ident">range</span>.<span class="ident">is_some</span>() {
+            <span class="macro">try</span><span class="macro">!</span>(<span class="ident">check_status</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">resp</span>, <span class="ident">StatusCode</span>::<span class="ident">PartialContent</span>));
+        } <span class="kw">else</span> {
+            <span class="macro">try</span><span class="macro">!</span>(<span class="ident">check_status</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">resp</span>, <span class="ident">StatusCode</span>::<span class="prelude-val">Ok</span>));
         }
 
-        <span class='kw'>let</span> <span class='ident'>blob</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Blob</span>::<span class='ident'>from_headers</span>(<span class='ident'>blob_name</span>, <span class='ident'>container_name</span>, <span class='kw-2'>&amp;</span><span class='ident'>resp</span>.<span class='ident'>headers</span>));
-        <span class='kw'>let</span> <span class='ident'>r</span>: <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Read</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>resp</span>);
+        <span class="kw">let</span> <span class="ident">blob</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">Blob</span>::<span class="ident">from_headers</span>(<span class="ident">blob_name</span>, <span class="ident">container_name</span>, <span class="kw-2">&amp;</span><span class="ident">resp</span>.<span class="ident">headers</span>));
+        <span class="kw">let</span> <span class="ident">r</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Read</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">resp</span>);
 
-        <span class='prelude-val'>Ok</span>((<span class='ident'>blob</span>, <span class='ident'>r</span>))
+        <span class="prelude-val">Ok</span>((<span class="ident">blob</span>, <span class="ident">r</span>))
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>put</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-               <span class='ident'>c</span>: <span class='kw-2'>&amp;</span><span class='ident'>Client</span>,
-               <span class='ident'>po</span>: <span class='kw-2'>&amp;</span><span class='ident'>PutOptions</span>,
-               <span class='ident'>r</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Read</span>, <span class='ident'>u64</span>)<span class='op'>&gt;</span>)
-               <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>AzureError</span><span class='op'>&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">put</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
+               <span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">Client</span>,
+               <span class="ident">po</span>: <span class="kw-2">&amp;</span><span class="ident">PutOptions</span>,
+               <span class="ident">r</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Read</span>, <span class="ident">u64</span>)<span class="op">&gt;</span>)
+               <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">AzureError</span><span class="op">&gt;</span> {
 
-        <span class='comment'>// parameter sanity check</span>
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>blob_type</span> {
-            <span class='ident'>BlobType</span>::<span class='ident'>BlockBlob</span> <span class='op'>=&gt;</span> {
-                <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>None</span> <span class='op'>=</span> <span class='ident'>r</span> {
-                    <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>AzureError</span>::<span class='ident'>InputParametersError</span>(<span class='string'>&quot;cannot use put_blob with \
+        <span class="comment">// parameter sanity check</span>
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">blob_type</span> {
+            <span class="ident">BlobType</span>::<span class="ident">BlockBlob</span> <span class="op">=&gt;</span> {
+                <span class="kw">if</span> <span class="ident">r</span>.<span class="ident">is_some</span>() {
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">AzureError</span>::<span class="ident">InputParametersError</span>(<span class="string">&quot;cannot use put_blob with \
                                                                  BlockBlob without a Read&quot;</span>
-                                                                    .<span class='ident'>to_owned</span>()));
+                                                                        .<span class="ident">to_owned</span>()));
                 }
             }
-            <span class='ident'>BlobType</span>::<span class='ident'>PageBlob</span> <span class='op'>=&gt;</span> {
-                <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(_) <span class='op'>=</span> <span class='ident'>r</span> {
-                    <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>AzureError</span>::<span class='ident'>InputParametersError</span>(<span class='string'>&quot;cannot use put_blob with \
+            <span class="ident">BlobType</span>::<span class="ident">PageBlob</span> <span class="op">=&gt;</span> {
+                <span class="kw">if</span> <span class="ident">r</span>.<span class="ident">is_some</span>() {
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">AzureError</span>::<span class="ident">InputParametersError</span>(<span class="string">&quot;cannot use put_blob with \
                                                                  PageBlob with a Read&quot;</span>
-                                                                    .<span class='ident'>to_owned</span>()));
+                                                                        .<span class="ident">to_owned</span>()));
                 }
 
-                <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>content_length</span> <span class='op'>%</span> <span class='number'>512</span> <span class='op'>!=</span> <span class='number'>0</span> {
-                    <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>AzureError</span>::<span class='ident'>InputParametersError</span>(<span class='string'>&quot;PageBlob size must be aligned \
+                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">content_length</span> <span class="op">%</span> <span class="number">512</span> <span class="op">!=</span> <span class="number">0</span> {
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">AzureError</span>::<span class="ident">InputParametersError</span>(<span class="string">&quot;PageBlob size must be aligned \
                                                                  to 512 bytes boundary&quot;</span>
-                                                                    .<span class='ident'>to_owned</span>()));
+                                                                        .<span class="ident">to_owned</span>()));
                 }
             }
-            <span class='ident'>BlobType</span>::<span class='ident'>AppendBlob</span> <span class='op'>=&gt;</span> {
-                <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(_) <span class='op'>=</span> <span class='ident'>r</span> {
-                    <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>AzureError</span>::<span class='ident'>InputParametersError</span>(<span class='string'>&quot;cannot use put_blob with \
+            <span class="ident">BlobType</span>::<span class="ident">AppendBlob</span> <span class="op">=&gt;</span> {
+                <span class="kw">if</span> <span class="ident">r</span>.<span class="ident">is_some</span>() {
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">AzureError</span>::<span class="ident">InputParametersError</span>(<span class="string">&quot;cannot use put_blob with \
                                                                  AppendBlob with a Read&quot;</span>
-                                                                    .<span class='ident'>to_owned</span>()));
+                                                                        .<span class="ident">to_owned</span>()));
                 }
             }
         }
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>uri</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}://{}.blob.core.windows.net/{}/{}&quot;</span>,
-                              <span class='ident'>c</span>.<span class='ident'>auth_scheme</span>(),
-                              <span class='ident'>c</span>.<span class='ident'>account</span>(),
-                              <span class='self'>self</span>.<span class='ident'>container_name</span>,
-                              <span class='self'>self</span>.<span class='ident'>name</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">uri</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}://{}.blob.core.windows.net/{}/{}&quot;</span>,
+                              <span class="ident">c</span>.<span class="ident">auth_scheme</span>(),
+                              <span class="ident">c</span>.<span class="ident">account</span>(),
+                              <span class="self">self</span>.<span class="ident">container_name</span>,
+                              <span class="self">self</span>.<span class="ident">name</span>);
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>timeout</span>) <span class='op'>=</span> <span class='ident'>po</span>.<span class='ident'>timeout</span> {
-            <span class='ident'>uri</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&amp;timeout={}&quot;</span>, <span class='ident'>uri</span>, <span class='ident'>timeout</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">timeout</span>) <span class="op">=</span> <span class="ident">po</span>.<span class="ident">timeout</span> {
+            <span class="ident">uri</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&amp;timeout={}&quot;</span>, <span class="ident">uri</span>, <span class="ident">timeout</span>);
         }
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>headers</span> <span class='op'>=</span> <span class='ident'>Headers</span>::<span class='ident'>new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">Headers</span>::<span class="ident">new</span>();
 
-        <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>ContentType</span>(<span class='self'>self</span>.<span class='ident'>content_type</span>.<span class='ident'>clone</span>()));
+        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ContentType</span>(<span class="self">self</span>.<span class="ident">content_type</span>.<span class="ident">clone</span>()));
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>content_encoding</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>content_encoding</span> {
-            <span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>header</span>::<span class='ident'>Encoding</span>;
-            <span class='kw'>let</span> <span class='ident'>enc</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>content_encoding</span>.<span class='ident'>parse</span>::<span class='op'>&lt;</span><span class='ident'>Encoding</span><span class='op'>&gt;</span>());
-            <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>ContentEncoding</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>enc</span>]));
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">content_encoding</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">content_encoding</span> {
+            <span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::<span class="ident">Encoding</span>;
+            <span class="kw">let</span> <span class="ident">enc</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">content_encoding</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">Encoding</span><span class="op">&gt;</span>());
+            <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ContentEncoding</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="ident">enc</span>]));
         };
 
-        <span class='comment'>// TODO Content-Language</span>
+        <span class="comment">// TODO Content-Language</span>
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>content_md5</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>content_md5</span> {
-            <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>ContentMD5</span>(<span class='ident'>content_md5</span>.<span class='ident'>to_owned</span>()));
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">content_md5</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">content_md5</span> {
+            <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ContentMD5</span>(<span class="ident">content_md5</span>.<span class="ident">to_owned</span>()));
         };
 
-        <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSBlobType</span>(<span class='self'>self</span>.<span class='ident'>blob_type</span>));
+        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSBlobType</span>(<span class="self">self</span>.<span class="ident">blob_type</span>));
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>lease_id</span>) <span class='op'>=</span> <span class='ident'>po</span>.<span class='ident'>lease_id</span> {
-            <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSLeaseId</span>(<span class='ident'>lease_id</span>.<span class='ident'>clone</span>()));
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">lease_id</span>) <span class="op">=</span> <span class="ident">po</span>.<span class="ident">lease_id</span> {
+            <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSLeaseId</span>(<span class="kw-2">*</span><span class="ident">lease_id</span>));
         }
 
-        <span class='comment'>// TODO x-ms-blob-content-disposition</span>
+        <span class="comment">// TODO x-ms-blob-content-disposition</span>
 
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>blob_type</span> <span class='op'>==</span> <span class='ident'>BlobType</span>::<span class='ident'>PageBlob</span> {
-            <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSBlobContentLength</span>(<span class='self'>self</span>.<span class='ident'>content_length</span>));
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">blob_type</span> <span class="op">==</span> <span class="ident">BlobType</span>::<span class="ident">PageBlob</span> {
+            <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSBlobContentLength</span>(<span class="self">self</span>.<span class="ident">content_length</span>));
         }
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>resp</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>c</span>.<span class='ident'>perform_request</span>(<span class='kw-2'>&amp;</span><span class='ident'>uri</span>, <span class='ident'>core</span>::<span class='ident'>HTTPMethod</span>::<span class='ident'>Put</span>, <span class='kw-2'>&amp;</span><span class='ident'>headers</span>, <span class='ident'>r</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">c</span>.<span class="ident">perform_request</span>(<span class="kw-2">&amp;</span><span class="ident">uri</span>, <span class="ident">core</span>::<span class="ident">HTTPMethod</span>::<span class="ident">Put</span>, <span class="kw-2">&amp;</span><span class="ident">headers</span>, <span class="ident">r</span>));
 
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>check_status</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>resp</span>, <span class='ident'>StatusCode</span>::<span class='ident'>Created</span>));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">core</span>::<span class="ident">errors</span>::<span class="ident">check_status</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">resp</span>, <span class="ident">StatusCode</span>::<span class="ident">Created</span>));
 
-        <span class='prelude-val'>Ok</span>(())
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>lease</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-                 <span class='ident'>c</span>: <span class='kw-2'>&amp;</span><span class='ident'>Client</span>,
-                 <span class='ident'>la</span>: <span class='ident'>LeaseAction</span>,
-                 <span class='ident'>lbo</span>: <span class='kw-2'>&amp;</span><span class='ident'>LeaseBlobOptions</span>)
-                 <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>LeaseId</span>, <span class='ident'>AzureError</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>uri</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}://{}.blob.core.windows.net/{}/{}?comp=lease&quot;</span>,
-                              <span class='ident'>c</span>.<span class='ident'>auth_scheme</span>(),
-                              <span class='ident'>c</span>.<span class='ident'>account</span>(),
-                              <span class='self'>self</span>.<span class='ident'>container_name</span>,
-                              <span class='self'>self</span>.<span class='ident'>name</span>);
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>timeout</span>) <span class='op'>=</span> <span class='ident'>lbo</span>.<span class='ident'>timeout</span> {
-            <span class='ident'>uri</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&amp;timeout={}&quot;</span>, <span class='ident'>uri</span>, <span class='ident'>timeout</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">lease</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
+                 <span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">Client</span>,
+                 <span class="ident">la</span>: <span class="ident">LeaseAction</span>,
+                 <span class="ident">lbo</span>: <span class="kw-2">&amp;</span><span class="ident">LeaseBlobOptions</span>)
+                 <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">LeaseId</span>, <span class="ident">AzureError</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">uri</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}://{}.blob.core.windows.net/{}/{}?comp=lease&quot;</span>,
+                              <span class="ident">c</span>.<span class="ident">auth_scheme</span>(),
+                              <span class="ident">c</span>.<span class="ident">account</span>(),
+                              <span class="self">self</span>.<span class="ident">container_name</span>,
+                              <span class="self">self</span>.<span class="ident">name</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">timeout</span>) <span class="op">=</span> <span class="ident">lbo</span>.<span class="ident">timeout</span> {
+            <span class="ident">uri</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&amp;timeout={}&quot;</span>, <span class="ident">uri</span>, <span class="ident">timeout</span>);
         }
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>headers</span> <span class='op'>=</span> <span class='ident'>Headers</span>::<span class='ident'>new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">Headers</span>::<span class="ident">new</span>();
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>lease_id</span>) <span class='op'>=</span> <span class='ident'>lbo</span>.<span class='ident'>lease_id</span> {
-            <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSLeaseId</span>(<span class='ident'>lease_id</span>.<span class='ident'>to_owned</span>()));
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">lease_id</span>) <span class="op">=</span> <span class="ident">lbo</span>.<span class="ident">lease_id</span> {
+            <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSLeaseId</span>(<span class="ident">lease_id</span>.<span class="ident">to_owned</span>()));
         }
 
-        <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSLeaseAction</span>(<span class='ident'>la</span>));
+        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSLeaseAction</span>(<span class="ident">la</span>));
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>lease_break_period</span>) <span class='op'>=</span> <span class='ident'>lbo</span>.<span class='ident'>lease_break_period</span> {
-            <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSLeaseBreakPeriod</span>(<span class='ident'>lease_break_period</span>));
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">lease_break_period</span>) <span class="op">=</span> <span class="ident">lbo</span>.<span class="ident">lease_break_period</span> {
+            <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSLeaseBreakPeriod</span>(<span class="ident">lease_break_period</span>));
         }
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>lease_duration</span>) <span class='op'>=</span> <span class='ident'>lbo</span>.<span class='ident'>lease_duration</span> {
-            <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSLeaseDurationSeconds</span>(<span class='ident'>lease_duration</span>));
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">lease_duration</span>) <span class="op">=</span> <span class="ident">lbo</span>.<span class="ident">lease_duration</span> {
+            <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSLeaseDurationSeconds</span>(<span class="ident">lease_duration</span>));
         }
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>proposed_lease_id</span>) <span class='op'>=</span> <span class='ident'>lbo</span>.<span class='ident'>proposed_lease_id</span> {
-            <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSProposedLeaseId</span>(<span class='ident'>proposed_lease_id</span>.<span class='ident'>clone</span>()));
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">proposed_lease_id</span>) <span class="op">=</span> <span class="ident">lbo</span>.<span class="ident">proposed_lease_id</span> {
+            <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSProposedLeaseId</span>(<span class="kw-2">*</span><span class="ident">proposed_lease_id</span>));
         }
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>request_id</span>) <span class='op'>=</span> <span class='ident'>lbo</span>.<span class='ident'>request_id</span> {
-            <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSClientRequestId</span>(<span class='ident'>request_id</span>.<span class='ident'>to_owned</span>()));
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">request_id</span>) <span class="op">=</span> <span class="ident">lbo</span>.<span class="ident">request_id</span> {
+            <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSClientRequestId</span>(<span class="ident">request_id</span>.<span class="ident">to_owned</span>()));
         }
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>resp</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>c</span>.<span class='ident'>perform_request</span>(<span class='kw-2'>&amp;</span><span class='ident'>uri</span>, <span class='ident'>core</span>::<span class='ident'>HTTPMethod</span>::<span class='ident'>Put</span>, <span class='kw-2'>&amp;</span><span class='ident'>headers</span>, <span class='prelude-val'>None</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">c</span>.<span class="ident">perform_request</span>(<span class="kw-2">&amp;</span><span class="ident">uri</span>, <span class="ident">core</span>::<span class="ident">HTTPMethod</span>::<span class="ident">Put</span>, <span class="kw-2">&amp;</span><span class="ident">headers</span>, <span class="prelude-val">None</span>));
 
-        <span class='kw'>let</span> <span class='ident'>expected_result</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>la</span> {
-            <span class='ident'>LeaseAction</span>::<span class='ident'>Acquire</span> <span class='op'>=&gt;</span> <span class='ident'>StatusCode</span>::<span class='ident'>Created</span>,
-            <span class='ident'>LeaseAction</span>::<span class='ident'>Renew</span> <span class='op'>=&gt;</span> <span class='ident'>StatusCode</span>::<span class='prelude-val'>Ok</span>,
-            <span class='ident'>LeaseAction</span>::<span class='ident'>Change</span> <span class='op'>=&gt;</span> <span class='ident'>StatusCode</span>::<span class='prelude-val'>Ok</span>,
-            <span class='ident'>LeaseAction</span>::<span class='ident'>Release</span> <span class='op'>=&gt;</span> <span class='ident'>StatusCode</span>::<span class='prelude-val'>Ok</span>,
-            <span class='ident'>LeaseAction</span>::<span class='ident'>Break</span> <span class='op'>=&gt;</span> <span class='ident'>StatusCode</span>::<span class='ident'>Accepted</span>,
+        <span class="kw">let</span> <span class="ident">expected_result</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">la</span> {
+            <span class="ident">LeaseAction</span>::<span class="ident">Acquire</span> <span class="op">=&gt;</span> <span class="ident">StatusCode</span>::<span class="ident">Created</span>,
+            <span class="ident">LeaseAction</span>::<span class="ident">Renew</span> <span class="op">|</span> <span class="ident">LeaseAction</span>::<span class="ident">Change</span> <span class="op">|</span> <span class="ident">LeaseAction</span>::<span class="ident">Release</span> <span class="op">=&gt;</span> <span class="ident">StatusCode</span>::<span class="prelude-val">Ok</span>,
+            <span class="ident">LeaseAction</span>::<span class="ident">Break</span> <span class="op">=&gt;</span> <span class="ident">StatusCode</span>::<span class="ident">Accepted</span>,
         };
 
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>check_status</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>resp</span>, <span class='ident'>expected_result</span>));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">core</span>::<span class="ident">errors</span>::<span class="ident">check_status</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">resp</span>, <span class="ident">expected_result</span>));
 
-        <span class='kw'>let</span> <span class='ident'>lid</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>resp</span>.<span class='ident'>headers</span>.<span class='ident'>get</span>::<span class='op'>&lt;</span><span class='ident'>XMSLeaseId</span><span class='op'>&gt;</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>l</span>) <span class='op'>=&gt;</span> <span class='ident'>l</span> <span class='kw'>as</span> <span class='kw-2'>&amp;</span><span class='ident'>Uuid</span>,
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>AzureError</span>::<span class='ident'>HeaderNotFound</span>(<span class='string'>&quot;x-ms-lease-id&quot;</span>.<span class='ident'>to_owned</span>())),
+        <span class="kw">let</span> <span class="ident">lid</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">resp</span>.<span class="ident">headers</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">XMSLeaseId</span><span class="op">&gt;</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">l</span>) <span class="op">=&gt;</span> <span class="ident">l</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">Uuid</span>,
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">AzureError</span>::<span class="ident">HeaderNotFound</span>(<span class="string">&quot;x-ms-lease-id&quot;</span>.<span class="ident">to_owned</span>())),
         };
 
-        <span class='prelude-val'>Ok</span>(<span class='ident'>lid</span>.<span class='ident'>clone</span>())
+        <span class="prelude-val">Ok</span>(<span class="kw-2">*</span><span class="ident">lid</span>)
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>put_page</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-                    <span class='ident'>c</span>: <span class='kw-2'>&amp;</span><span class='ident'>Client</span>,
-                    <span class='ident'>range</span>: <span class='kw-2'>&amp;</span><span class='ident'>BA512Range</span>,
-                    <span class='ident'>ppo</span>: <span class='kw-2'>&amp;</span><span class='ident'>PutPageOptions</span>,
-                    <span class='ident'>content</span>: (<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Read</span>, <span class='ident'>u64</span>))
-                    <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>AzureError</span><span class='op'>&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">put_page</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
+                    <span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">Client</span>,
+                    <span class="ident">range</span>: <span class="kw-2">&amp;</span><span class="ident">BA512Range</span>,
+                    <span class="ident">ppo</span>: <span class="kw-2">&amp;</span><span class="ident">PutPageOptions</span>,
+                    <span class="ident">content</span>: (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Read</span>, <span class="ident">u64</span>))
+                    <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">AzureError</span><span class="op">&gt;</span> {
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>uri</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}://{}.blob.core.windows.net/{}/{}?comp=page&quot;</span>,
-                              <span class='ident'>c</span>.<span class='ident'>auth_scheme</span>(),
-                              <span class='ident'>c</span>.<span class='ident'>account</span>(),
-                              <span class='self'>self</span>.<span class='ident'>container_name</span>,
-                              <span class='self'>self</span>.<span class='ident'>name</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">uri</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}://{}.blob.core.windows.net/{}/{}?comp=page&quot;</span>,
+                              <span class="ident">c</span>.<span class="ident">auth_scheme</span>(),
+                              <span class="ident">c</span>.<span class="ident">account</span>(),
+                              <span class="self">self</span>.<span class="ident">container_name</span>,
+                              <span class="self">self</span>.<span class="ident">name</span>);
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>timeout</span>) <span class='op'>=</span> <span class='ident'>ppo</span>.<span class='ident'>timeout</span> {
-            <span class='ident'>uri</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&amp;timeout={}&quot;</span>, <span class='ident'>uri</span>, <span class='ident'>timeout</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">timeout</span>) <span class="op">=</span> <span class="ident">ppo</span>.<span class="ident">timeout</span> {
+            <span class="ident">uri</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&amp;timeout={}&quot;</span>, <span class="ident">uri</span>, <span class="ident">timeout</span>);
         }
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>headers</span> <span class='op'>=</span> <span class='ident'>Headers</span>::<span class='ident'>new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">Headers</span>::<span class="ident">new</span>();
 
-        <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSRange</span>(<span class='ident'>range</span>.<span class='ident'>into</span>()));
-        <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSBlobContentLength</span>(<span class='ident'>content</span>.<span class='number'>1</span>));
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>lease_id</span>) <span class='op'>=</span> <span class='ident'>ppo</span>.<span class='ident'>lease_id</span> {
-            <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSLeaseId</span>(<span class='ident'>lease_id</span>.<span class='ident'>clone</span>()));
+        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSRange</span>(<span class="ident">range</span>.<span class="ident">into</span>()));
+        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSBlobContentLength</span>(<span class="ident">content</span>.<span class="number">1</span>));
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">lease_id</span>) <span class="op">=</span> <span class="ident">ppo</span>.<span class="ident">lease_id</span> {
+            <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSLeaseId</span>(<span class="kw-2">*</span><span class="ident">lease_id</span>));
         }
 
-        <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSPageWrite</span>(<span class='ident'>PageWriteType</span>::<span class='ident'>Update</span>));
+        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSPageWrite</span>(<span class="ident">PageWriteType</span>::<span class="ident">Update</span>));
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>resp</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>c</span>.<span class='ident'>perform_request</span>(<span class='kw-2'>&amp;</span><span class='ident'>uri</span>,
-                                              <span class='ident'>core</span>::<span class='ident'>HTTPMethod</span>::<span class='ident'>Put</span>,
-                                              <span class='kw-2'>&amp;</span><span class='ident'>headers</span>,
-                                              <span class='prelude-val'>Some</span>(<span class='ident'>content</span>)));
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>check_status</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>resp</span>, <span class='ident'>StatusCode</span>::<span class='ident'>Created</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp</span> <span class="op">=</span>
+            <span class="macro">try</span><span class="macro">!</span>(<span class="ident">c</span>.<span class="ident">perform_request</span>(<span class="kw-2">&amp;</span><span class="ident">uri</span>, <span class="ident">core</span>::<span class="ident">HTTPMethod</span>::<span class="ident">Put</span>, <span class="kw-2">&amp;</span><span class="ident">headers</span>, <span class="prelude-val">Some</span>(<span class="ident">content</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">core</span>::<span class="ident">errors</span>::<span class="ident">check_status</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">resp</span>, <span class="ident">StatusCode</span>::<span class="ident">Created</span>));
 
-        <span class='prelude-val'>Ok</span>(())
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>put_block</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-                     <span class='ident'>c</span>: <span class='kw-2'>&amp;</span><span class='ident'>Client</span>,
-                     <span class='ident'>block_id</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>,
-                     <span class='ident'>pbo</span>: <span class='kw-2'>&amp;</span><span class='ident'>PutBlockOptions</span>,
-                     <span class='ident'>content</span>: (<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Read</span>, <span class='ident'>u64</span>))
-                     <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>AzureError</span><span class='op'>&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">put_block</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
+                     <span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">Client</span>,
+                     <span class="ident">block_id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+                     <span class="ident">pbo</span>: <span class="kw-2">&amp;</span><span class="ident">PutBlockOptions</span>,
+                     <span class="ident">content</span>: (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Read</span>, <span class="ident">u64</span>))
+                     <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">AzureError</span><span class="op">&gt;</span> {
 
-        <span class='kw'>let</span> <span class='ident'>encoded_block_id</span> <span class='op'>=</span> <span class='ident'>block_id</span>.<span class='ident'>as_bytes</span>().<span class='ident'>to_base64</span>(<span class='ident'>STANDARD</span>);
+        <span class="kw">let</span> <span class="ident">encoded_block_id</span> <span class="op">=</span> <span class="ident">base64</span>::<span class="ident">encode</span>(<span class="ident">block_id</span>.<span class="ident">as_bytes</span>());
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>uri</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}://{}.blob.core.windows.net/{}/{}?comp=block&amp;blockid={}&quot;</span>,
-                              <span class='ident'>c</span>.<span class='ident'>auth_scheme</span>(),
-                              <span class='ident'>c</span>.<span class='ident'>account</span>(),
-                              <span class='self'>self</span>.<span class='ident'>container_name</span>,
-                              <span class='self'>self</span>.<span class='ident'>name</span>,
-                              <span class='ident'>encoded_block_id</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">uri</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}://{}.blob.core.windows.net/{}/{}?comp=block&amp;blockid={}&quot;</span>,
+                              <span class="ident">c</span>.<span class="ident">auth_scheme</span>(),
+                              <span class="ident">c</span>.<span class="ident">account</span>(),
+                              <span class="self">self</span>.<span class="ident">container_name</span>,
+                              <span class="self">self</span>.<span class="ident">name</span>,
+                              <span class="ident">encoded_block_id</span>);
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>timeout</span>) <span class='op'>=</span> <span class='ident'>pbo</span>.<span class='ident'>timeout</span> {
-            <span class='ident'>uri</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&amp;timeout={}&quot;</span>, <span class='ident'>uri</span>, <span class='ident'>timeout</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">timeout</span>) <span class="op">=</span> <span class="ident">pbo</span>.<span class="ident">timeout</span> {
+            <span class="ident">uri</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&amp;timeout={}&quot;</span>, <span class="ident">uri</span>, <span class="ident">timeout</span>);
         }
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>headers</span> <span class='op'>=</span> <span class='ident'>Headers</span>::<span class='ident'>new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">Headers</span>::<span class="ident">new</span>();
 
-        <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSBlobContentLength</span>(<span class='ident'>content</span>.<span class='number'>1</span>));
+        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSBlobContentLength</span>(<span class="ident">content</span>.<span class="number">1</span>));
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>lease_id</span>) <span class='op'>=</span> <span class='ident'>pbo</span>.<span class='ident'>lease_id</span> {
-            <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSLeaseId</span>(<span class='ident'>lease_id</span>.<span class='ident'>clone</span>()));
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">lease_id</span>) <span class="op">=</span> <span class="ident">pbo</span>.<span class="ident">lease_id</span> {
+            <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSLeaseId</span>(<span class="kw-2">*</span><span class="ident">lease_id</span>));
         }
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>request_id</span>) <span class='op'>=</span> <span class='ident'>pbo</span>.<span class='ident'>request_id</span> {
-            <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSClientRequestId</span>(<span class='ident'>request_id</span>.<span class='ident'>to_owned</span>()));
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">request_id</span>) <span class="op">=</span> <span class="ident">pbo</span>.<span class="ident">request_id</span> {
+            <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSClientRequestId</span>(<span class="ident">request_id</span>.<span class="ident">to_owned</span>()));
         }
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>resp</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>c</span>.<span class='ident'>perform_request</span>(<span class='kw-2'>&amp;</span><span class='ident'>uri</span>,
-                                              <span class='ident'>core</span>::<span class='ident'>HTTPMethod</span>::<span class='ident'>Put</span>,
-                                              <span class='kw-2'>&amp;</span><span class='ident'>headers</span>,
-                                              <span class='prelude-val'>Some</span>(<span class='ident'>content</span>)));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp</span> <span class="op">=</span>
+            <span class="macro">try</span><span class="macro">!</span>(<span class="ident">c</span>.<span class="ident">perform_request</span>(<span class="kw-2">&amp;</span><span class="ident">uri</span>, <span class="ident">core</span>::<span class="ident">HTTPMethod</span>::<span class="ident">Put</span>, <span class="kw-2">&amp;</span><span class="ident">headers</span>, <span class="prelude-val">Some</span>(<span class="ident">content</span>)));
 
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>check_status</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>resp</span>, <span class='ident'>StatusCode</span>::<span class='ident'>Created</span>));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">core</span>::<span class="ident">errors</span>::<span class="ident">check_status</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">resp</span>, <span class="ident">StatusCode</span>::<span class="ident">Created</span>));
 
-        <span class='prelude-val'>Ok</span>(())
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>clear_page</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-                      <span class='ident'>c</span>: <span class='kw-2'>&amp;</span><span class='ident'>Client</span>,
-                      <span class='ident'>range</span>: <span class='kw-2'>&amp;</span><span class='ident'>BA512Range</span>,
-                      <span class='ident'>lease_id</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>LeaseId</span><span class='op'>&gt;</span>)
-                      <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>AzureError</span><span class='op'>&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clear_page</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
+                      <span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">Client</span>,
+                      <span class="ident">range</span>: <span class="kw-2">&amp;</span><span class="ident">BA512Range</span>,
+                      <span class="ident">lease_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">LeaseId</span><span class="op">&gt;</span>)
+                      <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">AzureError</span><span class="op">&gt;</span> {
 
-        <span class='kw'>let</span> <span class='ident'>uri</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}://{}.blob.core.windows.net/{}/{}?comp=page&quot;</span>,
-                          <span class='ident'>c</span>.<span class='ident'>auth_scheme</span>(),
-                          <span class='ident'>c</span>.<span class='ident'>account</span>(),
-                          <span class='self'>self</span>.<span class='ident'>container_name</span>,
-                          <span class='self'>self</span>.<span class='ident'>name</span>);
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>headers</span> <span class='op'>=</span> <span class='ident'>Headers</span>::<span class='ident'>new</span>();
+        <span class="kw">let</span> <span class="ident">uri</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}://{}.blob.core.windows.net/{}/{}?comp=page&quot;</span>,
+                          <span class="ident">c</span>.<span class="ident">auth_scheme</span>(),
+                          <span class="ident">c</span>.<span class="ident">account</span>(),
+                          <span class="self">self</span>.<span class="ident">container_name</span>,
+                          <span class="self">self</span>.<span class="ident">name</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">Headers</span>::<span class="ident">new</span>();
 
-        <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSRange</span>(<span class='ident'>range</span>.<span class='ident'>into</span>()));
-        <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSBlobContentLength</span>(<span class='number'>0</span>));
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>lease_id</span>) <span class='op'>=</span> <span class='ident'>lease_id</span> {
-            <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSLeaseId</span>(<span class='ident'>lease_id</span>));
+        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSRange</span>(<span class="ident">range</span>.<span class="ident">into</span>()));
+        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSBlobContentLength</span>(<span class="number">0</span>));
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">lease_id</span>) <span class="op">=</span> <span class="ident">lease_id</span> {
+            <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSLeaseId</span>(<span class="ident">lease_id</span>));
         }
 
-        <span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>XMSPageWrite</span>(<span class='ident'>PageWriteType</span>::<span class='ident'>Clear</span>));
+        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XMSPageWrite</span>(<span class="ident">PageWriteType</span>::<span class="ident">Clear</span>));
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>resp</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>c</span>.<span class='ident'>perform_request</span>(<span class='kw-2'>&amp;</span><span class='ident'>uri</span>, <span class='ident'>core</span>::<span class='ident'>HTTPMethod</span>::<span class='ident'>Put</span>, <span class='kw-2'>&amp;</span><span class='ident'>headers</span>, <span class='prelude-val'>None</span>));
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>check_status</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>resp</span>, <span class='ident'>StatusCode</span>::<span class='ident'>Created</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">c</span>.<span class="ident">perform_request</span>(<span class="kw-2">&amp;</span><span class="ident">uri</span>, <span class="ident">core</span>::<span class="ident">HTTPMethod</span>::<span class="ident">Put</span>, <span class="kw-2">&amp;</span><span class="ident">headers</span>, <span class="prelude-val">None</span>));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">core</span>::<span class="ident">errors</span>::<span class="ident">check_status</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">resp</span>, <span class="ident">StatusCode</span>::<span class="ident">Created</span>));
 
-        <span class='prelude-val'>Ok</span>(())
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">del</span>(<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">Client</span>,
+               <span class="ident">container_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+               <span class="ident">blob_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>)
+               <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">core</span>::<span class="ident">errors</span>::<span class="ident">AzureError</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">uri</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}://{}.blob.core.windows.net/{}/{}&quot;</span>,
+                          <span class="ident">c</span>.<span class="ident">auth_scheme</span>(),
+                          <span class="ident">c</span>.<span class="ident">account</span>(),
+                          <span class="ident">container_name</span>,
+                          <span class="ident">blob_name</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp</span> <span class="op">=</span>
+            <span class="macro">try</span><span class="macro">!</span>(<span class="ident">c</span>.<span class="ident">perform_request</span>(<span class="kw-2">&amp;</span><span class="ident">uri</span>, <span class="ident">core</span>::<span class="ident">HTTPMethod</span>::<span class="ident">Delete</span>, <span class="kw-2">&amp;</span><span class="ident">Headers</span>::<span class="ident">new</span>(), <span class="prelude-val">None</span>));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">core</span>::<span class="ident">errors</span>::<span class="ident">check_status</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">resp</span>, <span class="ident">StatusCode</span>::<span class="ident">Accepted</span>));
+        <span class="prelude-val">Ok</span>(())
     }
 }
 </pre>
@@ -1386,6 +1404,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -1406,7 +1426,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -1417,11 +1437,9 @@
     <script>
         window.rootPath = "../../../../../";
         window.currentCrate = "azure_sdk_for_rust";
-        window.playgroundUrl = "";
     </script>
     <script src="../../../../../jquery.js"></script>
     <script src="../../../../../main.js"></script>
-    
     <script defer src="../../../../../search-index.js"></script>
 </body>
 </html>

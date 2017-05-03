@@ -1,5 +1,15 @@
 (function() {var implementors = {};
-implementors['libc'] = [];implementors['openssl'] = [];implementors['hyper'] = [];
+implementors["antidote"] = [];
+implementors["azure_sdk_for_rust"] = [];
+implementors["chrono"] = [];
+implementors["hyper"] = [];
+implementors["libc"] = [];
+implementors["num"] = [];
+implementors["openssl"] = [];
+implementors["regex_syntax"] = [];
+implementors["serde"] = [];
+implementors["syn"] = [];
+implementors["void"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

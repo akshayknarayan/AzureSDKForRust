@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `TableService` struct in crate `azure_sdk_for_rust`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, TableService">
+
+    <title>azure_sdk_for_rust::azure::storage::table::TableService - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'>Struct TableService</p><div class="block items"><ul><li><a href="#methods">Methods</a></li></ul></div><p class='location'><a href='../../../index.html'>azure_sdk_for_rust</a>::<wbr><a href='../../index.html'>azure</a>::<wbr><a href='../index.html'>storage</a>::<wbr><a href='index.html'>table</a></p><script>window.sidebarCurrent = {name: 'TableService', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../../index.html'>azure_sdk_for_rust</a>::<wbr><a href='../../index.html'>azure</a>::<wbr><a href='../index.html'>storage</a>::<wbr><a href='index.html'>table</a>::<wbr><a class="struct" href=''>TableService</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../../src/azure_sdk_for_rust/azure/storage/table/mod.rs.html#21-23' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct TableService { /* fields omitted */ }</pre><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../../../../azure_sdk_for_rust/azure/storage/table/struct.TableService.html" title="struct azure_sdk_for_rust::azure::storage::table::TableService">TableService</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../../src/azure_sdk_for_rust/azure/storage/table/mod.rs.html#25-182' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(client: <a class="struct" href="../../../../azure_sdk_for_rust/azure/storage/client/struct.Client.html" title="struct azure_sdk_for_rust::azure::storage::client::Client">Client</a>) -&gt; Self</code></span></h4>
+<h4 id='method.list_tables' class="method"><span id='list_tables.v' class='invisible'><code>fn <a href='#method.list_tables' class='fnname'>list_tables</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>&gt;, <a class="enum" href="../../../../azure_sdk_for_rust/azure/core/errors/enum.AzureError.html" title="enum azure_sdk_for_rust::azure::core::errors::AzureError">AzureError</a>&gt;</code></span></h4>
+<h4 id='method.create_table' class="method"><span id='create_table.v' class='invisible'><code>fn <a href='#method.create_table' class='fnname'>create_table</a>&lt;T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>&gt;&gt;(&amp;self, table_name: T) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="enum" href="../../../../azure_sdk_for_rust/azure/core/errors/enum.AzureError.html" title="enum azure_sdk_for_rust::azure::core::errors::AzureError">AzureError</a>&gt;</code></span></h4>
+<h4 id='method.get_entity' class="method"><span id='get_entity.v' class='invisible'><code>fn <a href='#method.get_entity' class='fnname'>get_entity</a>&lt;T:&nbsp;<a class="trait" href="../../../../serde/de/trait.DeserializeOwned.html" title="trait serde::de::DeserializeOwned">DeserializeOwned</a>&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;table_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;partition_key: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;row_key: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;T&gt;, <a class="enum" href="../../../../azure_sdk_for_rust/azure/core/errors/enum.AzureError.html" title="enum azure_sdk_for_rust::azure::core::errors::AzureError">AzureError</a>&gt;</code></span></h4>
+<h4 id='method.query_entities' class="method"><span id='query_entities.v' class='invisible'><code>fn <a href='#method.query_entities' class='fnname'>query_entities</a>&lt;T:&nbsp;<a class="trait" href="../../../../serde/de/trait.DeserializeOwned.html" title="trait serde::de::DeserializeOwned">DeserializeOwned</a>&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;table_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;query: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;<br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;T&gt;, <a class="enum" href="../../../../azure_sdk_for_rust/azure/core/errors/enum.AzureError.html" title="enum azure_sdk_for_rust::azure::core::errors::AzureError">AzureError</a>&gt;</code></span></h4>
+<h4 id='method.insert_entity' class="method"><span id='insert_entity.v' class='invisible'><code>fn <a href='#method.insert_entity' class='fnname'>insert_entity</a>&lt;T:&nbsp;<a class="trait" href="../../../../serde/ser/trait.Serialize.html" title="trait serde::ser::Serialize">Serialize</a>&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;table_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;entity: &amp;T<br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="enum" href="../../../../azure_sdk_for_rust/azure/core/errors/enum.AzureError.html" title="enum azure_sdk_for_rust::azure::core::errors::AzureError">AzureError</a>&gt;</code></span></h4>
+<h4 id='method.update_entity' class="method"><span id='update_entity.v' class='invisible'><code>fn <a href='#method.update_entity' class='fnname'>update_entity</a>&lt;T:&nbsp;<a class="trait" href="../../../../serde/ser/trait.Serialize.html" title="trait serde::ser::Serialize">Serialize</a>&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;table_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;partition_key: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;row_key: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;entity: &amp;T<br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="enum" href="../../../../azure_sdk_for_rust/azure/core/errors/enum.AzureError.html" title="enum azure_sdk_for_rust::azure::core::errors::AzureError">AzureError</a>&gt;</code></span></h4>
+<h4 id='method.delete_entity' class="method"><span id='delete_entity.v' class='invisible'><code>fn <a href='#method.delete_entity' class='fnname'>delete_entity</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;table_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;partition_key: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;row_key: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="enum" href="../../../../azure_sdk_for_rust/azure/core/errors/enum.AzureError.html" title="enum azure_sdk_for_rust::azure::core::errors::AzureError">AzureError</a>&gt;</code></span></h4>
+<h4 id='method.batch' class="method"><span id='batch.v' class='invisible'><code>fn <a href='#method.batch' class='fnname'>batch</a>&lt;T:&nbsp;<a class="trait" href="../../../../serde/ser/trait.Serialize.html" title="trait serde::ser::Serialize">Serialize</a>&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;table_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;partition_key: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;batch_items: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="struct" href="../../../../azure_sdk_for_rust/azure/storage/table/struct.BatchItem.html" title="struct azure_sdk_for_rust::azure::storage::table::BatchItem">BatchItem</a>&lt;T&gt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="enum" href="../../../../azure_sdk_for_rust/azure/core/errors/enum.AzureError.html" title="enum azure_sdk_for_rust::azure::core::errors::AzureError">AzureError</a>&gt;</code></span></h4>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../../";
+        window.currentCrate = "azure_sdk_for_rust";
+    </script>
+    <script src="../../../../jquery.js"></script>
+    <script src="../../../../main.js"></script>
+    <script defer src="../../../../search-index.js"></script>
+</body>
+</html>

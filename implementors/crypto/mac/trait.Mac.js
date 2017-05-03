@@ -1,5 +1,6 @@
 (function() {var implementors = {};
-implementors['crypto'] = [];
+implementors["azure_sdk_for_rust"] = [];
+implementors["crypto"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

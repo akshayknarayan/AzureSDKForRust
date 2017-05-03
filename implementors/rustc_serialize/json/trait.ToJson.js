@@ -1,5 +1,7 @@
 (function() {var implementors = {};
-implementors['rustc_serialize'] = [];
+implementors["azure_sdk_for_rust"] = [];
+implementors["hyper"] = [];
+implementors["rustc_serialize"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

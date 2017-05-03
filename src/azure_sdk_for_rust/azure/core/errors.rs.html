@@ -4,18 +4,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `src/azure/core/errors.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/mindflavor/src/rust/AzureSDKForRust/src/azure/core/errors.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>errors.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../../main.css">
+    
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -41,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -183,164 +185,148 @@
 <span id="140">140</span>
 <span id="141">141</span>
 <span id="142">142</span>
-<span id="143">143</span>
-<span id="144">144</span>
-<span id="145">145</span>
-<span id="146">146</span>
-<span id="147">147</span>
-<span id="148">148</span>
-<span id="149">149</span>
-<span id="150">150</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>hyper</span>;
-<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>status</span>::<span class='ident'>StatusCode</span>;
-<span class='kw'>use</span> <span class='ident'>chrono</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Error</span> <span class='kw'>as</span> <span class='ident'>IOError</span>;
-<span class='kw'>use</span> <span class='ident'>xml</span>::<span class='ident'>BuilderError</span> <span class='kw'>as</span> <span class='ident'>XMLError</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Read</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>num</span>;
-<span class='comment'>// use xml;</span>
-<span class='kw'>use</span> <span class='ident'>url</span>::<span class='ident'>ParseError</span> <span class='kw'>as</span> <span class='ident'>URLParseError</span>;
-<span class='kw'>use</span> <span class='ident'>azure</span>::<span class='ident'>core</span>::<span class='ident'>enumerations</span>::<span class='ident'>ParsingError</span>;
-<span class='kw'>use</span> <span class='ident'>azure</span>::<span class='ident'>core</span>::<span class='ident'>range</span>::<span class='ident'>ParseError</span>;
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">hyper</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">status</span>::<span class="ident">StatusCode</span>;
+<span class="kw">use</span> <span class="ident">chrono</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">IOError</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Read</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">num</span>;
+<span class="kw">use</span> <span class="ident">xml</span>::<span class="ident">BuilderError</span> <span class="kw">as</span> <span class="ident">XMLError</span>;
+<span class="kw">use</span> <span class="ident">url</span>::<span class="ident">ParseError</span> <span class="kw">as</span> <span class="ident">URLParseError</span>;
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">enumerations</span>::<span class="ident">ParsingError</span>;
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">range</span>::<span class="ident">ParseError</span>;
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>, <span class='ident'>PartialEq</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>UnexpectedHTTPResult</span> {
-    <span class='ident'>expected</span>: <span class='ident'>StatusCode</span>,
-    <span class='ident'>received</span>: <span class='ident'>StatusCode</span>,
-    <span class='ident'>body</span>: <span class='ident'>String</span>,
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">UnexpectedHTTPResult</span> {
+    <span class="ident">expected</span>: <span class="ident">StatusCode</span>,
+    <span class="ident">received</span>: <span class="ident">StatusCode</span>,
+    <span class="ident">body</span>: <span class="ident">String</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>UnexpectedHTTPResult</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>expected</span>: <span class='ident'>StatusCode</span>, <span class='ident'>received</span>: <span class='ident'>StatusCode</span>, <span class='ident'>body</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>UnexpectedHTTPResult</span> {
-        <span class='ident'>UnexpectedHTTPResult</span> {
-            <span class='ident'>expected</span>: <span class='ident'>expected</span>,
-            <span class='ident'>received</span>: <span class='ident'>received</span>,
-            <span class='ident'>body</span>: <span class='ident'>body</span>.<span class='ident'>to_owned</span>(),
+<span class="kw">impl</span> <span class="ident">UnexpectedHTTPResult</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">expected</span>: <span class="ident">StatusCode</span>, <span class="ident">received</span>: <span class="ident">StatusCode</span>, <span class="ident">body</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">UnexpectedHTTPResult</span> {
+        <span class="ident">UnexpectedHTTPResult</span> {
+            <span class="ident">expected</span>: <span class="ident">expected</span>,
+            <span class="ident">received</span>: <span class="ident">received</span>,
+            <span class="ident">body</span>: <span class="ident">body</span>.<span class="ident">to_owned</span>(),
         }
     }
 }
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>AzureError</span> {
-    <span class='ident'>HyperError</span>(<span class='ident'>hyper</span>::<span class='ident'>error</span>::<span class='ident'>Error</span>),
-    <span class='ident'>IOError</span>(<span class='ident'>IOError</span>),
-    <span class='ident'>XMLError</span>(<span class='ident'>XMLError</span>),
-    <span class='ident'>UnexpectedHTTPResult</span>(<span class='ident'>UnexpectedHTTPResult</span>),
-    <span class='ident'>HeaderNotFound</span>(<span class='ident'>String</span>),
-    <span class='ident'>ResponseParsingError</span>(<span class='ident'>TraversingError</span>),
-    <span class='ident'>ParseIntError</span>(<span class='ident'>num</span>::<span class='ident'>ParseIntError</span>),
-    <span class='ident'>ParseError</span>(<span class='ident'>ParseError</span>),
-    <span class='ident'>GenericError</span>,
-    <span class='ident'>ParsingError</span>(<span class='ident'>ParsingError</span>),
-    <span class='ident'>InputParametersError</span>(<span class='ident'>String</span>),
-    <span class='ident'>URLParseError</span>(<span class='ident'>URLParseError</span>),
-}
-
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>TraversingError</span> {
-    <span class='ident'>PathNotFound</span>(<span class='ident'>String</span>),
-    <span class='ident'>MultipleNode</span>(<span class='ident'>String</span>),
-    <span class='ident'>EnumerationNotMatched</span>(<span class='ident'>String</span>),
-    <span class='ident'>DateTimeParseError</span>(<span class='ident'>chrono</span>::<span class='ident'>format</span>::<span class='ident'>ParseError</span>),
-    <span class='ident'>TextNotFound</span>,
-    <span class='ident'>ParseIntError</span>(<span class='ident'>num</span>::<span class='ident'>ParseIntError</span>),
-    <span class='ident'>GenericParseError</span>(<span class='ident'>String</span>),
-    <span class='ident'>ParsingError</span>(<span class='ident'>ParsingError</span>),
-}
-
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>URLParseError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>AzureError</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>upe</span>: <span class='ident'>URLParseError</span>) <span class='op'>-&gt;</span> <span class='ident'>AzureError</span> {
-        <span class='ident'>AzureError</span>::<span class='ident'>URLParseError</span>(<span class='ident'>upe</span>)
+<span class="macro">quick_error</span><span class="macro">!</span> {
+    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AzureError</span> {
+        <span class="ident">HyperError</span>(<span class="ident">err</span>: <span class="ident">hyper</span>::<span class="ident">error</span>::<span class="ident">Error</span>){
+            <span class="ident">from</span>()
+            <span class="ident">display</span>(<span class="string">&quot;Hyper error: {}&quot;</span>, <span class="ident">err</span>)
+            <span class="ident">cause</span>(<span class="ident">err</span>)
+        }
+        <span class="ident">IOError</span>(<span class="ident">err</span>: <span class="ident">IOError</span>){
+            <span class="ident">from</span>()
+            <span class="ident">display</span>(<span class="string">&quot;IO error: {}&quot;</span>, <span class="ident">err</span>)
+            <span class="ident">cause</span>(<span class="ident">err</span>)
+        }
+        <span class="ident">XMLError</span>(<span class="ident">err</span>: <span class="ident">XMLError</span>){
+            <span class="ident">from</span>()
+            <span class="ident">display</span>(<span class="string">&quot;XML error: {}&quot;</span>, <span class="ident">err</span>)
+            <span class="ident">cause</span>(<span class="ident">err</span>)
+        }
+        <span class="ident">UnexpectedHTTPResult</span>(<span class="ident">err</span>: <span class="ident">UnexpectedHTTPResult</span>){
+            <span class="ident">from</span>()
+            <span class="ident">display</span>(<span class="string">&quot;UnexpectedHTTPResult error&quot;</span>)
+        }
+        <span class="ident">HeaderNotFound</span>(<span class="ident">msg</span>: <span class="ident">String</span>) {
+            <span class="ident">display</span>(<span class="string">&quot;Header not found: {}&quot;</span>, <span class="ident">msg</span>)
+        }
+        <span class="ident">ResponseParsingError</span>(<span class="ident">err</span>: <span class="ident">TraversingError</span>){
+            <span class="ident">from</span>()
+            <span class="ident">display</span>(<span class="string">&quot;Traversing error: {}&quot;</span>, <span class="ident">err</span>)
+            <span class="ident">cause</span>(<span class="ident">err</span>)
+        }
+        <span class="ident">ParseIntError</span>(<span class="ident">err</span>: <span class="ident">num</span>::<span class="ident">ParseIntError</span>){
+            <span class="ident">from</span>()
+            <span class="ident">display</span>(<span class="string">&quot;Parse int error: {}&quot;</span>, <span class="ident">err</span>)
+            <span class="ident">cause</span>(<span class="ident">err</span>)
+        }
+        <span class="ident">ParseError</span>(<span class="ident">err</span>: <span class="ident">ParseError</span>){
+            <span class="ident">from</span>()
+            <span class="ident">display</span>(<span class="string">&quot;Parse error&quot;</span>)
+        }
+        <span class="ident">GenericError</span>
+        <span class="ident">ParsingError</span>(<span class="ident">err</span>: <span class="ident">ParsingError</span>){
+            <span class="ident">from</span>()
+            <span class="ident">display</span>(<span class="string">&quot;Parsing error&quot;</span>)
+        }
+        <span class="ident">InputParametersError</span>(<span class="ident">msg</span>: <span class="ident">String</span>) {
+            <span class="ident">display</span>(<span class="string">&quot;Input parameters error: {}&quot;</span>, <span class="ident">msg</span>)
+        }
+        <span class="ident">URLParseError</span>(<span class="ident">err</span>: <span class="ident">URLParseError</span>){
+            <span class="ident">from</span>()
+            <span class="ident">display</span>(<span class="string">&quot;URL parse error: {}&quot;</span>, <span class="ident">err</span>)
+            <span class="ident">cause</span>(<span class="ident">err</span>)
+        }
+        <span class="ident">ChronoParserError</span>(<span class="ident">err</span>: <span class="ident">chrono</span>::<span class="ident">ParseError</span>) {
+            <span class="ident">from</span>()
+            <span class="ident">display</span>(<span class="string">&quot;Chrono parser error: {}&quot;</span>, <span class="ident">err</span>)
+            <span class="ident">cause</span>(<span class="ident">err</span>)
+        }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>ParseError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>AzureError</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>pe</span>: <span class='ident'>ParseError</span>) <span class='op'>-&gt;</span> <span class='ident'>AzureError</span> {
-        <span class='ident'>AzureError</span>::<span class='ident'>ParseError</span>(<span class='ident'>pe</span>)
+<span class="macro">quick_error</span><span class="macro">!</span> {
+    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">TraversingError</span> {
+        <span class="ident">PathNotFound</span>(<span class="ident">msg</span>: <span class="ident">String</span>) {
+            <span class="ident">display</span>(<span class="string">&quot;Path not found: {}&quot;</span>, <span class="ident">msg</span>)
+        }
+        <span class="ident">MultipleNode</span>(<span class="ident">msg</span>: <span class="ident">String</span>) {
+            <span class="ident">display</span>(<span class="string">&quot;Multiple node: {}&quot;</span>, <span class="ident">msg</span>)
+        }
+        <span class="ident">EnumerationNotMatched</span>(<span class="ident">msg</span>: <span class="ident">String</span>) {
+            <span class="ident">display</span>(<span class="string">&quot;Enumeration not matched: {}&quot;</span>, <span class="ident">msg</span>)
+        }
+        <span class="ident">DateTimeParseError</span>(<span class="ident">err</span>: <span class="ident">chrono</span>::<span class="ident">format</span>::<span class="ident">ParseError</span>){
+            <span class="ident">from</span>()
+            <span class="ident">display</span>(<span class="string">&quot;DateTime parse error: {}&quot;</span>, <span class="ident">err</span>)
+            <span class="ident">cause</span>(<span class="ident">err</span>)
+        }
+        <span class="ident">TextNotFound</span>
+        <span class="ident">ParseIntError</span>(<span class="ident">err</span>: <span class="ident">num</span>::<span class="ident">ParseIntError</span>){
+            <span class="ident">from</span>()
+            <span class="ident">display</span>(<span class="string">&quot;Parse int error: {}&quot;</span>, <span class="ident">err</span>)
+            <span class="ident">cause</span>(<span class="ident">err</span>)
+        }
+        <span class="ident">GenericParseError</span>(<span class="ident">msg</span>: <span class="ident">String</span>) {
+            <span class="ident">display</span>(<span class="string">&quot;Generic parse error: {}&quot;</span>, <span class="ident">msg</span>)
+        }
+        <span class="ident">ParsingError</span>(<span class="ident">err</span>: <span class="ident">ParsingError</span>){
+            <span class="ident">from</span>()
+            <span class="ident">display</span>(<span class="string">&quot;Parsing error&quot;</span>)
+        }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>AzureError</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(_: ()) <span class='op'>-&gt;</span> <span class='ident'>AzureError</span> {
-        <span class='ident'>AzureError</span>::<span class='ident'>GenericError</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span>()<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">AzureError</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(_: ()) <span class="op">-&gt;</span> <span class="ident">AzureError</span> {
+        <span class="ident">AzureError</span>::<span class="ident">GenericError</span>
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>hyper</span>::<span class='ident'>error</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>AzureError</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>he</span>: <span class='ident'>hyper</span>::<span class='ident'>error</span>::<span class='ident'>Error</span>) <span class='op'>-&gt;</span> <span class='ident'>AzureError</span> {
-        <span class='ident'>AzureError</span>::<span class='ident'>HyperError</span>(<span class='ident'>he</span>)
-    }
-}
+<span class="attribute">#[<span class="ident">inline</span>]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">check_status</span>(<span class="ident">resp</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">hyper</span>::<span class="ident">client</span>::<span class="ident">response</span>::<span class="ident">Response</span>,
+                    <span class="ident">s</span>: <span class="ident">StatusCode</span>)
+                    <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">AzureError</span><span class="op">&gt;</span> {
+    <span class="kw">if</span> <span class="ident">resp</span>.<span class="ident">status</span> <span class="op">!=</span> <span class="ident">s</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp_s</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">resp</span>.<span class="ident">read_to_string</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">resp_s</span>));
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>ParsingError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>AzureError</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>pie</span>: <span class='ident'>ParsingError</span>) <span class='op'>-&gt;</span> <span class='ident'>AzureError</span> {
-        <span class='ident'>AzureError</span>::<span class='ident'>ParsingError</span>(<span class='ident'>pie</span>)
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>XMLError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>AzureError</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>xmle</span>: <span class='ident'>XMLError</span>) <span class='op'>-&gt;</span> <span class='ident'>AzureError</span> {
-        <span class='ident'>AzureError</span>::<span class='ident'>XMLError</span>(<span class='ident'>xmle</span>)
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>IOError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>AzureError</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>ioe</span>: <span class='ident'>IOError</span>) <span class='op'>-&gt;</span> <span class='ident'>AzureError</span> {
-        <span class='ident'>AzureError</span>::<span class='ident'>IOError</span>(<span class='ident'>ioe</span>)
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>chrono</span>::<span class='ident'>format</span>::<span class='ident'>ParseError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>AzureError</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>pe</span>: <span class='ident'>chrono</span>::<span class='ident'>format</span>::<span class='ident'>ParseError</span>) <span class='op'>-&gt;</span> <span class='ident'>AzureError</span> {
-        <span class='ident'>AzureError</span>::<span class='ident'>ResponseParsingError</span>(<span class='ident'>TraversingError</span>::<span class='ident'>DateTimeParseError</span>(<span class='ident'>pe</span>))
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>TraversingError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>AzureError</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>te</span>: <span class='ident'>TraversingError</span>) <span class='op'>-&gt;</span> <span class='ident'>AzureError</span> {
-        <span class='ident'>AzureError</span>::<span class='ident'>ResponseParsingError</span>(<span class='ident'>te</span>)
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>num</span>::<span class='ident'>ParseIntError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>AzureError</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>pie</span>: <span class='ident'>num</span>::<span class='ident'>ParseIntError</span>) <span class='op'>-&gt;</span> <span class='ident'>AzureError</span> {
-        <span class='ident'>AzureError</span>::<span class='ident'>ParseIntError</span>(<span class='ident'>pie</span>)
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>chrono</span>::<span class='ident'>format</span>::<span class='ident'>ParseError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TraversingError</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>pe</span>: <span class='ident'>chrono</span>::<span class='ident'>format</span>::<span class='ident'>ParseError</span>) <span class='op'>-&gt;</span> <span class='ident'>TraversingError</span> {
-        <span class='ident'>TraversingError</span>::<span class='ident'>DateTimeParseError</span>(<span class='ident'>pe</span>)
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>num</span>::<span class='ident'>ParseIntError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TraversingError</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>pie</span>: <span class='ident'>num</span>::<span class='ident'>ParseIntError</span>) <span class='op'>-&gt;</span> <span class='ident'>TraversingError</span> {
-        <span class='ident'>TraversingError</span>::<span class='ident'>ParseIntError</span>(<span class='ident'>pie</span>)
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>ParsingError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TraversingError</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>pie</span>: <span class='ident'>ParsingError</span>) <span class='op'>-&gt;</span> <span class='ident'>TraversingError</span> {
-        <span class='ident'>TraversingError</span>::<span class='ident'>ParsingError</span>(<span class='ident'>pie</span>)
-    }
-}
-
-<span class='attribute'>#[<span class='ident'>inline</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>check_status</span>(<span class='ident'>resp</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>hyper</span>::<span class='ident'>client</span>::<span class='ident'>response</span>::<span class='ident'>Response</span>,
-                    <span class='ident'>s</span>: <span class='ident'>StatusCode</span>)
-                    <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>AzureError</span><span class='op'>&gt;</span> {
-    <span class='kw'>if</span> <span class='ident'>resp</span>.<span class='ident'>status</span> <span class='op'>!=</span> <span class='ident'>s</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>resp_s</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>resp</span>.<span class='ident'>read_to_string</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>resp_s</span>));
-
-        <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>AzureError</span>::<span class='ident'>UnexpectedHTTPResult</span>(<span class='ident'>UnexpectedHTTPResult</span>::<span class='ident'>new</span>(<span class='ident'>s</span>,
-                                                                              <span class='ident'>resp</span>.<span class='ident'>status</span>,
-                                                                              <span class='kw-2'>&amp;</span><span class='ident'>resp_s</span>)));
+        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">AzureError</span>::<span class="ident">UnexpectedHTTPResult</span>(<span class="ident">UnexpectedHTTPResult</span>::<span class="ident">new</span>(<span class="ident">s</span>,
+                                                                              <span class="ident">resp</span>.<span class="ident">status</span>,
+                                                                              <span class="kw-2">&amp;</span><span class="ident">resp_s</span>)));
     }
 
-    <span class='prelude-val'>Ok</span>(())
+    <span class="prelude-val">Ok</span>(())
 }
 </pre>
 </section>
@@ -366,6 +352,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -386,7 +374,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -397,11 +385,9 @@
     <script>
         window.rootPath = "../../../../";
         window.currentCrate = "azure_sdk_for_rust";
-        window.playgroundUrl = "";
     </script>
     <script src="../../../../jquery.js"></script>
     <script src="../../../../main.js"></script>
-    
     <script defer src="../../../../search-index.js"></script>
 </body>
 </html>
