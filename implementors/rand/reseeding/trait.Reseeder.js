@@ -3,6 +3,7 @@ implementors["antidote"] = [];
 implementors["azure_sdk_for_rust"] = [];
 implementors["chrono"] = [];
 implementors["hyper"] = [];
+implementors["hyper_native_tls"] = [];
 implementors["libc"] = [];
 implementors["num"] = [];
 implementors["openssl"] = [];

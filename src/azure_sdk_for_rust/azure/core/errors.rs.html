@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/mindflavor/src/rust/AzureSDKForRust/src/azure/core/errors.rs`.">
+    <meta name="description" content="Source to the Rust file `src/azure/core/errors.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>errors.rs.html -- source</title>
@@ -185,6 +185,23 @@
 <span id="140">140</span>
 <span id="141">141</span>
 <span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">hyper</span>;
 <span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">status</span>::<span class="ident">StatusCode</span>;
@@ -196,6 +213,7 @@
 <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">ParseError</span> <span class="kw">as</span> <span class="ident">URLParseError</span>;
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">enumerations</span>::<span class="ident">ParsingError</span>;
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">range</span>::<span class="ident">ParseError</span>;
+<span class="kw">use</span> <span class="ident">serde_json</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">UnexpectedHTTPResult</span> {
@@ -217,6 +235,11 @@
 <span class="macro">quick_error</span><span class="macro">!</span> {
     <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
     <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AzureError</span> {
+        <span class="ident">JSONError</span>(<span class="ident">err</span>: <span class="ident">serde_json</span>::<span class="ident">Error</span>) {
+            <span class="ident">from</span>()
+            <span class="ident">display</span>(<span class="string">&quot;json error: {}&quot;</span>, <span class="ident">err</span>)
+            <span class="ident">cause</span>(<span class="ident">err</span>)
+        }
         <span class="ident">HyperError</span>(<span class="ident">err</span>: <span class="ident">hyper</span>::<span class="ident">error</span>::<span class="ident">Error</span>){
             <span class="ident">from</span>()
             <span class="ident">display</span>(<span class="string">&quot;Hyper error: {}&quot;</span>, <span class="ident">err</span>)
@@ -319,7 +342,7 @@
                     <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">AzureError</span><span class="op">&gt;</span> {
     <span class="kw">if</span> <span class="ident">resp</span>.<span class="ident">status</span> <span class="op">!=</span> <span class="ident">s</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp_s</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
-        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">resp</span>.<span class="ident">read_to_string</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">resp_s</span>));
+        <span class="ident">resp</span>.<span class="ident">read_to_string</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">resp_s</span>)<span class="question-mark">?</span>;
 
         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">AzureError</span>::<span class="ident">UnexpectedHTTPResult</span>(<span class="ident">UnexpectedHTTPResult</span>::<span class="ident">new</span>(<span class="ident">s</span>,
                                                                               <span class="ident">resp</span>.<span class="ident">status</span>,
@@ -327,6 +350,17 @@
     }
 
     <span class="prelude-val">Ok</span>(())
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">check_status_extract_body</span>(<span class="ident">resp</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">hyper</span>::<span class="ident">client</span>::<span class="ident">response</span>::<span class="ident">Response</span>,
+                                 <span class="ident">s</span>: <span class="ident">StatusCode</span>)
+                                 <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">AzureError</span><span class="op">&gt;</span> {
+
+    <span class="ident">check_status</span>(<span class="ident">resp</span>, <span class="ident">s</span>)<span class="question-mark">?</span>;
+
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp_s</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
+    <span class="ident">resp</span>.<span class="ident">read_to_string</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">resp_s</span>)<span class="question-mark">?</span>;
+    <span class="prelude-val">Ok</span>(<span class="ident">resp_s</span>)
 }
 </pre>
 </section>
@@ -386,7 +420,6 @@
         window.rootPath = "../../../../";
         window.currentCrate = "azure_sdk_for_rust";
     </script>
-    <script src="../../../../jquery.js"></script>
     <script src="../../../../main.js"></script>
     <script defer src="../../../../search-index.js"></script>
 </body>

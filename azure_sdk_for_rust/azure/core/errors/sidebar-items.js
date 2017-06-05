@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["AzureError",""],["TraversingError",""]],"fn":[["check_status",""]],"struct":[["UnexpectedHTTPResult",""]]});
+initSidebarItems({"enum":[["AzureError",""],["TraversingError",""]],"fn":[["check_status",""],["check_status_extract_body",""]],"struct":[["UnexpectedHTTPResult",""]]});

@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["core",""],["service_bus",""],["storage",""]]});
+initSidebarItems({"mod":[["core",""],["cosmos",""],["service_bus",""],["storage",""]]});

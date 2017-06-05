@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/mindflavor/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.11/src/verify.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/MINDFLAVOR/mindflavor/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.13/src/verify.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>verify.rs.html -- source</title>
@@ -97,16 +97,16 @@
 <span class="kw">use</span> <span class="ident">error</span>::<span class="ident">ErrorStack</span>;
 
 <span class="macro">bitflags</span><span class="macro">!</span> {
-    <span class="kw">pub</span> <span class="ident">flags</span> <span class="ident">X509CheckFlags</span>: <span class="ident">c_uint</span> {
-        <span class="kw">const</span> <span class="ident">X509_CHECK_FLAG_ALWAYS_CHECK_SUBJECT</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">X509_CHECK_FLAG_ALWAYS_CHECK_SUBJECT</span>,
-        <span class="kw">const</span> <span class="ident">X509_CHECK_FLAG_NO_WILDCARDS</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">X509_CHECK_FLAG_NO_WILDCARDS</span>,
-        <span class="kw">const</span> <span class="ident">X509_CHECK_FLAG_NO_PARTIAL_WILDCARDS</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">X509_CHECK_FLAG_NO_PARTIAL_WILDCARDS</span>,
-        <span class="kw">const</span> <span class="ident">X509_CHECK_FLAG_MULTI_LABEL_WILDCARDS</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">X509_CHECK_FLAG_MULTI_LABEL_WILDCARDS</span>,
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">X509CheckFlags</span>: <span class="ident">c_uint</span> {
+        <span class="kw">const</span> <span class="ident">X509_CHECK_FLAG_ALWAYS_CHECK_SUBJECT</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">X509_CHECK_FLAG_ALWAYS_CHECK_SUBJECT</span>;
+        <span class="kw">const</span> <span class="ident">X509_CHECK_FLAG_NO_WILDCARDS</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">X509_CHECK_FLAG_NO_WILDCARDS</span>;
+        <span class="kw">const</span> <span class="ident">X509_CHECK_FLAG_NO_PARTIAL_WILDCARDS</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">X509_CHECK_FLAG_NO_PARTIAL_WILDCARDS</span>;
+        <span class="kw">const</span> <span class="ident">X509_CHECK_FLAG_MULTI_LABEL_WILDCARDS</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">X509_CHECK_FLAG_MULTI_LABEL_WILDCARDS</span>;
         <span class="kw">const</span> <span class="ident">X509_CHECK_FLAG_SINGLE_LABEL_SUBDOMAINS</span>
-            <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">X509_CHECK_FLAG_SINGLE_LABEL_SUBDOMAINS</span>,
+            <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">X509_CHECK_FLAG_SINGLE_LABEL_SUBDOMAINS</span>;
         <span class="doccomment">/// Requires the `v110` feature and OpenSSL 1.1.0.</span>
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v110&quot;</span>, <span class="ident">ossl110</span>))]</span>
-        <span class="kw">const</span> <span class="ident">X509_CHECK_FLAG_NEVER_CHECK_SUBJECT</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">X509_CHECK_FLAG_NEVER_CHECK_SUBJECT</span>,
+        <span class="kw">const</span> <span class="ident">X509_CHECK_FLAG_NEVER_CHECK_SUBJECT</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">X509_CHECK_FLAG_NEVER_CHECK_SUBJECT</span>;
     }
 }
 
@@ -192,7 +192,6 @@
         window.rootPath = "../../";
         window.currentCrate = "openssl";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

@@ -77,7 +77,7 @@ group order for an elliptic curve key, for example.</p>
 </div><h4 id='method.public_eq' class="method"><span id='public_eq.v' class='invisible'><code>fn <a href='#method.public_eq' class='fnname'>public_eq</a>(&amp;self, other: &amp;<a class="struct" href="../../openssl/pkey/struct.PKeyRef.html" title="struct openssl::pkey::PKeyRef">PKeyRef</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
 <div class='docblock'><p>Compares the public component of this key with another.</p>
 </div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../../openssl/types/trait.OpenSslTypeRef.html" title="trait openssl::types::OpenSslTypeRef">ForeignTypeRef</a> for <a class="struct" href="../../openssl/pkey/struct.PKeyRef.html" title="struct openssl::pkey::PKeyRef">PKeyRef</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'><h4 id='associatedtype.CType' class="type"><span id='CType.t' class='invisible'><code>type <a href='../../openssl/types/trait.OpenSslTypeRef.html#associatedtype.CType' class="type">CType</a> = <a class="struct" href="../../openssl_sys/ossl10x/struct.EVP_PKEY.html" title="struct openssl_sys::ossl10x::EVP_PKEY">EVP_PKEY</a></code></span></h4>
+<div class='impl-items'><h4 id='associatedtype.CType' class="type"><span id='CType.t' class='invisible'><code>type <a href='../../openssl/types/trait.OpenSslTypeRef.html#associatedtype.CType' class="type">CType</a> = <a class="enum" href="../../openssl_sys/ossl110/enum.EVP_PKEY.html" title="enum openssl_sys::ossl110::EVP_PKEY">EVP_PKEY</a></code></span></h4>
 <div class='docblock'><p>The raw C type.</p>
 </div><h4 id='method.from_ptr' class="method"><span id='from_ptr.v' class='invisible'><code>unsafe fn <a href='../../openssl/types/trait.OpenSslTypeRef.html#method.from_ptr' class='fnname'>from_ptr</a>&lt;'a&gt;(ptr: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.pointer.html">*mut </a>Self::<a class="trait" href="../../openssl/types/trait.OpenSslTypeRef.html" title="trait openssl::types::OpenSslTypeRef">CType</a>) -&gt; &amp;'a Self</code></span></h4>
 <div class='docblock'><p>Constructs a shared instance of this type from its raw type.</p>
@@ -142,7 +142,6 @@ group order for an elliptic curve key, for example.</p>
         window.rootPath = "../../";
         window.currentCrate = "openssl";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

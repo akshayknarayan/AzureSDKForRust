@@ -4,6 +4,7 @@ implementors["azure_sdk_for_rust"] = ["impl <a class=\"trait\" href=\"rand/trait
 implementors["chrono"] = [];
 implementors["crypto"] = ["impl <a class=\"trait\" href=\"rand/trait.Rng.html\" title=\"trait rand::Rng\">Rng</a> for <a class=\"struct\" href=\"crypto/fortuna/struct.Fortuna.html\" title=\"struct crypto::fortuna::Fortuna\">Fortuna</a>",];
 implementors["hyper"] = [];
+implementors["hyper_native_tls"] = [];
 implementors["libc"] = [];
 implementors["num"] = [];
 implementors["openssl"] = [];
