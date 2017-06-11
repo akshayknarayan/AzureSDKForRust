@@ -427,15 +427,156 @@
 <span id="382">382</span>
 <span id="383">383</span>
 <span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">cosmos</span>::<span class="ident">authorization_token</span>::{<span class="ident">TokenType</span>, <span class="ident">AuthorizationToken</span>};
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">HTTPMethod</span>;
 
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">cosmos</span>::<span class="ident">database</span>::<span class="ident">Database</span>;
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">cosmos</span>::<span class="ident">collection</span>::<span class="ident">Collection</span>;
 
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">errors</span>::{<span class="ident">AzureError</span>, <span class="ident">check_status_extract_body</span>, <span class="ident">check_status</span>};
 
-<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">cosmos</span>::<span class="ident">request_response</span>::{<span class="ident">ListDatabasesResponse</span>, <span class="ident">CreateDatabaseRequest</span>};
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">cosmos</span>::<span class="ident">request_response</span>::{<span class="ident">ListDatabasesResponse</span>, <span class="ident">CreateDatabaseRequest</span>,
+                                      <span class="ident">ListCollectionsResponse</span>};
 
 <span class="kw">use</span> <span class="ident">url</span>;
 
@@ -464,6 +605,7 @@
 <span class="macro">header</span><span class="macro">!</span> { (<span class="ident">XMSVersion</span>, <span class="string">&quot;x-ms-version&quot;</span>) <span class="op">=&gt;</span> [<span class="ident">String</span>] }
 <span class="macro">header</span><span class="macro">!</span> { (<span class="ident">XMSDate</span>, <span class="string">&quot;x-ms-date&quot;</span>) <span class="op">=&gt;</span> [<span class="ident">String</span>] }
 <span class="macro">header</span><span class="macro">!</span> { (<span class="ident">Authorization</span>, <span class="string">&quot;Authorization&quot;</span>) <span class="op">=&gt;</span> [<span class="ident">String</span>] }
+<span class="macro">header</span><span class="macro">!</span> { (<span class="ident">OfferThroughput</span>, <span class="string">&quot;x-ms-offer-throughput&quot;</span>) <span class="op">=&gt;</span> [<span class="ident">u64</span>] }
 
 <span class="macro">define_encode_set</span><span class="macro">!</span> {
     <span class="kw">pub</span> <span class="ident">COMPLETE_ENCODE_SET</span> <span class="op">=</span> [<span class="ident">url</span>::<span class="ident">percent_encoding</span>::<span class="ident">USERINFO_ENCODE_SET</span>] <span class="op">|</span> {
@@ -472,7 +614,7 @@
 }
 
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>,<span class="ident">Copy</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ResourceType</span> {
     <span class="ident">Databases</span>,
     <span class="ident">Collections</span>,
@@ -557,13 +699,11 @@
         <span class="prelude-val">Ok</span>(<span class="ident">res</span>)
     }
 
-
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">list_databases</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Database</span><span class="op">&gt;</span>, <span class="ident">AzureError</span><span class="op">&gt;</span> {
         <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;list_databases called&quot;</span>);
 
         <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">url</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;https://{}.documents.azure.com/dbs&quot;</span>,
-                                          <span class="self">self</span>.<span class="ident">authorization_token</span>.<span class="ident">account</span>()))
-                .<span class="ident">unwrap</span>();
+                                           <span class="self">self</span>.<span class="ident">authorization_token</span>.<span class="ident">account</span>()))<span class="question-mark">?</span>;
 
         <span class="comment">// No specific headers are required, list databases only needs standard headers</span>
         <span class="comment">// which will be provied by perform_request</span>
@@ -581,8 +721,7 @@
                <span class="ident">database_name</span>);
 
         <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">url</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;https://{}.documents.azure.com/dbs&quot;</span>,
-                                          <span class="self">self</span>.<span class="ident">authorization_token</span>.<span class="ident">account</span>()))
-                .<span class="ident">unwrap</span>();
+                                           <span class="self">self</span>.<span class="ident">authorization_token</span>.<span class="ident">account</span>()))<span class="question-mark">?</span>;
 
         <span class="comment">// No specific headers are required, create databases only needs standard headers</span>
         <span class="comment">// which will be provied by perform_request</span>
@@ -608,13 +747,11 @@
         <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;get_database called (database_name == {})&quot;</span>, <span class="ident">database_name</span>);
 
         <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">url</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;https://{}.documents.azure.com/dbs/{}&quot;</span>,
-                                          <span class="self">self</span>.<span class="ident">authorization_token</span>.<span class="ident">account</span>(),
-                                          <span class="ident">database_name</span>))
-                .<span class="ident">unwrap</span>();
+                                           <span class="self">self</span>.<span class="ident">authorization_token</span>.<span class="ident">account</span>(),
+                                           <span class="ident">database_name</span>))<span class="question-mark">?</span>;
 
         <span class="comment">// No specific headers are required, get database only needs standard headers</span>
         <span class="comment">// which will be provied by perform_request</span>
-
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp</span> <span class="op">=</span>
             <span class="self">self</span>.<span class="ident">perform_request</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>, <span class="ident">HTTPMethod</span>::<span class="ident">Get</span>, <span class="prelude-val">None</span>, <span class="ident">ResourceType</span>::<span class="ident">Databases</span>, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
 
@@ -629,13 +766,11 @@
                <span class="ident">database_name</span>);
 
         <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">url</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;https://{}.documents.azure.com/dbs/{}&quot;</span>,
-                                          <span class="self">self</span>.<span class="ident">authorization_token</span>.<span class="ident">account</span>(),
-                                          <span class="ident">database_name</span>))
-                .<span class="ident">unwrap</span>();
+                                           <span class="self">self</span>.<span class="ident">authorization_token</span>.<span class="ident">account</span>(),
+                                           <span class="ident">database_name</span>))<span class="question-mark">?</span>;
 
         <span class="comment">// No specific headers are required, delete database only needs standard headers</span>
         <span class="comment">// which will be provied by perform_request</span>
-
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">perform_request</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>,
                                             <span class="ident">HTTPMethod</span>::<span class="ident">Delete</span>,
                                             <span class="prelude-val">None</span>,
@@ -646,7 +781,140 @@
 
         <span class="prelude-val">Ok</span>(())
     }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_collection</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
+                          <span class="ident">database_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+                          <span class="ident">collection_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>)
+                          <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Collection</span>, <span class="ident">AzureError</span><span class="op">&gt;</span> {
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;get_collection called (database_name == {}, collection_name == {})&quot;</span>,
+               <span class="ident">database_name</span>,
+               <span class="ident">collection_name</span>);
+
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">url</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;https://{}.documents.azure.com/dbs/{}/colls/{}&quot;</span>,
+                                           <span class="self">self</span>.<span class="ident">authorization_token</span>.<span class="ident">account</span>(),
+                                           <span class="ident">database_name</span>,
+                                           <span class="ident">collection_name</span>))<span class="question-mark">?</span>;
+
+        <span class="comment">// No specific headers are required, get database only needs standard headers</span>
+        <span class="comment">// which will be provied by perform_request</span>
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp</span> <span class="op">=</span>
+            <span class="self">self</span>.<span class="ident">perform_request</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>, <span class="ident">HTTPMethod</span>::<span class="ident">Get</span>, <span class="prelude-val">None</span>, <span class="ident">ResourceType</span>::<span class="ident">Collections</span>, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">check_status_extract_body</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">resp</span>, <span class="ident">StatusCode</span>::<span class="prelude-val">Ok</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">coll</span>: <span class="ident">Collection</span> <span class="op">=</span> <span class="ident">serde_json</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">body</span>)<span class="question-mark">?</span>;
+
+        <span class="prelude-val">Ok</span>(<span class="ident">coll</span>)
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">list_collections</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">database_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Collection</span><span class="op">&gt;</span>, <span class="ident">AzureError</span><span class="op">&gt;</span> {
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;list_collections called&quot;</span>);
+
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">url</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;https://{}.documents.azure.com/dbs/{}/colls&quot;</span>,
+                                           <span class="self">self</span>.<span class="ident">authorization_token</span>.<span class="ident">account</span>(),
+                                           <span class="ident">database_name</span>))<span class="question-mark">?</span>;
+
+        <span class="comment">// No specific headers are required, list collections only needs standard headers</span>
+        <span class="comment">// which will be provied by perform_request</span>
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp</span> <span class="op">=</span>
+            <span class="self">self</span>.<span class="ident">perform_request</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>, <span class="ident">HTTPMethod</span>::<span class="ident">Get</span>, <span class="prelude-val">None</span>, <span class="ident">ResourceType</span>::<span class="ident">Collections</span>, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">check_status_extract_body</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">resp</span>, <span class="ident">StatusCode</span>::<span class="prelude-val">Ok</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">colls</span>: <span class="ident">ListCollectionsResponse</span> <span class="op">=</span> <span class="ident">serde_json</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">body</span>)<span class="question-mark">?</span>;
+
+        <span class="prelude-val">Ok</span>(<span class="ident">colls</span>.<span class="ident">collections</span>)
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_collection</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
+                             <span class="ident">database_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+                             <span class="ident">required_throughput</span>: <span class="ident">u64</span>,
+                             <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">Collection</span>)
+                             <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Collection</span>, <span class="ident">AzureError</span><span class="op">&gt;</span> {
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;create_collection called&quot;</span>);
+
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">url</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;https://{}.documents.azure.com/dbs/{}/colls&quot;</span>,
+                                           <span class="self">self</span>.<span class="ident">authorization_token</span>.<span class="ident">account</span>(),
+                                           <span class="ident">database_name</span>))<span class="question-mark">?</span>;
+
+        <span class="comment">// Headers added as per https://docs.microsoft.com/en-us/rest/api/documentdb/create-a-collection</span>
+        <span class="comment">// Standard headers (auth and version) will be provied by perform_request</span>
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">Headers</span>::<span class="ident">new</span>();
+        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">OfferThroughput</span>(<span class="ident">required_throughput</span>));
+
+        <span class="kw">let</span> <span class="ident">collection_serialized</span> <span class="op">=</span> <span class="ident">serde_json</span>::<span class="ident">to_string</span>(<span class="ident">collection</span>)<span class="question-mark">?</span>;
+
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;collection_serialized == {}&quot;</span>, <span class="ident">collection_serialized</span>);
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">curs</span> <span class="op">=</span> <span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">collection_serialized</span>);
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">perform_request</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>,
+                                            <span class="ident">HTTPMethod</span>::<span class="ident">Post</span>,
+                                            <span class="prelude-val">Some</span>((<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">curs</span>, <span class="ident">collection_serialized</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>)),
+                                            <span class="ident">ResourceType</span>::<span class="ident">Collections</span>,
+                                            <span class="prelude-val">Some</span>(<span class="ident">headers</span>))<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">check_status_extract_body</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">resp</span>, <span class="ident">StatusCode</span>::<span class="ident">Created</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">coll</span>: <span class="ident">Collection</span> <span class="op">=</span> <span class="ident">serde_json</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">body</span>)<span class="question-mark">?</span>;
+
+        <span class="prelude-val">Ok</span>(<span class="ident">coll</span>)
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">delete_collection</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
+                             <span class="ident">database_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+                             <span class="ident">collection_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>)
+                             <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">AzureError</span><span class="op">&gt;</span> {
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;delete_collection called (database_name == {}, collection_name == {}&quot;</span>,
+               <span class="ident">database_name</span>,
+               <span class="ident">collection_name</span>);
+
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">url</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;https://{}.documents.azure.com/dbs/{}/colls/{}&quot;</span>,
+                                           <span class="self">self</span>.<span class="ident">authorization_token</span>.<span class="ident">account</span>(),
+                                           <span class="ident">database_name</span>,
+                                           <span class="ident">collection_name</span>))<span class="question-mark">?</span>;
+
+        <span class="comment">// No specific headers are required.</span>
+        <span class="comment">// Standard headers (auth and version) will be provied by perform_request</span>
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">perform_request</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>,
+                                            <span class="ident">HTTPMethod</span>::<span class="ident">Delete</span>,
+                                            <span class="prelude-val">None</span>,
+                                            <span class="ident">ResourceType</span>::<span class="ident">Collections</span>,
+                                            <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+
+        <span class="ident">check_status</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">resp</span>, <span class="ident">StatusCode</span>::<span class="ident">NoContent</span>)<span class="question-mark">?</span>;
+
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">replace_collection</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
+                              <span class="ident">database_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+                              <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">Collection</span>)
+                              <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Collection</span>, <span class="ident">AzureError</span><span class="op">&gt;</span> {
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;replace_collection called&quot;</span>);
+
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">url</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;https://{}.documents.azure.com/dbs/{}/colls&quot;</span>,
+                                           <span class="self">self</span>.<span class="ident">authorization_token</span>.<span class="ident">account</span>(),
+                                           <span class="ident">database_name</span>))<span class="question-mark">?</span>;
+
+        <span class="comment">// No specific headers are required.</span>
+        <span class="comment">// Standard headers (auth and version) will be provied by perform_request</span>
+        <span class="kw">let</span> <span class="ident">collection_serialized</span> <span class="op">=</span> <span class="ident">serde_json</span>::<span class="ident">to_string</span>(<span class="ident">collection</span>)<span class="question-mark">?</span>;
+
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;collection_serialized == {}&quot;</span>, <span class="ident">collection_serialized</span>);
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">curs</span> <span class="op">=</span> <span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">collection_serialized</span>);
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">perform_request</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>,
+                                            <span class="ident">HTTPMethod</span>::<span class="ident">Put</span>,
+                                            <span class="prelude-val">Some</span>((<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">curs</span>, <span class="ident">collection_serialized</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>)),
+                                            <span class="ident">ResourceType</span>::<span class="ident">Collections</span>,
+                                            <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">check_status_extract_body</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">resp</span>, <span class="ident">StatusCode</span>::<span class="ident">Created</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">coll</span>: <span class="ident">Collection</span> <span class="op">=</span> <span class="ident">serde_json</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">body</span>)<span class="question-mark">?</span>;
+
+        <span class="prelude-val">Ok</span>(<span class="ident">coll</span>)
+    }
 }
+
 
 <span class="kw">fn</span> <span class="ident">generate_authorization</span>(<span class="ident">authorization_token</span>: <span class="kw-2">&amp;</span><span class="ident">AuthorizationToken</span>,
                           <span class="ident">http_method</span>: <span class="ident">HTTPMethod</span>,
@@ -686,6 +954,7 @@
                   <span class="ident">resource_link</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
                   <span class="ident">time</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>)
                   <span class="op">-&gt;</span> <span class="ident">String</span> {
+
     <span class="comment">// From official docs:</span>
     <span class="comment">// StringToSign = Verb.toLowerCase() + &quot;\n&quot; + ResourceType.toLowerCase() + &quot;\n&quot; + ResourceLink + &quot;\n&quot; + Date.toLowerCase() + &quot;\n&quot; + &quot;&quot; + &quot;\n&quot;;</span>
     <span class="comment">// Notice the empty string at the end so we need to add two carriage returns</span>
@@ -709,24 +978,28 @@
 }
 
 <span class="kw">fn</span> <span class="ident">generate_resource_link</span>(<span class="ident">u</span>: <span class="kw-2">&amp;</span><span class="ident">url</span>::<span class="ident">Url</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ps</span> <span class="op">=</span> <span class="ident">u</span>.<span class="ident">path_segments</span>().<span class="ident">unwrap</span>();
+    <span class="kw">static</span> <span class="ident">ENDING_STRINGS</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="kw-2">&amp;</span><span class="ident">str</span>] <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;/dbs&quot;</span>, <span class="string">&quot;/colls&quot;</span>, <span class="string">&quot;/docs&quot;</span>];
 
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">segment</span>) <span class="op">=</span> <span class="ident">ps</span>.<span class="ident">next</span>() {
-        <span class="kw">match</span> <span class="ident">segment</span> {
-            <span class="string">&quot;&quot;</span> <span class="op">=&gt;</span> <span class="string">&quot;&quot;</span>, 
-            <span class="string">&quot;dbs&quot;</span> <span class="op">|</span> <span class="string">&quot;colls&quot;</span> <span class="op">|</span> <span class="string">&quot;docs&quot;</span> <span class="op">=&gt;</span> {
-                <span class="kw">if</span> <span class="ident">ps</span>.<span class="ident">next</span>() <span class="op">==</span> <span class="prelude-val">None</span> {
-                    <span class="string">&quot;&quot;</span>
-                } <span class="kw">else</span> {
-                    <span class="kw-2">&amp;</span><span class="ident">u</span>.<span class="ident">path</span>()[<span class="number">1</span>..]
+    <span class="comment">// store the element only if it does not end with dbs, colls or docs</span>
+    <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">u</span>.<span class="ident">path</span>();
+
+    <span class="kw">for</span> <span class="ident">str_to_match</span> <span class="kw">in</span> <span class="ident">ENDING_STRINGS</span> {
+        <span class="kw">if</span> <span class="ident">str_to_match</span>.<span class="ident">len</span>() <span class="op">&lt;=</span> <span class="ident">p</span>.<span class="ident">len</span>() {
+            <span class="kw">let</span> <span class="ident">sm</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">p</span>[<span class="ident">p</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">str_to_match</span>.<span class="ident">len</span>()..];
+            <span class="kw">if</span> <span class="kw-2">&amp;</span><span class="ident">sm</span> <span class="op">==</span> <span class="ident">str_to_match</span> {
+                <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="ident">str_to_match</span>.<span class="ident">len</span>() {
+                    <span class="kw">return</span> <span class="string">&quot;&quot;</span>;
                 }
+
+                <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">p</span>[<span class="number">1</span>..<span class="ident">p</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">str_to_match</span>.<span class="ident">len</span>()];
+                <span class="kw">return</span> <span class="ident">ret</span>;
             }
-            _ <span class="op">=&gt;</span> <span class="ident">u</span>.<span class="ident">path</span>(),
         }
-    } <span class="kw">else</span> {
-        <span class="string">&quot;&quot;</span>
     }
+
+    <span class="kw-2">&amp;</span><span class="ident">p</span>[<span class="number">1</span>..]
 }
+
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
@@ -745,13 +1018,15 @@
                                  <span class="ident">ResourceType</span>::<span class="ident">Databases</span>,
                                  <span class="string">&quot;dbs/MyDatabase/colls/MyCollection&quot;</span>,
                                  <span class="kw-2">&amp;</span><span class="ident">time</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">ret</span>,
-                   <span class="string">&quot;get
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">ret</span>,
+            <span class="string">&quot;get
 dbs
 dbs/MyDatabase/colls/MyCollection
 mon, 01 jan 1900 01:00:00 gmt
 
-&quot;</span>);
+&quot;</span>
+        );
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -793,8 +1068,8 @@ mon, 01 jan 1900 01:00:00 gmt
                                          <span class="string">&quot;dbs/ToDoList&quot;</span>,
                                          <span class="kw-2">&amp;</span><span class="ident">time</span>);
 
-        <span class="comment">// This is the result shown in the MSDN page. Clearly is wrong :)</span>
-        <span class="comment">// below is the right one.</span>
+        <span class="comment">// This is the result shown in the MSDN page. It&#39;s clearly wrong :)</span>
+        <span class="comment">// below is the correct one.</span>
         <span class="comment">//assert_eq!(ret,</span>
         <span class="comment">//           &quot;type%3dmaster%26ver%3d1.0%26sig%3dc09PEVJrgp2uQRkr934kFbTqhByc7TVr3O&quot;);</span>
 
@@ -810,6 +1085,9 @@ mon, 01 jan 1900 01:00:00 gmt
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">generate_resource_link</span>(<span class="kw-2">&amp;</span><span class="ident">u</span>), <span class="string">&quot;&quot;</span>);
         <span class="kw">let</span> <span class="ident">u</span> <span class="op">=</span> <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://mindflavor.raldld.r4eee.sss/colls/second/third&quot;</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">generate_resource_link</span>(<span class="kw-2">&amp;</span><span class="ident">u</span>), <span class="string">&quot;colls/second/third&quot;</span>);
+        <span class="kw">let</span> <span class="ident">u</span> <span class="op">=</span> <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://mindflavor.documents.azure.com/dbs/test_db/colls&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">generate_resource_link</span>(<span class="kw-2">&amp;</span><span class="ident">u</span>), <span class="string">&quot;dbs/test_db&quot;</span>);
+
     }
 }
 </pre>

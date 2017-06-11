@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["DataType",""],["IndexingMode",""],["KeyKind",""]],"struct":[["Collection",""],["ExcludedPath",""],["IncludedPath",""],["IncludedPathIndex",""],["IndexingPolicy",""],["PartitionKey",""]]});

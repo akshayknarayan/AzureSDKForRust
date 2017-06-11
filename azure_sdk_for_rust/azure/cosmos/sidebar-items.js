@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["authorization_token",""],["client",""],["database",""]]});
+initSidebarItems({"mod":[["authorization_token",""],["client",""],["collection",""],["database",""]]});

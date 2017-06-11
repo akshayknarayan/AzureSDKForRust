@@ -711,6 +711,8 @@
 <span id="666">666</span>
 <span id="667">667</span>
 <span id="668">668</span>
+<span id="669">669</span>
+<span id="670">670</span>
 </pre><pre class="rust ">
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">uuid</span>;
 
@@ -758,7 +760,9 @@
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">ba512_range</span>::<span class="ident">BA512Range</span>;
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">incompletevector</span>::<span class="ident">IncompleteVector</span>;
 
-<span class="kw">use</span> <span class="ident">mime</span>::<span class="ident">Mime</span>;
+<span class="comment">//use mime::Mime;</span>
+
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">mime</span>::<span class="ident">Mime</span>;
 
 <span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">status</span>::<span class="ident">StatusCode</span>;
 <span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::{<span class="ident">Headers</span>, <span class="ident">ContentType</span>, <span class="ident">ContentLength</span>, <span class="ident">LastModified</span>, <span class="ident">ContentEncoding</span>,
@@ -1142,27 +1146,27 @@
                 <span class="kw">if</span> <span class="ident">r</span>.<span class="ident">is_none</span>() {
                     <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">AzureError</span>::<span class="ident">InputParametersError</span>(<span class="string">&quot;cannot use put_blob with \
                                                                  BlockBlob without a Read&quot;</span>
-                                                                        .<span class="ident">to_owned</span>()));
+                                                                    .<span class="ident">to_owned</span>()));
                 }
             }
             <span class="ident">BlobType</span>::<span class="ident">PageBlob</span> <span class="op">=&gt;</span> {
                 <span class="kw">if</span> <span class="ident">r</span>.<span class="ident">is_some</span>() {
                     <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">AzureError</span>::<span class="ident">InputParametersError</span>(<span class="string">&quot;cannot use put_blob with \
                                                                  PageBlob with a Read&quot;</span>
-                                                                        .<span class="ident">to_owned</span>()));
+                                                                    .<span class="ident">to_owned</span>()));
                 }
 
                 <span class="kw">if</span> <span class="self">self</span>.<span class="ident">content_length</span> <span class="op">%</span> <span class="number">512</span> <span class="op">!=</span> <span class="number">0</span> {
                     <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">AzureError</span>::<span class="ident">InputParametersError</span>(<span class="string">&quot;PageBlob size must be aligned \
                                                                  to 512 bytes boundary&quot;</span>
-                                                                        .<span class="ident">to_owned</span>()));
+                                                                    .<span class="ident">to_owned</span>()));
                 }
             }
             <span class="ident">BlobType</span>::<span class="ident">AppendBlob</span> <span class="op">=&gt;</span> {
                 <span class="kw">if</span> <span class="ident">r</span>.<span class="ident">is_some</span>() {
                     <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">AzureError</span>::<span class="ident">InputParametersError</span>(<span class="string">&quot;cannot use put_blob with \
                                                                  AppendBlob with a Read&quot;</span>
-                                                                        .<span class="ident">to_owned</span>()));
+                                                                    .<span class="ident">to_owned</span>()));
                 }
             }
         }

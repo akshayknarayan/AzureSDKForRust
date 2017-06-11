@@ -545,8 +545,11 @@ used to perform the shift.</p>
 <span class="macro">assert</span><span class="macro">!</span>(<span class="number">16u8</span>.<span class="ident">is_power_of_two</span>());
 <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="number">10u8</span>.<span class="ident">is_power_of_two</span>());</pre>
 </div><h4 id='method.next_power_of_two' class="method"><span id='next_power_of_two.v' class='invisible'><code>fn <a href='#method.next_power_of_two' class='fnname'>next_power_of_two</a>(self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
-<div class='docblock'><p>Returns the smallest power of two greater than or equal to <code>self</code>.
-Unspecified behavior on overflow.</p>
+<div class='docblock'><p>Returns the smallest power of two greater than or equal to <code>self</code>.</p>
+
+<p>When return value overflows (i.e. <code>self &gt; (1 &lt;&lt; (N-1))</code> for type
+<code>uN</code>), it panics in debug mode and return value is wrapped to 0 in
+release mode (the only situation in which method can return 0).</p>
 
 <h1 id='examples-39' class='section-header'><a href='#examples-39'>Examples</a></h1>
 <p>Basic usage:</p>

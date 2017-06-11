@@ -506,6 +506,8 @@
 <span id="461">461</span>
 <span id="462">462</span>
 <span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">range</span>;
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">HTTPMethod</span>;
@@ -894,12 +896,14 @@
 
         <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">string_to_sign</span>(<span class="kw-2">&amp;</span><span class="ident">headers</span>, <span class="kw-2">&amp;</span><span class="ident">u</span>, <span class="ident">method</span>, <span class="ident">service_type</span>);
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">s</span>,
-                   <span class="string">&quot;POST
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">s</span>,
+            <span class="string">&quot;POST
 
 application/json; charset=utf-8
 Wed, 03 May 2017 14:04:56 GMT
-/mindrust/TABLES&quot;</span>);
+/mindrust/TABLES&quot;</span>
+        );
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -912,7 +916,7 @@ Wed, 03 May 2017 14:04:56 GMT
     <span class="kw">fn</span> <span class="ident">test_canonicalize_resource_1</span>() {
         <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">url</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://myaccount.blob.core.windows.\
                                    net/mycontainer?restype=container&amp;comp=metadata&quot;</span>)
-                .<span class="ident">unwrap</span>();
+            .<span class="ident">unwrap</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw">super</span>::<span class="ident">canonicalized_resource</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>),
                    <span class="string">&quot;/myaccount/mycontainer\ncomp:metadata\nrestype:container&quot;</span>);
     }
@@ -922,7 +926,7 @@ Wed, 03 May 2017 14:04:56 GMT
         <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">url</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://myaccount.blob.core.windows.\
                                    net/mycontainer?restype=container&amp;comp=list&amp;include=snapshots&amp;\
                                    include=metadata&amp;include=uncommittedblobs&quot;</span>)
-                .<span class="ident">unwrap</span>();
+            .<span class="ident">unwrap</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw">super</span>::<span class="ident">canonicalized_resource</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>),
                    <span class="string">&quot;/myaccount/mycontainer\ncomp:list\ninclude:metadata,snapshots,\
                     uncommittedblobs\nrestype:container&quot;</span>);
@@ -932,7 +936,7 @@ Wed, 03 May 2017 14:04:56 GMT
     <span class="kw">fn</span> <span class="ident">test_canonicalize_resource_3</span>() {
         <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">url</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://myaccount-secondary.blob.core.windows.\
                                    net/mycontainer/myblob&quot;</span>)
-                .<span class="ident">unwrap</span>();
+            .<span class="ident">unwrap</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw">super</span>::<span class="ident">canonicalized_resource</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>),
                    <span class="string">&quot;/myaccount-secondary/mycontainer/myblob&quot;</span>);
     }
@@ -942,7 +946,7 @@ Wed, 03 May 2017 14:04:56 GMT
         <span class="kw">let</span> <span class="ident">str_to_sign</span> <span class="op">=</span> <span class="string">&quot;53d7e14aee681a00340300032015-01-01T10:00:00.0000000&quot;</span>.<span class="ident">to_owned</span>();
         <span class="kw">let</span> <span class="ident">hmac_key</span> <span class="op">=</span> <span class="string">&quot;pXeTVaaaaU9XxH6fPcPlq8Y9D9G3Cdo5Eh2nMSgKj/DWqeSFFXDdmpz5Trv+L2hQNM+nGa704R\
                         f8Z22W9O1jdQ==&quot;</span>
-                .<span class="ident">to_owned</span>();
+            .<span class="ident">to_owned</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw">super</span>::<span class="ident">encode_str_to_sign</span>(<span class="kw-2">&amp;</span><span class="ident">str_to_sign</span>, <span class="kw-2">&amp;</span><span class="ident">hmac_key</span>),
                    <span class="string">&quot;gZzaRaIkvC9jYRY123tq3xXZdsMAcgAbjKQo8y0p0Fs=&quot;</span>.<span class="ident">to_owned</span>());
@@ -953,7 +957,7 @@ Wed, 03 May 2017 14:04:56 GMT
         <span class="kw">let</span> <span class="ident">str_to_sign</span> <span class="op">=</span> <span class="string">&quot;This is the data to sign&quot;</span>.<span class="ident">to_owned</span>();
         <span class="kw">let</span> <span class="ident">hmac_key</span> <span class="op">=</span> <span class="string">&quot;pXeTVaaaaU9XxH6fPcPlq8Y9D9G3Cdo5Eh2nMSgKj/DWqeSFFXDdmpz5Trv+L2hQNM+nGa704R\
                         f8Z22W9O1jdQ==&quot;</span>
-                .<span class="ident">to_owned</span>();
+            .<span class="ident">to_owned</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw">super</span>::<span class="ident">encode_str_to_sign</span>(<span class="kw-2">&amp;</span><span class="ident">str_to_sign</span>, <span class="kw-2">&amp;</span><span class="ident">hmac_key</span>),
                    <span class="string">&quot;YuKoXELO9M9HXeeGaSXBr4Nk+CgPAEQhcwJ6tVtBRCw=&quot;</span>.<span class="ident">to_owned</span>());
@@ -964,7 +968,7 @@ Wed, 03 May 2017 14:04:56 GMT
         <span class="kw">let</span> <span class="ident">str_to_sign</span> <span class="op">=</span> <span class="string">&quot;This is the data to sign&quot;</span>.<span class="ident">to_owned</span>();
         <span class="kw">let</span> <span class="ident">hmac_key</span> <span class="op">=</span> <span class="string">&quot;pXeTVaaaaU9XxH6fPcPlq8Y9D9G3Cdo5Eh2nMSgKj/DWqeSFFXDdmpz5Trv+L2hQNM+nGa704R\
                         f8Z22W9O1jdQ==&quot;</span>
-                .<span class="ident">to_owned</span>();
+            .<span class="ident">to_owned</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw">super</span>::<span class="ident">encode_str_to_sign</span>(<span class="kw-2">&amp;</span><span class="ident">str_to_sign</span>, <span class="kw-2">&amp;</span><span class="ident">hmac_key</span>),
                    <span class="string">&quot;YuKoXELO9M9HXeeGaSXBr4Nk+CgPAEQhcwJ6tVtBRCw=&quot;</span>.<span class="ident">to_owned</span>());
