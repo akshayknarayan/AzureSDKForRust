@@ -508,22 +508,39 @@
 <span id="463">463</span>
 <span id="464">464</span>
 <span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">range</span>;
-<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">HTTPMethod</span>;
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">errors</span>::<span class="ident">AzureError</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">Method</span>;
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">lease</span>::{<span class="ident">LeaseId</span>, <span class="ident">LeaseStatus</span>, <span class="ident">LeaseState</span>, <span class="ident">LeaseDuration</span>, <span class="ident">LeaseAction</span>};
 <span class="kw">use</span> <span class="ident">chrono</span>;
 <span class="kw">use</span> <span class="ident">crypto</span>::<span class="ident">hmac</span>::<span class="ident">Hmac</span>;
 <span class="kw">use</span> <span class="ident">crypto</span>::<span class="ident">mac</span>::<span class="ident">Mac</span>;
 <span class="kw">use</span> <span class="ident">crypto</span>::<span class="ident">sha2</span>::<span class="ident">Sha256</span>;
 <span class="kw">use</span> <span class="ident">hyper</span>;
-<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">Client</span>;
-<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::{<span class="ident">Header</span>, <span class="ident">HeaderFormat</span>, <span class="ident">Headers</span>, <span class="ident">ContentEncoding</span>, <span class="ident">ContentLanguage</span>,
-                    <span class="ident">ContentLength</span>, <span class="ident">ContentType</span>, <span class="ident">Date</span>, <span class="ident">IfModifiedSince</span>, <span class="ident">IfUnmodifiedSince</span>};
+<span class="kw">use</span> <span class="ident">hyper_tls</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::{<span class="ident">Header</span>, <span class="ident">Headers</span>, <span class="ident">ContentEncoding</span>, <span class="ident">ContentLanguage</span>, <span class="ident">ContentLength</span>, <span class="ident">ContentType</span>,
+                    <span class="ident">Date</span>, <span class="ident">IfModifiedSince</span>, <span class="ident">IfUnmodifiedSince</span>};
 <span class="kw">use</span> <span class="ident">base64</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Read</span>;
 <span class="kw">use</span> <span class="ident">url</span>;
+
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
 
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ServiceType</span> {
     <span class="ident">Blob</span>,
@@ -553,12 +570,13 @@
 <span class="macro">header</span><span class="macro">!</span> { (<span class="ident">XMSRangeGetContentMD5</span>, <span class="string">&quot;x-ms-range-get-content-md5&quot;</span>) <span class="op">=&gt;</span> [<span class="ident">bool</span>] }
 <span class="macro">header</span><span class="macro">!</span> { (<span class="ident">XMSClientRequestId</span>, <span class="string">&quot;x-ms-client-request-id&quot;</span>) <span class="op">=&gt;</span> [<span class="ident">String</span>] }
 
-<span class="kw">fn</span> <span class="ident">generate_authorization</span>(<span class="ident">h</span>: <span class="kw-2">&amp;</span><span class="ident">Headers</span>,
-                          <span class="ident">u</span>: <span class="kw-2">&amp;</span><span class="ident">url</span>::<span class="ident">Url</span>,
-                          <span class="ident">method</span>: <span class="ident">HTTPMethod</span>,
-                          <span class="ident">hmac_key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-                          <span class="ident">service_type</span>: <span class="ident">ServiceType</span>)
-                          <span class="op">-&gt;</span> <span class="ident">String</span> {
+<span class="kw">fn</span> <span class="ident">generate_authorization</span>(
+    <span class="ident">h</span>: <span class="kw-2">&amp;</span><span class="ident">Headers</span>,
+    <span class="ident">u</span>: <span class="kw-2">&amp;</span><span class="ident">url</span>::<span class="ident">Url</span>,
+    <span class="ident">method</span>: <span class="ident">Method</span>,
+    <span class="ident">hmac_key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    <span class="ident">service_type</span>: <span class="ident">ServiceType</span>,
+) <span class="op">-&gt;</span> <span class="ident">String</span> {
     <span class="kw">let</span> <span class="ident">str_to_sign</span> <span class="op">=</span> <span class="ident">string_to_sign</span>(<span class="ident">h</span>, <span class="ident">u</span>, <span class="ident">method</span>, <span class="ident">service_type</span>);
 
     <span class="comment">// println!(&quot;\nstr_to_sign == {:?}\n&quot;, str_to_sign);</span>
@@ -585,7 +603,7 @@
 }
 
 <span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">fn</span> <span class="ident">add_if_exists</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Header</span> <span class="op">+</span> <span class="ident">HeaderFormat</span> <span class="op">+</span> <span class="ident">Display</span><span class="op">&gt;</span>(<span class="ident">h</span>: <span class="kw-2">&amp;</span><span class="ident">Headers</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+<span class="kw">fn</span> <span class="ident">add_if_exists</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Header</span> <span class="op">+</span> <span class="ident">Display</span><span class="op">&gt;</span>(<span class="ident">h</span>: <span class="kw-2">&amp;</span><span class="ident">Headers</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
     <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">h</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span>() {
         <span class="prelude-val">Some</span>(<span class="ident">ce</span>) <span class="op">=&gt;</span> <span class="ident">ce</span>.<span class="ident">to_string</span>(),
         <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">String</span>::<span class="ident">default</span>(),
@@ -596,11 +614,7 @@
 
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unknown_lints</span>)]</span>
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">needless_pass_by_value</span>)]</span>
-<span class="kw">fn</span> <span class="ident">string_to_sign</span>(<span class="ident">h</span>: <span class="kw-2">&amp;</span><span class="ident">Headers</span>,
-                  <span class="ident">u</span>: <span class="kw-2">&amp;</span><span class="ident">url</span>::<span class="ident">Url</span>,
-                  <span class="ident">method</span>: <span class="ident">HTTPMethod</span>,
-                  <span class="ident">service_type</span>: <span class="ident">ServiceType</span>)
-                  <span class="op">-&gt;</span> <span class="ident">String</span> {
+<span class="kw">fn</span> <span class="ident">string_to_sign</span>(<span class="ident">h</span>: <span class="kw-2">&amp;</span><span class="ident">Headers</span>, <span class="ident">u</span>: <span class="kw-2">&amp;</span><span class="ident">url</span>::<span class="ident">Url</span>, <span class="ident">method</span>: <span class="ident">Method</span>, <span class="ident">service_type</span>: <span class="ident">ServiceType</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">str_to_sign</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
     <span class="kw">let</span> <span class="ident">verb</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">method</span>);
     <span class="ident">str_to_sign</span> <span class="op">=</span> <span class="ident">str_to_sign</span> <span class="op">+</span> <span class="kw-2">&amp;</span><span class="ident">verb</span>.<span class="ident">to_uppercase</span>() <span class="op">+</span> <span class="string">&quot;\n&quot;</span>;
@@ -724,10 +738,10 @@
 
 <span class="kw">fn</span> <span class="ident">canonicalized_resource</span>(<span class="ident">u</span>: <span class="kw-2">&amp;</span><span class="ident">url</span>::<span class="ident">Url</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">can_res</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
-    <span class="ident">can_res</span> <span class="op">=</span> <span class="ident">can_res</span> <span class="op">+</span> <span class="string">&quot;/&quot;</span>;
+    <span class="ident">can_res</span> <span class="op">+=</span> <span class="string">&quot;/&quot;</span>;
 
     <span class="kw">let</span> <span class="ident">account</span> <span class="op">=</span> <span class="ident">get_account</span>(<span class="ident">u</span>);
-    <span class="ident">can_res</span> <span class="op">=</span> <span class="ident">can_res</span> <span class="op">+</span> <span class="kw-2">&amp;</span><span class="ident">account</span>;
+    <span class="ident">can_res</span> <span class="op">+=</span> <span class="kw-2">&amp;</span><span class="ident">account</span>;
 
     <span class="kw">let</span> <span class="ident">paths</span> <span class="op">=</span> <span class="ident">u</span>.<span class="ident">path_segments</span>().<span class="ident">unwrap</span>();
 
@@ -738,9 +752,9 @@
             <span class="ident">path</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">p</span>);
         }
 
-        <span class="ident">can_res</span> <span class="op">=</span> <span class="ident">can_res</span> <span class="op">+</span> <span class="kw-2">&amp;</span><span class="ident">path</span>;
+        <span class="ident">can_res</span> <span class="op">+=</span> <span class="kw-2">&amp;</span><span class="ident">path</span>;
     }
-    <span class="ident">can_res</span> <span class="op">=</span> <span class="ident">can_res</span> <span class="op">+</span> <span class="string">&quot;\n&quot;</span>;
+    <span class="ident">can_res</span> <span class="op">+=</span> <span class="string">&quot;\n&quot;</span>;
 
     <span class="comment">// query parameters</span>
     <span class="kw">let</span> <span class="ident">query_pairs</span> <span class="op">=</span> <span class="ident">u</span>.<span class="ident">query_pairs</span>(); <span class="comment">//.into_owned();</span>
@@ -769,12 +783,12 @@
 
             <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">item</span>) <span class="kw">in</span> <span class="ident">ret</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
                 <span class="kw">if</span> <span class="ident">i</span> <span class="op">&gt;</span> <span class="number">0</span> {
-                    <span class="ident">can_res</span> <span class="op">=</span> <span class="ident">can_res</span> <span class="op">+</span> <span class="string">&quot;,&quot;</span>
+                    <span class="ident">can_res</span> <span class="op">+=</span> <span class="string">&quot;,&quot;</span>
                 }
-                <span class="ident">can_res</span> <span class="op">=</span> <span class="ident">can_res</span> <span class="op">+</span> <span class="ident">item</span>;
+                <span class="ident">can_res</span> <span class="op">+=</span> <span class="ident">item</span>;
             }
 
-            <span class="ident">can_res</span> <span class="op">=</span> <span class="ident">can_res</span> <span class="op">+</span> <span class="string">&quot;\n&quot;</span>;
+            <span class="ident">can_res</span> <span class="op">+=</span> <span class="string">&quot;\n&quot;</span>;
         }
     };
 
@@ -794,58 +808,57 @@
 
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unknown_lints</span>)]</span>
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">too_many_arguments</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">perform_request</span>(<span class="ident">client</span>: <span class="kw-2">&amp;</span><span class="ident">Client</span>,
-                       <span class="ident">uri</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-                       <span class="ident">method</span>: <span class="ident">HTTPMethod</span>,
-                       <span class="ident">azure_key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-                       <span class="ident">headers</span>: <span class="kw-2">&amp;</span><span class="ident">Headers</span>,
-                       <span class="ident">request_body</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Read</span>, <span class="ident">u64</span>)<span class="op">&gt;</span>,
-                       <span class="ident">request_str</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>,
-                       <span class="ident">service_type</span>: <span class="ident">ServiceType</span>)
-                       <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">hyper</span>::<span class="ident">client</span>::<span class="ident">response</span>::<span class="ident">Response</span>, <span class="ident">hyper</span>::<span class="ident">error</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">dt</span> <span class="op">=</span> <span class="ident">chrono</span>::<span class="ident">UTC</span>::<span class="ident">now</span>();
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">perform_request</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(
+    <span class="ident">client</span>: <span class="kw-2">&amp;</span><span class="ident">hyper</span>::<span class="ident">Client</span><span class="op">&lt;</span><span class="ident">hyper_tls</span>::<span class="ident">HttpsConnector</span><span class="op">&lt;</span><span class="ident">hyper</span>::<span class="ident">client</span>::<span class="ident">HttpConnector</span><span class="op">&gt;&gt;</span>,
+    <span class="ident">uri</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    <span class="ident">http_method</span>: <span class="ident">Method</span>,
+    <span class="ident">azure_key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    <span class="ident">headers_func</span>: <span class="ident">F</span>,
+    <span class="ident">request_body</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
+    <span class="ident">service_type</span>: <span class="ident">ServiceType</span>,
+) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">hyper</span>::<span class="ident">client</span>::<span class="ident">FutureResponse</span>, <span class="ident">AzureError</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Headers</span>),
+{
+    <span class="kw">let</span> <span class="ident">dt</span> <span class="op">=</span> <span class="ident">chrono</span>::<span class="ident">Utc</span>::<span class="ident">now</span>();
     <span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">dt</span>.<span class="ident">format</span>(<span class="string">&quot;%a, %d %h %Y %T GMT&quot;</span>));
 
-    <span class="comment">// let mut h = Headers::new();</span>
-
-    <span class="kw">let</span> <span class="ident">u</span> <span class="op">=</span> <span class="ident">url</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="ident">uri</span>).<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">url</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="ident">uri</span>)<span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">uri</span> <span class="op">=</span> <span class="ident">hyper</span>::<span class="ident">Uri</span>::<span class="ident">from_str</span>(<span class="ident">uri</span>)<span class="question-mark">?</span>;
 
     <span class="comment">// for header in additional_headers.iter() {</span>
     <span class="comment">//     println!(&quot;{:?}&quot;, header.value_string());</span>
     <span class="comment">//     h.set();</span>
     <span class="comment">// }</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">hyper</span>::<span class="ident">Request</span>::<span class="ident">new</span>(<span class="ident">http_method</span>.<span class="ident">clone</span>(), <span class="ident">uri</span>);
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">h</span> <span class="op">=</span> <span class="ident">headers</span>.<span class="ident">clone</span>();
+    <span class="comment">// This will give the caller the ability to add custom headers.</span>
+    <span class="comment">// The closure is needed to because request.headers_mut().set_raw(...) requires</span>
+    <span class="comment">// a Cow with &#39;static lifetime...</span>
+    <span class="ident">headers_func</span>(<span class="ident">request</span>.<span class="ident">headers_mut</span>());
 
-    <span class="ident">h</span>.<span class="ident">set</span>(<span class="ident">XMSDate</span>(<span class="ident">time</span>));
-    <span class="ident">h</span>.<span class="ident">set</span>(<span class="ident">XMSVersion</span>(<span class="ident">AZURE_VERSION</span>.<span class="ident">to_owned</span>()));
+    <span class="ident">request</span>.<span class="ident">headers_mut</span>().<span class="ident">set</span>(<span class="ident">XMSDate</span>(<span class="ident">time</span>));
+    <span class="ident">request</span>
+        .<span class="ident">headers_mut</span>()
+        .<span class="ident">set</span>(<span class="ident">XMSVersion</span>(<span class="ident">AZURE_VERSION</span>.<span class="ident">to_owned</span>()));
 
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((_, <span class="ident">size</span>)) <span class="op">=</span> <span class="ident">request_body</span> {
-        <span class="ident">h</span>.<span class="ident">set</span>(<span class="ident">ContentLength</span>(<span class="ident">size</span>));
+    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">body</span>) <span class="op">=</span> <span class="ident">request_body</span> {
+        <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">from</span>(<span class="ident">body</span>);
+        <span class="ident">request</span>.<span class="ident">headers_mut</span>().<span class="ident">set</span>(<span class="ident">ContentLength</span>(<span class="ident">body</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>));
+        <span class="ident">request</span>.<span class="ident">set_body</span>(<span class="ident">b</span>);
     }
 
-    <span class="kw">let</span> <span class="ident">auth</span> <span class="op">=</span> <span class="ident">generate_authorization</span>(<span class="kw-2">&amp;</span><span class="ident">h</span>, <span class="kw-2">&amp;</span><span class="ident">u</span>, <span class="ident">method</span>, <span class="ident">azure_key</span>, <span class="ident">service_type</span>);
-    <span class="comment">// println!(&quot;auth == {:?}&quot;, auth);</span>
+    <span class="kw">let</span> <span class="ident">auth</span> <span class="op">=</span> <span class="ident">generate_authorization</span>(
+        <span class="ident">request</span>.<span class="ident">headers</span>(),
+        <span class="kw-2">&amp;</span><span class="ident">url</span>,
+        <span class="ident">http_method</span>,
+        <span class="ident">azure_key</span>,
+        <span class="ident">service_type</span>,
+    );
 
-    <span class="ident">h</span>.<span class="ident">set</span>(<span class="ident">Authorization</span>(<span class="ident">auth</span>));
+    <span class="ident">request</span>.<span class="ident">headers_mut</span>().<span class="ident">set</span>(<span class="ident">Authorization</span>(<span class="ident">auth</span>));
 
-    <span class="comment">// println!(&quot;{:?}&quot;, h);</span>
-
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">method</span> {
-        <span class="ident">HTTPMethod</span>::<span class="ident">Get</span> <span class="op">=&gt;</span> <span class="ident">client</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">u</span>.<span class="ident">to_string</span>()),
-        <span class="ident">HTTPMethod</span>::<span class="ident">Put</span> <span class="op">=&gt;</span> <span class="ident">client</span>.<span class="ident">put</span>(<span class="kw-2">&amp;</span><span class="ident">u</span>.<span class="ident">to_string</span>()),
-        <span class="ident">HTTPMethod</span>::<span class="ident">Post</span> <span class="op">=&gt;</span> <span class="ident">client</span>.<span class="ident">post</span>(<span class="kw-2">&amp;</span><span class="ident">u</span>.<span class="ident">to_string</span>()),
-        <span class="ident">HTTPMethod</span>::<span class="ident">Delete</span> <span class="op">=&gt;</span> <span class="ident">client</span>.<span class="ident">delete</span>(<span class="kw-2">&amp;</span><span class="ident">u</span>.<span class="ident">to_string</span>()),
-    };
-
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="kw-2">mut</span> <span class="ident">rb</span>, <span class="ident">size</span>)) <span class="op">=</span> <span class="ident">request_body</span> {
-        <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">hyper</span>::<span class="ident">client</span>::<span class="ident">Body</span>::<span class="ident">SizedBody</span>(<span class="ident">rb</span>, <span class="ident">size</span>);
-        <span class="ident">builder</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">body</span>(<span class="ident">b</span>);
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">body</span>) <span class="op">=</span> <span class="ident">request_str</span> {
-        <span class="ident">builder</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">body</span>(<span class="ident">body</span>);
-    }
-
-    <span class="ident">builder</span>.<span class="ident">headers</span>(<span class="ident">h</span>).<span class="ident">send</span>()
+    <span class="prelude-val">Ok</span>(<span class="ident">client</span>.<span class="ident">request</span>(<span class="ident">request</span>))
 }
 
 
@@ -868,8 +881,10 @@
         <span class="ident">h</span>.<span class="ident">set</span>(<span class="ident">XMSDate</span>(<span class="ident">time</span>));
         <span class="ident">h</span>.<span class="ident">set</span>(<span class="ident">XMSVersion</span>(<span class="string">&quot;2015-04-05&quot;</span>.<span class="ident">to_owned</span>()));
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw">super</span>::<span class="ident">canonicalize_header</span>(<span class="kw-2">&amp;</span><span class="ident">h</span>),
-                   <span class="string">&quot;x-ms-date:Fri, 28 Nov 2014 21:00:09 GMT+09:00\nx-ms-version:2015-04-05\n&quot;</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="kw">super</span>::<span class="ident">canonicalize_header</span>(<span class="kw-2">&amp;</span><span class="ident">h</span>),
+            <span class="string">&quot;x-ms-date:Fri, 28 Nov 2014 21:00:09 GMT+09:00\nx-ms-version:2015-04-05\n&quot;</span>
+        );
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -885,7 +900,7 @@
 
         <span class="kw">let</span> <span class="ident">u</span>: <span class="ident">url</span>::<span class="ident">Url</span> <span class="op">=</span> <span class="ident">url</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://mindrust.table.core.windows.net/TABLES&quot;</span>)
             .<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">method</span>: <span class="ident">HTTPMethod</span> <span class="op">=</span> <span class="ident">HTTPMethod</span>::<span class="ident">Post</span>;
+        <span class="kw">let</span> <span class="ident">method</span>: <span class="ident">Method</span> <span class="op">=</span> <span class="ident">Method</span>::<span class="ident">Post</span>;
         <span class="kw">let</span> <span class="ident">service_type</span>: <span class="ident">ServiceType</span> <span class="op">=</span> <span class="ident">ServiceType</span>::<span class="ident">Table</span>;
 
         <span class="kw">let</span> <span class="ident">dt</span> <span class="op">=</span> <span class="ident">chrono</span>::<span class="ident">DateTime</span>::<span class="ident">parse_from_rfc2822</span>(<span class="string">&quot;Wed,  3 May 2017 14:04:56 +0000&quot;</span>).<span class="ident">unwrap</span>();
@@ -914,31 +929,40 @@ Wed, 03 May 2017 14:04:56 GMT
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_canonicalize_resource_1</span>() {
-        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">url</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://myaccount.blob.core.windows.\
-                                   net/mycontainer?restype=container&amp;comp=metadata&quot;</span>)
-            .<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw">super</span>::<span class="ident">canonicalized_resource</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>),
-                   <span class="string">&quot;/myaccount/mycontainer\ncomp:metadata\nrestype:container&quot;</span>);
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">url</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(
+            <span class="string">&quot;http://myaccount.blob.core.windows.\
+             net/mycontainer?restype=container&amp;comp=metadata&quot;</span>,
+        ).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="kw">super</span>::<span class="ident">canonicalized_resource</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>),
+            <span class="string">&quot;/myaccount/mycontainer\ncomp:metadata\nrestype:container&quot;</span>
+        );
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_canonicalize_resource_2</span>() {
-        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">url</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://myaccount.blob.core.windows.\
-                                   net/mycontainer?restype=container&amp;comp=list&amp;include=snapshots&amp;\
-                                   include=metadata&amp;include=uncommittedblobs&quot;</span>)
-            .<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw">super</span>::<span class="ident">canonicalized_resource</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>),
-                   <span class="string">&quot;/myaccount/mycontainer\ncomp:list\ninclude:metadata,snapshots,\
-                    uncommittedblobs\nrestype:container&quot;</span>);
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">url</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(
+            <span class="string">&quot;http://myaccount.blob.core.windows.\
+             net/mycontainer?restype=container&amp;comp=list&amp;include=snapshots&amp;\
+             include=metadata&amp;include=uncommittedblobs&quot;</span>,
+        ).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="kw">super</span>::<span class="ident">canonicalized_resource</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>),
+            <span class="string">&quot;/myaccount/mycontainer\ncomp:list\ninclude:metadata,snapshots,\
+             uncommittedblobs\nrestype:container&quot;</span>
+        );
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_canonicalize_resource_3</span>() {
-        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">url</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://myaccount-secondary.blob.core.windows.\
-                                   net/mycontainer/myblob&quot;</span>)
-            .<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw">super</span>::<span class="ident">canonicalized_resource</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>),
-                   <span class="string">&quot;/myaccount-secondary/mycontainer/myblob&quot;</span>);
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">url</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(
+            <span class="string">&quot;https://myaccount-secondary.blob.core.windows.\
+             net/mycontainer/myblob&quot;</span>,
+        ).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="kw">super</span>::<span class="ident">canonicalized_resource</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>),
+            <span class="string">&quot;/myaccount-secondary/mycontainer/myblob&quot;</span>
+        );
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -948,8 +972,10 @@ Wed, 03 May 2017 14:04:56 GMT
                         f8Z22W9O1jdQ==&quot;</span>
             .<span class="ident">to_owned</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw">super</span>::<span class="ident">encode_str_to_sign</span>(<span class="kw-2">&amp;</span><span class="ident">str_to_sign</span>, <span class="kw-2">&amp;</span><span class="ident">hmac_key</span>),
-                   <span class="string">&quot;gZzaRaIkvC9jYRY123tq3xXZdsMAcgAbjKQo8y0p0Fs=&quot;</span>.<span class="ident">to_owned</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="kw">super</span>::<span class="ident">encode_str_to_sign</span>(<span class="kw-2">&amp;</span><span class="ident">str_to_sign</span>, <span class="kw-2">&amp;</span><span class="ident">hmac_key</span>),
+            <span class="string">&quot;gZzaRaIkvC9jYRY123tq3xXZdsMAcgAbjKQo8y0p0Fs=&quot;</span>.<span class="ident">to_owned</span>()
+        );
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -959,8 +985,10 @@ Wed, 03 May 2017 14:04:56 GMT
                         f8Z22W9O1jdQ==&quot;</span>
             .<span class="ident">to_owned</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw">super</span>::<span class="ident">encode_str_to_sign</span>(<span class="kw-2">&amp;</span><span class="ident">str_to_sign</span>, <span class="kw-2">&amp;</span><span class="ident">hmac_key</span>),
-                   <span class="string">&quot;YuKoXELO9M9HXeeGaSXBr4Nk+CgPAEQhcwJ6tVtBRCw=&quot;</span>.<span class="ident">to_owned</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="kw">super</span>::<span class="ident">encode_str_to_sign</span>(<span class="kw-2">&amp;</span><span class="ident">str_to_sign</span>, <span class="kw-2">&amp;</span><span class="ident">hmac_key</span>),
+            <span class="string">&quot;YuKoXELO9M9HXeeGaSXBr4Nk+CgPAEQhcwJ6tVtBRCw=&quot;</span>.<span class="ident">to_owned</span>()
+        );
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -970,8 +998,10 @@ Wed, 03 May 2017 14:04:56 GMT
                         f8Z22W9O1jdQ==&quot;</span>
             .<span class="ident">to_owned</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw">super</span>::<span class="ident">encode_str_to_sign</span>(<span class="kw-2">&amp;</span><span class="ident">str_to_sign</span>, <span class="kw-2">&amp;</span><span class="ident">hmac_key</span>),
-                   <span class="string">&quot;YuKoXELO9M9HXeeGaSXBr4Nk+CgPAEQhcwJ6tVtBRCw=&quot;</span>.<span class="ident">to_owned</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="kw">super</span>::<span class="ident">encode_str_to_sign</span>(<span class="kw-2">&amp;</span><span class="ident">str_to_sign</span>, <span class="kw-2">&amp;</span><span class="ident">hmac_key</span>),
+            <span class="string">&quot;YuKoXELO9M9HXeeGaSXBr4Nk+CgPAEQhcwJ6tVtBRCw=&quot;</span>.<span class="ident">to_owned</span>()
+        );
     }
 }
 </pre>

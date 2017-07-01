@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["ResourceType",""]],"struct":[["Authorization",""],["COMPLETE_ENCODE_SET",""],["Client",""],["OfferThroughput",""],["XMSDate",""],["XMSVersion",""]]});
+initSidebarItems({"enum":[["ResourceType",""]],"struct":[["Authorization",""],["Client",""],["DocumentIndexingDirective",""],["DocumentIsUpsert",""],["OfferThroughput",""],["XMSDate",""],["XMSVersion",""]]});

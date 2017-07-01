@@ -175,6 +175,13 @@
 <span id="130">130</span>
 <span id="131">131</span>
 <span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
 </pre><pre class="rust ">
 <span class="comment">/* Table batch support
 * Current limitation:
@@ -209,11 +216,12 @@ Content-Transfer-Encoding: binary
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate_batch_payload</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Serialize</span><span class="op">&gt;</span>(<span class="ident">uri_prefix</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-                                            <span class="ident">table</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-                                            <span class="ident">primary_key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-                                            <span class="ident">items</span>: <span class="kw-2">&amp;</span>[<span class="ident">BatchItem</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>])
-                                            <span class="op">-&gt;</span> <span class="ident">String</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate_batch_payload</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Serialize</span><span class="op">&gt;</span>(
+    <span class="ident">uri_prefix</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    <span class="ident">table</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    <span class="ident">primary_key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    <span class="ident">items</span>: <span class="kw-2">&amp;</span>[<span class="ident">BatchItem</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>],
+) <span class="op">-&gt;</span> <span class="ident">String</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">payload</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">BATCH_BEGIN</span>.<span class="ident">to_owned</span>();
     <span class="kw">for</span> <span class="ident">item</span> <span class="kw">in</span> <span class="ident">items</span> {
         <span class="ident">payload</span>.<span class="ident">push_str</span>(<span class="ident">CHANGESET_BEGIN</span>);
@@ -284,24 +292,30 @@ If-Match: *
 --batch_a1e9d677-b28b-435e-a89e-87e6a768a431
 &quot;#</span>;
 
-        <span class="kw">let</span> <span class="ident">items</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">bupdate</span>(<span class="string">&quot;Channel_17&quot;</span>, <span class="string">&quot;3&quot;</span>, <span class="number">9</span>, <span class="string">&quot;.NET...&quot;</span>),
-                         <span class="ident">bupdate</span>(<span class="string">&quot;Channel_17&quot;</span>, <span class="string">&quot;3&quot;</span>, <span class="number">9</span>, <span class="string">&quot;PDC 2008...&quot;</span>),
-                         <span class="ident">bdelete</span>(<span class="string">&quot;3&quot;</span>)];
-        <span class="kw">let</span> <span class="ident">actual</span> <span class="op">=</span> <span class="ident">generate_batch_payload</span>(<span class="string">&quot;https://myaccount.table.core.windows.net/&quot;</span>,
-                                            <span class="string">&quot;Blogs&quot;</span>,
-                                            <span class="string">&quot;Channel_17&quot;</span>,
-                                            <span class="ident">items</span>.<span class="ident">as_slice</span>());
+        <span class="kw">let</span> <span class="ident">items</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[
+            <span class="ident">bupdate</span>(<span class="string">&quot;Channel_17&quot;</span>, <span class="string">&quot;3&quot;</span>, <span class="number">9</span>, <span class="string">&quot;.NET...&quot;</span>),
+            <span class="ident">bupdate</span>(<span class="string">&quot;Channel_17&quot;</span>, <span class="string">&quot;3&quot;</span>, <span class="number">9</span>, <span class="string">&quot;PDC 2008...&quot;</span>),
+            <span class="ident">bdelete</span>(<span class="string">&quot;3&quot;</span>),
+        ];
+        <span class="kw">let</span> <span class="ident">actual</span> <span class="op">=</span> <span class="ident">generate_batch_payload</span>(
+            <span class="string">&quot;https://myaccount.table.core.windows.net/&quot;</span>,
+            <span class="string">&quot;Blogs&quot;</span>,
+            <span class="string">&quot;Channel_17&quot;</span>,
+            <span class="ident">items</span>.<span class="ident">as_slice</span>(),
+        );
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">expected</span>, <span class="ident">actual</span>);
     }
 
     <span class="kw">fn</span> <span class="ident">bupdate</span>(<span class="ident">pk</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">rk</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">rating</span>: <span class="ident">i32</span>, <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">BatchItem</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span> {
-        <span class="ident">BatchItem</span>(<span class="ident">rk</span>.<span class="ident">to_owned</span>(),
-                  <span class="prelude-val">Some</span>(<span class="ident">Entity</span> {
-                           <span class="ident">PartitionKey</span>: <span class="ident">pk</span>.<span class="ident">to_owned</span>(),
-                           <span class="ident">RowKey</span>: <span class="ident">rk</span>.<span class="ident">to_owned</span>(),
-                           <span class="ident">Rating</span>: <span class="ident">rating</span>,
-                           <span class="ident">Text</span>: <span class="ident">text</span>.<span class="ident">to_owned</span>(),
-                       }))
+        <span class="ident">BatchItem</span>(
+            <span class="ident">rk</span>.<span class="ident">to_owned</span>(),
+            <span class="prelude-val">Some</span>(<span class="ident">Entity</span> {
+                <span class="ident">PartitionKey</span>: <span class="ident">pk</span>.<span class="ident">to_owned</span>(),
+                <span class="ident">RowKey</span>: <span class="ident">rk</span>.<span class="ident">to_owned</span>(),
+                <span class="ident">Rating</span>: <span class="ident">rating</span>,
+                <span class="ident">Text</span>: <span class="ident">text</span>.<span class="ident">to_owned</span>(),
+            }),
+        )
     }
 
     <span class="kw">fn</span> <span class="ident">bdelete</span>(<span class="ident">rk</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">BatchItem</span><span class="op">&lt;</span><span class="ident">Entity</span><span class="op">&gt;</span> {

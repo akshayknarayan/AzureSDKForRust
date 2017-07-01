@@ -64,7 +64,6 @@
 <span id="19">19</span>
 <span id="20">20</span>
 <span id="21">21</span>
-<span id="22">22</span>
 </pre><pre class="rust ">
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">crypto</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">hyper</span>;
@@ -81,12 +80,11 @@
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">range</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">ba512_range</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">HTTPMethod</span> {
-    <span class="ident">Get</span>,
-    <span class="ident">Put</span>,
-    <span class="ident">Post</span>,
-    <span class="ident">Delete</span>,
+<span class="kw">use</span> <span class="ident">url</span>::<span class="ident">percent_encoding</span>;
+<span class="macro">define_encode_set</span><span class="macro">!</span> {
+    <span class="kw">pub</span> <span class="ident">COMPLETE_ENCODE_SET</span> <span class="op">=</span> [<span class="ident">percent_encoding</span>::<span class="ident">USERINFO_ENCODE_SET</span>] <span class="op">|</span> {
+        <span class="string">&#39;+&#39;</span>, <span class="string">&#39;-&#39;</span>, <span class="string">&#39;&amp;&#39;</span>
+    }
 }
 </pre>
 </section>

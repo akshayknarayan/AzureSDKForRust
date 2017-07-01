@@ -69,6 +69,10 @@
 <span id="24">24</span>
 <span id="25">25</span>
 <span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
@@ -79,21 +83,25 @@
 
 <span class="macro">create_enum</span><span class="macro">!</span>(<span class="ident">LeaseStatus</span>, (<span class="ident">Locked</span>, <span class="string">&quot;locked&quot;</span>), (<span class="ident">Unlocked</span>, <span class="string">&quot;unlocked&quot;</span>));
 
-<span class="macro">create_enum</span><span class="macro">!</span>(<span class="ident">LeaseState</span>,
-             (<span class="ident">Available</span>, <span class="string">&quot;available&quot;</span>),
-             (<span class="ident">Leased</span>, <span class="string">&quot;leased&quot;</span>),
-             (<span class="ident">Expired</span>, <span class="string">&quot;expired&quot;</span>),
-             (<span class="ident">Breaking</span>, <span class="string">&quot;breaking&quot;</span>),
-             (<span class="ident">Broken</span>, <span class="string">&quot;broken&quot;</span>));
+<span class="macro">create_enum</span><span class="macro">!</span>(
+    <span class="ident">LeaseState</span>,
+    (<span class="ident">Available</span>, <span class="string">&quot;available&quot;</span>),
+    (<span class="ident">Leased</span>, <span class="string">&quot;leased&quot;</span>),
+    (<span class="ident">Expired</span>, <span class="string">&quot;expired&quot;</span>),
+    (<span class="ident">Breaking</span>, <span class="string">&quot;breaking&quot;</span>),
+    (<span class="ident">Broken</span>, <span class="string">&quot;broken&quot;</span>)
+);
 
 <span class="macro">create_enum</span><span class="macro">!</span>(<span class="ident">LeaseDuration</span>, (<span class="ident">Infinite</span>, <span class="string">&quot;infinite&quot;</span>), (<span class="ident">Fixed</span>, <span class="string">&quot;fixed&quot;</span>));
 
-<span class="macro">create_enum</span><span class="macro">!</span>(<span class="ident">LeaseAction</span>,
-             (<span class="ident">Acquire</span>, <span class="string">&quot;acquire&quot;</span>),
-             (<span class="ident">Renew</span>, <span class="string">&quot;renew &quot;</span>),
-             (<span class="ident">Change</span>, <span class="string">&quot;change&quot;</span>),
-             (<span class="ident">Release</span>, <span class="string">&quot;release &quot;</span>),
-             (<span class="ident">Break</span>, <span class="string">&quot;break&quot;</span>));
+<span class="macro">create_enum</span><span class="macro">!</span>(
+    <span class="ident">LeaseAction</span>,
+    (<span class="ident">Acquire</span>, <span class="string">&quot;acquire&quot;</span>),
+    (<span class="ident">Renew</span>, <span class="string">&quot;renew &quot;</span>),
+    (<span class="ident">Change</span>, <span class="string">&quot;change&quot;</span>),
+    (<span class="ident">Release</span>, <span class="string">&quot;release &quot;</span>),
+    (<span class="ident">Break</span>, <span class="string">&quot;break&quot;</span>)
+);
 
 <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">LeaseId</span> <span class="op">=</span> <span class="ident">Uuid</span>;
 </pre>

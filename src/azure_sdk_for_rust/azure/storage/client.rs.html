@@ -138,20 +138,16 @@
 <span id="93">93</span>
 <span id="94">94</span>
 <span id="95">95</span>
-<span id="96">96</span>
-<span id="97">97</span>
-<span id="98">98</span>
-<span id="99">99</span>
 </pre><pre class="rust ">
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Read</span>;
-<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">net</span>::<span class="ident">HttpsConnector</span>;
-<span class="kw">use</span> <span class="ident">hyper_native_tls</span>::<span class="ident">NativeTlsClient</span>;
-<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">client</span>::<span class="ident">response</span>::<span class="ident">Response</span>;
-<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">client</span>::<span class="ident">Client</span> <span class="kw">as</span> <span class="ident">HyperClient</span>;
-<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">error</span>::<span class="ident">Error</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>;
+<span class="kw">use</span> <span class="ident">hyper_tls</span>;
 <span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::<span class="ident">Headers</span>;
-<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">HTTPMethod</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">Method</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">rest_client</span>::{<span class="ident">perform_request</span>, <span class="ident">ServiceType</span>};
+
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">errors</span>::<span class="ident">AzureError</span>;
+
+<span class="kw">use</span> <span class="ident">tokio_core</span>::<span class="ident">reactor</span>::<span class="ident">Handle</span>;
 
 <span class="comment">// Can be variant for different cloud environment</span>
 <span class="kw">const</span> <span class="ident">SERVICE_SUFFIX_BLOB</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;.blob.core.windows.net&quot;</span>;
@@ -160,86 +156,82 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Client</span> {
     <span class="ident">account</span>: <span class="ident">String</span>,
     <span class="ident">key</span>: <span class="ident">String</span>,
-    <span class="ident">use_https</span>: <span class="ident">bool</span>,
-    <span class="ident">hc</span>: <span class="ident">HyperClient</span>,
+    <span class="ident">hc</span>: <span class="ident">hyper</span>::<span class="ident">Client</span><span class="op">&lt;</span><span class="ident">hyper_tls</span>::<span class="ident">HttpsConnector</span><span class="op">&lt;</span><span class="ident">hyper</span>::<span class="ident">client</span>::<span class="ident">HttpConnector</span><span class="op">&gt;&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Client</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">account</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">use_https</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">Client</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="ident">Handle</span>, <span class="ident">account</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Client</span>, <span class="ident">AzureError</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident">hyper</span>;
 
-        <span class="kw">let</span> <span class="ident">ssl</span> <span class="op">=</span> <span class="ident">NativeTlsClient</span>::<span class="ident">new</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">connector</span> <span class="op">=</span> <span class="ident">HttpsConnector</span>::<span class="ident">new</span>(<span class="ident">ssl</span>);
-        <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">hyper</span>::<span class="ident">Client</span>::<span class="ident">with_connector</span>(<span class="ident">connector</span>);
+        <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">hyper</span>::<span class="ident">Client</span>::<span class="ident">configure</span>()
+            .<span class="ident">connector</span>(<span class="ident">hyper_tls</span>::<span class="ident">HttpsConnector</span>::<span class="ident">new</span>(<span class="number">4</span>, <span class="ident">handle</span>)<span class="question-mark">?</span>)
+            .<span class="ident">build</span>(<span class="ident">handle</span>);
 
-        <span class="ident">Client</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">Client</span> {
             <span class="ident">account</span>: <span class="ident">account</span>.<span class="ident">to_owned</span>(),
             <span class="ident">key</span>: <span class="ident">key</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">use_https</span>: <span class="ident">use_https</span>,
             <span class="ident">hc</span>: <span class="ident">client</span>,
-        }
+        })
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">account</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">account</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">use_https</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">use_https</span>
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">auth_scheme</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">use_https</span> { <span class="string">&quot;https&quot;</span> } <span class="kw">else</span> { <span class="string">&quot;http&quot;</span> }
-    }
-
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">key</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">perform_request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
-                           <span class="ident">uri</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-                           <span class="ident">method</span>: <span class="ident">HTTPMethod</span>,
-                           <span class="ident">headers</span>: <span class="kw-2">&amp;</span><span class="ident">Headers</span>,
-                           <span class="ident">request_body</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Read</span>, <span class="ident">u64</span>)<span class="op">&gt;</span>)
-                           <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="ident">perform_request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">hc</span>,
-                        <span class="ident">uri</span>,
-                        <span class="ident">method</span>,
-                        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">key</span>,
-                        <span class="ident">headers</span>,
-                        <span class="ident">request_body</span>,
-                        <span class="prelude-val">None</span>,
-                        <span class="ident">ServiceType</span>::<span class="ident">Blob</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">perform_request</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">uri</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">method</span>: <span class="ident">Method</span>,
+        <span class="ident">headers_func</span>: <span class="ident">F</span>,
+        <span class="ident">request_body</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">hyper</span>::<span class="ident">client</span>::<span class="ident">FutureResponse</span>, <span class="ident">AzureError</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Headers</span>),
+    {
+        <span class="ident">perform_request</span>(
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">hc</span>,
+            <span class="ident">uri</span>,
+            <span class="ident">method</span>,
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">key</span>,
+            <span class="ident">headers_func</span>,
+            <span class="ident">request_body</span>,
+            <span class="ident">ServiceType</span>::<span class="ident">Blob</span>,
+        )
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">perform_table_request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
-                                 <span class="ident">segment</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-                                 <span class="ident">method</span>: <span class="ident">HTTPMethod</span>,
-                                 <span class="ident">headers</span>: <span class="ident">Headers</span>,
-                                 <span class="ident">request_str</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>)
-                                 <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-
-        <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;segment: {}, method: {:?}, headers: {:?}&quot;</span>,
-               <span class="ident">segment</span>,
-               <span class="ident">method</span>,
-               <span class="ident">headers</span>);
-        <span class="ident">perform_request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">hc</span>,
-                        (<span class="self">self</span>.<span class="ident">get_uri_prefix</span>(<span class="ident">ServiceType</span>::<span class="ident">Table</span>) <span class="op">+</span> <span class="ident">segment</span>).<span class="ident">as_str</span>(),
-                        <span class="ident">method</span>,
-                        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">key</span>,
-                        <span class="kw-2">&amp;</span><span class="ident">headers</span>,
-                        <span class="prelude-val">None</span>,
-                        <span class="ident">request_str</span>,
-                        <span class="ident">ServiceType</span>::<span class="ident">Table</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">perform_table_request</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">segment</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">method</span>: <span class="ident">Method</span>,
+        <span class="ident">headers_func</span>: <span class="ident">F</span>,
+        <span class="ident">request_str</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">hyper</span>::<span class="ident">client</span>::<span class="ident">FutureResponse</span>, <span class="ident">AzureError</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Headers</span>),
+    {
+        <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;segment: {}, method: {:?}&quot;</span>, <span class="ident">segment</span>, <span class="ident">method</span>,);
+        <span class="ident">perform_request</span>(
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">hc</span>,
+            (<span class="self">self</span>.<span class="ident">get_uri_prefix</span>(<span class="ident">ServiceType</span>::<span class="ident">Table</span>) <span class="op">+</span> <span class="ident">segment</span>).<span class="ident">as_str</span>(),
+            <span class="ident">method</span>,
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">key</span>,
+            <span class="ident">headers_func</span>,
+            <span class="ident">request_str</span>,
+            <span class="ident">ServiceType</span>::<span class="ident">Table</span>,
+        )
     }
 
     <span class="doccomment">/// Uri scheme + authority e.g. http://myaccount.table.core.windows.net/</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_uri_prefix</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">service_type</span>: <span class="ident">ServiceType</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
-        <span class="self">self</span>.<span class="ident">auth_scheme</span>().<span class="ident">to_owned</span>() <span class="op">+</span> <span class="string">&quot;://&quot;</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">account</span>() <span class="op">+</span>
-        <span class="kw">match</span> <span class="ident">service_type</span> {
-            <span class="ident">ServiceType</span>::<span class="ident">Blob</span> <span class="op">=&gt;</span> <span class="ident">SERVICE_SUFFIX_BLOB</span>,
-            <span class="ident">ServiceType</span>::<span class="ident">Table</span> <span class="op">=&gt;</span> <span class="ident">SERVICE_SUFFIX_TABLE</span>,
-        } <span class="op">+</span> <span class="string">&quot;/&quot;</span>
+        <span class="string">&quot;https://&quot;</span>.<span class="ident">to_owned</span>() <span class="op">+</span> <span class="self">self</span>.<span class="ident">account</span>() <span class="op">+</span>
+            <span class="kw">match</span> <span class="ident">service_type</span> {
+                <span class="ident">ServiceType</span>::<span class="ident">Blob</span> <span class="op">=&gt;</span> <span class="ident">SERVICE_SUFFIX_BLOB</span>,
+                <span class="ident">ServiceType</span>::<span class="ident">Table</span> <span class="op">=&gt;</span> <span class="ident">SERVICE_SUFFIX_TABLE</span>,
+            } <span class="op">+</span> <span class="string">&quot;/&quot;</span>
     }
 }
 </pre>
