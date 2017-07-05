@@ -68,14 +68,16 @@
 <span id="23">23</span>
 <span id="24">24</span>
 </pre><pre class="rust ">
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ListBlobOptions</span> {
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">incompletevector</span>::<span class="ident">ContinuationToken</span>;
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ListBlobOptions</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="kw">pub</span> <span class="ident">max_results</span>: <span class="ident">u32</span>,
     <span class="kw">pub</span> <span class="ident">include_snapshots</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">include_metadata</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">include_uncommittedblobs</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">include_copy</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">next_marker</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">next_marker</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">ContinuationToken</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">prefix</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">timeout</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
 }
@@ -90,8 +92,6 @@
     <span class="ident">prefix</span>: <span class="prelude-val">None</span>,
     <span class="ident">timeout</span>: <span class="prelude-val">None</span>,
 };
-
-<span class="kw">impl</span> <span class="ident">ListBlobOptions</span> {}
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
