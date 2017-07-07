@@ -1238,6 +1238,12 @@
 <span id="1193">1193</span>
 <span id="1194">1194</span>
 <span id="1195">1195</span>
+<span id="1196">1196</span>
+<span id="1197">1197</span>
+<span id="1198">1198</span>
+<span id="1199">1199</span>
+<span id="1200">1200</span>
+<span id="1201">1201</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">cosmos</span>::<span class="ident">authorization_token</span>::{<span class="ident">TokenType</span>, <span class="ident">AuthorizationToken</span>};
 
@@ -1252,12 +1258,13 @@
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">cosmos</span>::<span class="ident">request_response</span>::{<span class="ident">ListDatabasesResponse</span>, <span class="ident">CreateDatabaseRequest</span>,
                                       <span class="ident">ListCollectionsResponse</span>, <span class="ident">ListDocumentsResponseAttributes</span>,
                                       <span class="ident">ListDocumentsResponseEntities</span>, <span class="ident">ListDocumentsResponse</span>,
-                                      <span class="ident">Document</span>};
+                                      <span class="ident">Document</span>, <span class="ident">ListDocumentsResponseAdditionalHeaders</span>,
+                                      <span class="ident">GetDocumentAdditionalHeaders</span>, <span class="ident">GetDocumentResponse</span>};
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">COMPLETE_ENCODE_SET</span>;
 
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">cosmos</span>::<span class="ident">ConsistencyLevel</span>;
-<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">cosmos</span>::<span class="ident">list_documents</span>::{<span class="ident">ListDocumentsOptions</span>, <span class="ident">ListDocumentsResponseAdditionalHeaders</span>};
-<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">cosmos</span>::<span class="ident">get_document</span>::{<span class="ident">GetDocumentOptions</span>, <span class="ident">GetDocumentAdditionalHeaders</span>};
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">cosmos</span>::<span class="ident">list_documents</span>::<span class="ident">ListDocumentsOptions</span>;
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">cosmos</span>::<span class="ident">get_document</span>::<span class="ident">GetDocumentOptions</span>;
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">incompletevector</span>::<span class="ident">ContinuationToken</span>;
 
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::{<span class="ident">FromStr</span>, <span class="ident">from_utf8</span>};
@@ -1361,6 +1368,8 @@
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">hyper_client</span>.<span class="ident">request</span>(<span class="ident">request</span>))
     }
 
+    <span class="doccomment">/// Returns database list associated to the account</span>
+    <span class="doccomment">/// specified in the  `azure_sdk_for_rust::azure::cosmos::authorization_token::AuthorizationToken`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">list_databases</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw">impl</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Database</span><span class="op">&gt;</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">AzureError</span><span class="op">&gt;</span> {
         <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;list_databases called&quot;</span>);
 
@@ -1949,13 +1958,7 @@
         <span class="ident">database</span>: <span class="ident">S1</span>,
         <span class="ident">collection</span>: <span class="ident">S2</span>,
         <span class="ident">ldo</span>: <span class="kw-2">&amp;</span><span class="ident">ListDocumentsOptions</span>,
-    ) <span class="op">-&gt;</span> <span class="kw">impl</span> <span class="ident">Future</span><span class="op">&lt;</span>
-        <span class="ident">Item</span> <span class="op">=</span> (
-            <span class="ident">ListDocumentsResponse</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-            <span class="ident">ListDocumentsResponseAdditionalHeaders</span>,
-        ),
-        <span class="ident">Error</span> <span class="op">=</span> <span class="ident">AzureError</span>,
-    <span class="op">&gt;</span>
+    ) <span class="op">-&gt;</span> <span class="kw">impl</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">ListDocumentsResponse</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">AzureError</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">S1</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>,
         <span class="ident">S2</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>,
@@ -1976,31 +1979,8 @@
         <span class="ident">done</span>(<span class="ident">req</span>).<span class="ident">from_err</span>().<span class="ident">and_then</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">future_response</span><span class="op">|</span> {
             <span class="ident">check_status_extract_headers_and_body</span>(<span class="ident">future_response</span>, <span class="ident">StatusCode</span>::<span class="prelude-val">Ok</span>)
                 .<span class="ident">and_then</span>(<span class="kw">move</span> <span class="op">|</span>(<span class="ident">headers</span>, <span class="ident">whole_body</span>)<span class="op">|</span> {
-                    <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;headers == {:?}&quot;</span>, <span class="ident">headers</span>);
-
-                    <span class="kw">let</span> <span class="ident">ado</span> <span class="op">=</span> <span class="ident">ListDocumentsResponseAdditionalHeaders</span> {
-                        <span class="comment">// This match just tries to extract the info and convert it</span>
-                        <span class="comment">// into the correct type. It is complicated because headers</span>
-                        <span class="comment">// can be missing and also because headers.get&lt;T&gt; will return</span>
-                        <span class="comment">// a T reference (&amp;T) so we need to cast it into the</span>
-                        <span class="comment">// correct type and clone it (in this case into a &amp;str that will</span>
-                        <span class="comment">// become a String using to_owned())</span>
-                        <span class="ident">continuation_token</span>: <span class="kw">match</span> <span class="ident">headers</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ContinuationTokenHeader</span><span class="op">&gt;</span>() {
-                            <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>((<span class="ident">s</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">str</span>).<span class="ident">to_owned</span>()),
-                            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
-                        },
-                        <span class="comment">// Here we assume the Charge header to always be present.</span>
-                        <span class="comment">// If problems arise we</span>
-                        <span class="comment">// will change the field to be Option(al).</span>
-                        <span class="ident">charge</span>: <span class="kw-2">*</span>(<span class="ident">headers</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Charge</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>() <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">u64</span>),
-                        <span class="ident">etag</span>: <span class="kw">match</span> <span class="ident">headers</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Etag</span><span class="op">&gt;</span>() {
-                            <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>((<span class="ident">s</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">str</span>).<span class="ident">to_owned</span>()),
-                            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
-                        },
-                    };
-                    <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;ado == {:?}&quot;</span>, <span class="ident">ado</span>);
-                    <span class="ident">done</span>(<span class="ident">list_documents_extract_result</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">whole_body</span>))
-                        .<span class="ident">and_then</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">body</span><span class="op">|</span> <span class="ident">ok</span>((<span class="ident">body</span>, <span class="ident">ado</span>)))
+                    <span class="ident">done</span>(<span class="ident">list_documents_extract_result</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">whole_body</span>, <span class="ident">headers</span>))
+                        .<span class="ident">and_then</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">result</span><span class="op">|</span> <span class="ident">ok</span>(<span class="ident">result</span>))
                 })
         })
     }
@@ -2060,7 +2040,7 @@
         <span class="ident">collection</span>: <span class="ident">S2</span>,
         <span class="ident">document_id</span>: <span class="ident">S3</span>,
         <span class="ident">gdo</span>: <span class="kw-2">&amp;</span><span class="ident">GetDocumentOptions</span>,
-    ) <span class="op">-&gt;</span> <span class="kw">impl</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span>, <span class="ident">GetDocumentAdditionalHeaders</span>), <span class="ident">Error</span> <span class="op">=</span> <span class="ident">AzureError</span><span class="op">&gt;</span>
+    ) <span class="op">-&gt;</span> <span class="kw">impl</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">GetDocumentResponse</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">AzureError</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">S1</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>,
         <span class="ident">S2</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>,
@@ -2095,7 +2075,7 @@
     <span class="ident">status</span>: <span class="ident">hyper</span>::<span class="ident">StatusCode</span>,
     <span class="ident">headers</span>: <span class="ident">hyper</span>::<span class="ident">Headers</span>,
     <span class="ident">v_body</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span>, <span class="ident">GetDocumentAdditionalHeaders</span>), <span class="ident">AzureError</span><span class="op">&gt;</span>
+) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">GetDocumentResponse</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">AzureError</span><span class="op">&gt;</span>
 <span class="kw">where</span>
     <span class="ident">T</span>: <span class="ident">DeserializeOwned</span>,
 {
@@ -2114,7 +2094,10 @@
                 <span class="ident">entity</span>: <span class="ident">serde_json</span>::<span class="ident">from_slice</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">v_body</span>)<span class="question-mark">?</span>,
             };
 
-            <span class="prelude-val">Ok</span>((<span class="prelude-val">Some</span>(<span class="ident">document</span>), <span class="ident">gdah</span>))
+            <span class="prelude-val">Ok</span>(<span class="ident">GetDocumentResponse</span> {
+                <span class="ident">document</span>: <span class="prelude-val">Some</span>(<span class="ident">document</span>),
+                <span class="ident">additional_headers</span>: <span class="ident">gdah</span>,
+            })
         }
         <span class="comment">// NotFound is not an error so we return None along</span>
         <span class="comment">// with the additional headers.</span>
@@ -2124,7 +2107,10 @@
             };
             <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;gdah == {:?}&quot;</span>, <span class="ident">gdah</span>);
 
-            <span class="prelude-val">Ok</span>((<span class="prelude-val">None</span>, <span class="ident">gdah</span>))
+            <span class="prelude-val">Ok</span>(<span class="ident">GetDocumentResponse</span> {
+                <span class="ident">document</span>: <span class="prelude-val">None</span>,
+                <span class="ident">additional_headers</span>: <span class="ident">gdah</span>,
+            })
         }
         _ <span class="op">=&gt;</span> {
             <span class="comment">// We treat everything else as an error. We could</span>
@@ -2142,10 +2128,35 @@
 
 <span class="kw">fn</span> <span class="ident">list_documents_extract_result</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span>(
     <span class="ident">v_body</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
+    <span class="ident">headers</span>: <span class="ident">Headers</span>,
 ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ListDocumentsResponse</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">AzureError</span><span class="op">&gt;</span>
 <span class="kw">where</span>
     <span class="ident">T</span>: <span class="ident">DeserializeOwned</span>,
 {
+    <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;headers == {:?}&quot;</span>, <span class="ident">headers</span>);
+
+    <span class="kw">let</span> <span class="ident">ado</span> <span class="op">=</span> <span class="ident">ListDocumentsResponseAdditionalHeaders</span> {
+        <span class="comment">// This match just tries to extract the info and convert it</span>
+        <span class="comment">// into the correct type. It is complicated because headers</span>
+        <span class="comment">// can be missing and also because headers.get&lt;T&gt; will return</span>
+        <span class="comment">// a T reference (&amp;T) so we need to cast it into the</span>
+        <span class="comment">// correct type and clone it (in this case into a &amp;str that will</span>
+        <span class="comment">// become a String using to_owned())</span>
+        <span class="ident">continuation_token</span>: <span class="kw">match</span> <span class="ident">headers</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ContinuationTokenHeader</span><span class="op">&gt;</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>((<span class="ident">s</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">str</span>).<span class="ident">to_owned</span>()),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+        },
+        <span class="comment">// Here we assume the Charge header to always be present.</span>
+        <span class="comment">// If problems arise we</span>
+        <span class="comment">// will change the field to be Option(al).</span>
+        <span class="ident">charge</span>: <span class="kw-2">*</span>(<span class="ident">headers</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Charge</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>() <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">u64</span>),
+        <span class="ident">etag</span>: <span class="kw">match</span> <span class="ident">headers</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">Etag</span><span class="op">&gt;</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>((<span class="ident">s</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">str</span>).<span class="ident">to_owned</span>()),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+        },
+    };
+    <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;ado == {:?}&quot;</span>, <span class="ident">ado</span>);
+
     <span class="comment">// we will proceed in three steps:</span>
     <span class="comment">// 1- Deserialize the result as DocumentAttributes. The extra field will be ignored.</span>
     <span class="comment">// 2- Deserialize the result a type T. The extra fields will be ignored.</span>
@@ -2169,6 +2180,7 @@
     <span class="prelude-val">Ok</span>(<span class="ident">ListDocumentsResponse</span> {
         <span class="ident">rid</span>: <span class="ident">document_attributes</span>.<span class="ident">rid</span>,
         <span class="ident">documents</span>: <span class="ident">v</span>,
+        <span class="ident">additional_headers</span>: <span class="ident">ado</span>,
     })
 }
 
@@ -2339,8 +2351,8 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">string_to_sign_00</span>() {
-        <span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span> <span class="ident">chrono</span>::<span class="ident">DateTime</span>::<span class="ident">parse_from_rfc3339</span>(<span class="string">&quot;1900-01-01T01:00:00.000000000+00:00&quot;</span>)
-            .<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span>
+            <span class="ident">chrono</span>::<span class="ident">DateTime</span>::<span class="ident">parse_from_rfc3339</span>(<span class="string">&quot;1900-01-01T01:00:00.000000000+00:00&quot;</span>).<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span> <span class="ident">time</span>.<span class="ident">with_timezone</span>(<span class="kw-2">&amp;</span><span class="ident">chrono</span>::<span class="ident">Utc</span>);
         <span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">time</span>.<span class="ident">format</span>(<span class="ident">TIME_FORMAT</span>));
 
@@ -2363,8 +2375,8 @@ mon, 01 jan 1900 01:00:00 gmt
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">generate_authorization_00</span>() {
-        <span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span> <span class="ident">chrono</span>::<span class="ident">DateTime</span>::<span class="ident">parse_from_rfc3339</span>(<span class="string">&quot;1900-01-01T01:00:00.000000000+00:00&quot;</span>)
-            .<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span>
+            <span class="ident">chrono</span>::<span class="ident">DateTime</span>::<span class="ident">parse_from_rfc3339</span>(<span class="string">&quot;1900-01-01T01:00:00.000000000+00:00&quot;</span>).<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span> <span class="ident">time</span>.<span class="ident">with_timezone</span>(<span class="kw-2">&amp;</span><span class="ident">chrono</span>::<span class="ident">Utc</span>);
         <span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">time</span>.<span class="ident">format</span>(<span class="ident">TIME_FORMAT</span>));
 
@@ -2391,8 +2403,8 @@ mon, 01 jan 1900 01:00:00 gmt
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">generate_authorization_01</span>() {
-        <span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span> <span class="ident">chrono</span>::<span class="ident">DateTime</span>::<span class="ident">parse_from_rfc3339</span>(<span class="string">&quot;2017-04-27T00:51:12.000000000+00:00&quot;</span>)
-            .<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span>
+            <span class="ident">chrono</span>::<span class="ident">DateTime</span>::<span class="ident">parse_from_rfc3339</span>(<span class="string">&quot;2017-04-27T00:51:12.000000000+00:00&quot;</span>).<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span> <span class="ident">time</span>.<span class="ident">with_timezone</span>(<span class="kw-2">&amp;</span><span class="ident">chrono</span>::<span class="ident">Utc</span>);
         <span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">time</span>.<span class="ident">format</span>(<span class="ident">TIME_FORMAT</span>));
 

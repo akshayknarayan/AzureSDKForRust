@@ -1,1 +1,1 @@
-initSidebarItems({"constant":[["GET_DOCUMENT_OPTIONS_DEFAULT",""]],"struct":[["GetDocumentAdditionalHeaders",""],["GetDocumentOptions",""]]});
+initSidebarItems({"constant":[["GET_DOCUMENT_OPTIONS_DEFAULT",""]],"struct":[["GetDocumentOptions",""]]});

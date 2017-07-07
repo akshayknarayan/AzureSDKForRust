@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["CreateDatabaseRequest",""],["Document",""],["GetDocumentAdditionalHeaders",""],["GetDocumentResponse",""],["ListCollectionsResponse",""],["ListDatabasesResponse",""],["ListDocumentsResponse",""],["ListDocumentsResponseAdditionalHeaders",""],["ListDocumentsResponseAttributes",""],["ListDocumentsResponseEntities",""]]});

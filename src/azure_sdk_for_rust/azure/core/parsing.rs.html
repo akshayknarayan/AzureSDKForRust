@@ -665,8 +665,8 @@
         <span class="kw">let</span> <span class="ident">elem</span>: <span class="ident">Element</span> <span class="op">=</span> <span class="ident">XML</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
 
         <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">traverse</span>(<span class="kw-2">&amp;</span><span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Containers&quot;</span>, <span class="string">&quot;Container&quot;</span>], <span class="bool-val">false</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">res_final</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">traverse_single_must</span>(<span class="ident">res</span>[<span class="number">1</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;LeaseStatus&quot;</span>])
-            .<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">res_final</span> <span class="op">=</span>
+            <span class="kw">super</span>::<span class="ident">traverse_single_must</span>(<span class="ident">res</span>[<span class="number">1</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;LeaseStatus&quot;</span>]).<span class="ident">unwrap</span>();
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">inner</span>) <span class="op">=</span> <span class="kw">super</span>::<span class="ident">inner_text</span>(<span class="ident">res_final</span>) {
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">inner</span>, <span class="string">&quot;locked&quot;</span>);
@@ -680,8 +680,8 @@
         <span class="kw">let</span> <span class="ident">elem</span>: <span class="ident">Element</span> <span class="op">=</span> <span class="ident">XML</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
 
         <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">traverse</span>(<span class="kw-2">&amp;</span><span class="ident">elem</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;Containers&quot;</span>, <span class="string">&quot;Container&quot;</span>], <span class="bool-val">false</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">res_final</span> <span class="op">=</span> <span class="kw">super</span>::<span class="ident">traverse_single_optional</span>(<span class="ident">res</span>[<span class="number">1</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;Pinocchio&quot;</span>])
-            .<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">res_final</span> <span class="op">=</span>
+            <span class="kw">super</span>::<span class="ident">traverse_single_optional</span>(<span class="ident">res</span>[<span class="number">1</span>], <span class="kw-2">&amp;</span>[<span class="string">&quot;Properties&quot;</span>, <span class="string">&quot;Pinocchio&quot;</span>]).<span class="ident">unwrap</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">res_final</span>, <span class="prelude-val">None</span>);
     }

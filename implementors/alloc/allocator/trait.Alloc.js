@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors["azure_sdk_for_rust"] = [];
+implementors["azure_sdk_for_rust"] = ["impl&lt;'a&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/alloc/allocator/trait.Alloc.html\" title=\"trait alloc::allocator::Alloc\">Alloc</a> for &amp;'a System","impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/alloc/allocator/trait.Alloc.html\" title=\"trait alloc::allocator::Alloc\">Alloc</a> for System",];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

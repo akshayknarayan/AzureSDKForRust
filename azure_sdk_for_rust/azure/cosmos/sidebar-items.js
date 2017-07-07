@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["ConsistencyLevel",""]],"mod":[["authorization_token",""],["client",""],["collection",""],["database",""],["document",""],["get_document",""],["list_documents",""]]});
+initSidebarItems({"enum":[["ConsistencyLevel",""]],"mod":[["authorization_token",""],["client",""],["collection",""],["database",""],["document",""],["get_document",""],["list_documents",""],["request_response",""]]});
