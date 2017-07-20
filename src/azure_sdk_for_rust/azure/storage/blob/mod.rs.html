@@ -860,10 +860,6 @@
 <span id="815">815</span>
 <span id="816">816</span>
 <span id="817">817</span>
-<span id="818">818</span>
-<span id="819">819</span>
-<span id="820">820</span>
-<span id="821">821</span>
 </pre><pre class="rust ">
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">uuid</span>;
 
@@ -889,13 +885,13 @@
 
 <span class="kw">use</span> <span class="ident">futures</span>::<span class="ident">future</span>::<span class="kw-2">*</span>;
 
-<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">lease</span>::{<span class="ident">LeaseId</span>, <span class="ident">LeaseStatus</span>, <span class="ident">LeaseState</span>, <span class="ident">LeaseDuration</span>, <span class="ident">LeaseAction</span>};
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">lease</span>::{<span class="ident">LeaseAction</span>, <span class="ident">LeaseDuration</span>, <span class="ident">LeaseId</span>, <span class="ident">LeaseState</span>, <span class="ident">LeaseStatus</span>};
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">storage</span>::<span class="ident">client</span>::<span class="ident">Client</span>;
 
-<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">storage</span>::<span class="ident">rest_client</span>::{<span class="ident">XMSRange</span>, <span class="ident">ContentMD5</span>, <span class="ident">XMSLeaseStatus</span>, <span class="ident">XMSLeaseDuration</span>,
-                                  <span class="ident">XMSLeaseState</span>, <span class="ident">XMSLeaseId</span>, <span class="ident">XMSRangeGetContentMD5</span>,
-                                  <span class="ident">XMSClientRequestId</span>, <span class="ident">XMSLeaseAction</span>, <span class="ident">XMSLeaseDurationSeconds</span>,
-                                  <span class="ident">XMSLeaseBreakPeriod</span>, <span class="ident">XMSProposedLeaseId</span>, <span class="ident">ETag</span>};
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">storage</span>::<span class="ident">rest_client</span>::{<span class="ident">ContentMD5</span>, <span class="ident">ETag</span>, <span class="ident">XMSClientRequestId</span>, <span class="ident">XMSLeaseAction</span>,
+                                  <span class="ident">XMSLeaseBreakPeriod</span>, <span class="ident">XMSLeaseDuration</span>, <span class="ident">XMSLeaseDurationSeconds</span>,
+                                  <span class="ident">XMSLeaseId</span>, <span class="ident">XMSLeaseState</span>, <span class="ident">XMSLeaseStatus</span>, <span class="ident">XMSProposedLeaseId</span>,
+                                  <span class="ident">XMSRange</span>, <span class="ident">XMSRangeGetContentMD5</span>};
 
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">parsing</span>::{<span class="ident">cast_must</span>, <span class="ident">cast_optional</span>, <span class="ident">from_azure_time</span>, <span class="ident">traverse</span>};
 
@@ -905,8 +901,8 @@
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">enumerations</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 
-<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">errors</span>::{<span class="ident">TraversingError</span>, <span class="ident">AzureError</span>, <span class="ident">check_status_extract_body</span>,
-                          <span class="ident">check_status_extract_headers_and_body</span>};
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">errors</span>::{<span class="ident">check_status_extract_body</span>, <span class="ident">check_status_extract_headers_and_body</span>,
+                          <span class="ident">AzureError</span>, <span class="ident">TraversingError</span>};
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">parsing</span>::<span class="ident">FromStringOptional</span>;
 
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">range</span>::<span class="ident">Range</span>;
@@ -918,8 +914,8 @@
 <span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">mime</span>::<span class="ident">Mime</span>;
 
 <span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">StatusCode</span>;
-<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::{<span class="ident">Headers</span>, <span class="ident">ContentType</span>, <span class="ident">ContentLength</span>, <span class="ident">LastModified</span>, <span class="ident">ContentEncoding</span>,
-                    <span class="ident">ContentLanguage</span>};
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::{<span class="ident">ContentEncoding</span>, <span class="ident">ContentLanguage</span>, <span class="ident">ContentLength</span>, <span class="ident">ContentType</span>, <span class="ident">Headers</span>,
+                    <span class="ident">LastModified</span>};
 
 <span class="kw">use</span> <span class="ident">base64</span>;
 
@@ -1341,15 +1337,13 @@
 
         <span class="comment">// parameter sanity check</span>
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">blob_type</span> {
-            <span class="ident">BlobType</span>::<span class="ident">BlockBlob</span> <span class="op">=&gt;</span> {
-                <span class="kw">if</span> <span class="ident">r</span>.<span class="ident">is_none</span>() {
-                    <span class="kw">return</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">err</span>(<span class="ident">AzureError</span>::<span class="ident">InputParametersError</span>(
-                        <span class="string">&quot;cannot use put_blob with \
-                         BlockBlob without a Read&quot;</span>
-                            .<span class="ident">to_owned</span>(),
-                    )));
-                }
-            }
+            <span class="ident">BlobType</span>::<span class="ident">BlockBlob</span> <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">r</span>.<span class="ident">is_none</span>() {
+                <span class="kw">return</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">err</span>(<span class="ident">AzureError</span>::<span class="ident">InputParametersError</span>(
+                    <span class="string">&quot;cannot use put_blob with \
+                     BlockBlob without a Read&quot;</span>
+                        .<span class="ident">to_owned</span>(),
+                )));
+            },
             <span class="ident">BlobType</span>::<span class="ident">PageBlob</span> <span class="op">=&gt;</span> {
                 <span class="kw">if</span> <span class="ident">r</span>.<span class="ident">is_some</span>() {
                     <span class="kw">return</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">err</span>(<span class="ident">AzureError</span>::<span class="ident">InputParametersError</span>(
@@ -1367,15 +1361,13 @@
                     )));
                 }
             }
-            <span class="ident">BlobType</span>::<span class="ident">AppendBlob</span> <span class="op">=&gt;</span> {
-                <span class="kw">if</span> <span class="ident">r</span>.<span class="ident">is_some</span>() {
-                    <span class="kw">return</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">err</span>(<span class="ident">AzureError</span>::<span class="ident">InputParametersError</span>(
-                        <span class="string">&quot;cannot use put_blob with \
-                         AppendBlob with a Read&quot;</span>
-                            .<span class="ident">to_owned</span>(),
-                    )));
-                }
-            }
+            <span class="ident">BlobType</span>::<span class="ident">AppendBlob</span> <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">r</span>.<span class="ident">is_some</span>() {
+                <span class="kw">return</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">err</span>(<span class="ident">AzureError</span>::<span class="ident">InputParametersError</span>(
+                    <span class="string">&quot;cannot use put_blob with \
+                     AppendBlob with a Read&quot;</span>
+                        .<span class="ident">to_owned</span>(),
+                )));
+            },
         }
 
         <span class="kw">let</span> <span class="ident">ce</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">content_encoding</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">content_encoding</span> {

@@ -66,6 +66,12 @@
 <span id="21">21</span>
 <span id="22">22</span>
 <span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">cosmos</span>::<span class="ident">ConsistencyLevel</span>;
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">incompletevector</span>::<span class="ident">ContinuationToken</span>;
@@ -79,6 +85,12 @@
     <span class="kw">pub</span> <span class="ident">incremental_feed</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">if_none_match</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">partition_range_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>,
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">ListDocumentsOptions</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="ident">ListDocumentsOptions</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="ident">LIST_DOCUMENTS_OPTIONS_DEFAULT</span>.<span class="ident">clone</span>()
+    }
 }
 
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">LIST_DOCUMENTS_OPTIONS_DEFAULT</span>: <span class="ident">ListDocumentsOptions</span> <span class="op">=</span> <span class="ident">ListDocumentsOptions</span> {

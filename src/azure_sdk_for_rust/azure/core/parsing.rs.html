@@ -367,11 +367,9 @@
 <span id="322">322</span>
 <span id="323">323</span>
 <span id="324">324</span>
-<span id="325">325</span>
-<span id="326">326</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">xml</span>::<span class="ident">Element</span>;
-<span class="kw">use</span> <span class="ident">xml</span>::<span class="ident">Xml</span>::{<span class="ident">ElementNode</span>, <span class="ident">CharacterNode</span>};
+<span class="kw">use</span> <span class="ident">xml</span>::<span class="ident">Xml</span>::{<span class="ident">CharacterNode</span>, <span class="ident">ElementNode</span>};
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">errors</span>::<span class="ident">TraversingError</span>;
 <span class="kw">use</span> <span class="ident">chrono</span>;
 
@@ -524,12 +522,10 @@
     <span class="ident">T</span>: <span class="ident">FromStringOptional</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 {
     <span class="kw">match</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">traverse_single_optional</span>(<span class="ident">node</span>, <span class="ident">path</span>)) {
-        <span class="prelude-val">Some</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> {
-            <span class="kw">match</span> <span class="ident">inner_text</span>(<span class="ident">e</span>) {
-                <span class="prelude-val">Ok</span>(<span class="ident">txt</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">T</span>::<span class="ident">from_str_optional</span>(<span class="ident">txt</span>)))),
-                <span class="prelude-val">Err</span>(_) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
-            }
-        }
+        <span class="prelude-val">Some</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="ident">inner_text</span>(<span class="ident">e</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">txt</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">T</span>::<span class="ident">from_str_optional</span>(<span class="ident">txt</span>)))),
+            <span class="prelude-val">Err</span>(_) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
+        },
         <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
     }
 }

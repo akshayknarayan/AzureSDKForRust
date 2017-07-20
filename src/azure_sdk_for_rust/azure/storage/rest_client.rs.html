@@ -521,21 +521,19 @@
 <span id="476">476</span>
 <span id="477">477</span>
 <span id="478">478</span>
-<span id="479">479</span>
-<span id="480">480</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">range</span>;
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">errors</span>::<span class="ident">AzureError</span>;
 <span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">Method</span>;
-<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">lease</span>::{<span class="ident">LeaseId</span>, <span class="ident">LeaseStatus</span>, <span class="ident">LeaseState</span>, <span class="ident">LeaseDuration</span>, <span class="ident">LeaseAction</span>};
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">lease</span>::{<span class="ident">LeaseAction</span>, <span class="ident">LeaseDuration</span>, <span class="ident">LeaseId</span>, <span class="ident">LeaseState</span>, <span class="ident">LeaseStatus</span>};
 <span class="kw">use</span> <span class="ident">chrono</span>;
 <span class="kw">use</span> <span class="ident">crypto</span>::<span class="ident">hmac</span>::<span class="ident">Hmac</span>;
 <span class="kw">use</span> <span class="ident">crypto</span>::<span class="ident">mac</span>::<span class="ident">Mac</span>;
 <span class="kw">use</span> <span class="ident">crypto</span>::<span class="ident">sha2</span>::<span class="ident">Sha256</span>;
 <span class="kw">use</span> <span class="ident">hyper</span>;
 <span class="kw">use</span> <span class="ident">hyper_tls</span>;
-<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::{<span class="ident">Header</span>, <span class="ident">Headers</span>, <span class="ident">ContentEncoding</span>, <span class="ident">ContentLanguage</span>, <span class="ident">ContentLength</span>, <span class="ident">ContentType</span>,
-                    <span class="ident">Date</span>, <span class="ident">IfModifiedSince</span>, <span class="ident">IfUnmodifiedSince</span>};
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::{<span class="ident">ContentEncoding</span>, <span class="ident">ContentLanguage</span>, <span class="ident">ContentLength</span>, <span class="ident">ContentType</span>, <span class="ident">Date</span>, <span class="ident">Header</span>,
+                    <span class="ident">Headers</span>, <span class="ident">IfModifiedSince</span>, <span class="ident">IfUnmodifiedSince</span>};
 <span class="kw">use</span> <span class="ident">base64</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span>;
 <span class="kw">use</span> <span class="ident">url</span>;
@@ -627,13 +625,11 @@
             <span class="comment">// content lenght must only be specified if != 0</span>
             <span class="comment">// this is valid from 2015-02-21</span>
             <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">h</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ContentLength</span><span class="op">&gt;</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">ce</span>) <span class="op">=&gt;</span> {
-                    <span class="kw">if</span> <span class="ident">ce</span>.<span class="ident">to_be</span>() <span class="op">!=</span> <span class="number">0u64</span> {
-                        <span class="ident">ce</span>.<span class="ident">to_string</span>()
-                    } <span class="kw">else</span> {
-                        <span class="ident">String</span>::<span class="ident">default</span>()
-                    }
-                }
+                <span class="prelude-val">Some</span>(<span class="ident">ce</span>) <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">ce</span>.<span class="ident">to_be</span>() <span class="op">!=</span> <span class="number">0u64</span> {
+                    <span class="ident">ce</span>.<span class="ident">to_string</span>()
+                } <span class="kw">else</span> {
+                    <span class="ident">String</span>::<span class="ident">default</span>()
+                },
                 <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">String</span>::<span class="ident">default</span>(),
             };
 
@@ -890,8 +886,8 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">str_to_sign_test</span>() {
         <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-        <span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::{<span class="ident">Accept</span>, <span class="ident">qitem</span>};
-        <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">storage</span>::<span class="ident">table</span>::{<span class="ident">get_json_mime_nometadata</span>, <span class="ident">get_default_json_mime</span>};
+        <span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::{<span class="ident">qitem</span>, <span class="ident">Accept</span>};
+        <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">storage</span>::<span class="ident">table</span>::{<span class="ident">get_default_json_mime</span>, <span class="ident">get_json_mime_nometadata</span>};
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span>: <span class="ident">Headers</span> <span class="op">=</span> <span class="ident">Headers</span>::<span class="ident">new</span>();
         <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">Accept</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="ident">qitem</span>(<span class="ident">get_json_mime_nometadata</span>())]));

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["False",""],["IncompleteParameter",""],["Parameter",""],["Query",""],["True",""]],"trait":[["Complete",""]]});
