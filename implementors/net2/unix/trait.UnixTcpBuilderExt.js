@@ -1,5 +1,9 @@
 (function() {var implementors = {};
 implementors["azure_sdk_for_rust"] = [];
+implementors["hyper"] = [];
+implementors["mio"] = [];
+implementors["net2"] = [];
+implementors["tokio_core"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);
