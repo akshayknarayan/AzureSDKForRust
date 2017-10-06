@@ -137,7 +137,6 @@
 <span id="92">92</span>
 <span id="93">93</span>
 <span id="94">94</span>
-<span id="95">95</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">hyper</span>;
 <span class="kw">use</span> <span class="ident">hyper_tls</span>;
@@ -227,11 +226,10 @@
 
     <span class="doccomment">/// Uri scheme + authority e.g. http://myaccount.table.core.windows.net/</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_uri_prefix</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">service_type</span>: <span class="ident">ServiceType</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
-        <span class="string">&quot;https://&quot;</span>.<span class="ident">to_owned</span>() <span class="op">+</span> <span class="self">self</span>.<span class="ident">account</span>() <span class="op">+</span>
-            <span class="kw">match</span> <span class="ident">service_type</span> {
-                <span class="ident">ServiceType</span>::<span class="ident">Blob</span> <span class="op">=&gt;</span> <span class="ident">SERVICE_SUFFIX_BLOB</span>,
-                <span class="ident">ServiceType</span>::<span class="ident">Table</span> <span class="op">=&gt;</span> <span class="ident">SERVICE_SUFFIX_TABLE</span>,
-            } <span class="op">+</span> <span class="string">&quot;/&quot;</span>
+        <span class="string">&quot;https://&quot;</span>.<span class="ident">to_owned</span>() <span class="op">+</span> <span class="self">self</span>.<span class="ident">account</span>() <span class="op">+</span> <span class="kw">match</span> <span class="ident">service_type</span> {
+            <span class="ident">ServiceType</span>::<span class="ident">Blob</span> <span class="op">=&gt;</span> <span class="ident">SERVICE_SUFFIX_BLOB</span>,
+            <span class="ident">ServiceType</span>::<span class="ident">Table</span> <span class="op">=&gt;</span> <span class="ident">SERVICE_SUFFIX_TABLE</span>,
+        } <span class="op">+</span> <span class="string">&quot;/&quot;</span>
     }
 }
 </pre>

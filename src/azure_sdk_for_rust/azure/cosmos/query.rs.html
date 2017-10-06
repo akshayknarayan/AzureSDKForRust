@@ -200,6 +200,9 @@
 <span id="155">155</span>
 <span id="156">156</span>
 <span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">PhantomData</span>;
 
@@ -242,11 +245,11 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span> {
         <span class="self">self</span>.<span class="ident">name</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span> {
         <span class="self">self</span>.<span class="ident">value</span>
     }
 }
@@ -256,7 +259,7 @@
     <span class="ident">N</span>: <span class="ident">Complete</span>,
     <span class="ident">V</span>: <span class="ident">Complete</span>,
 {
-    <span class="kw">fn</span> <span class="ident">name</span>(<span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">IncompleteParameter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">True</span>, <span class="ident">V</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">IncompleteParameter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">True</span>, <span class="ident">V</span><span class="op">&gt;</span> {
         <span class="ident">IncompleteParameter</span> {
             <span class="ident">name_completed</span>: <span class="ident">PhantomData</span>,
             <span class="ident">value_completed</span>: <span class="ident">PhantomData</span>,
@@ -267,7 +270,7 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">value</span>(<span class="self">self</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">IncompleteParameter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">N</span>, <span class="ident">True</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value</span>(<span class="self">self</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">IncompleteParameter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">N</span>, <span class="ident">True</span><span class="op">&gt;</span> {
         <span class="ident">IncompleteParameter</span> {
             <span class="ident">name_completed</span>: <span class="ident">PhantomData</span>,
             <span class="ident">value_completed</span>: <span class="ident">PhantomData</span>,
@@ -280,7 +283,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">IncompleteParameter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">True</span>, <span class="ident">True</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Parameter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Parameter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">parameter</span>
     }
 }
@@ -292,26 +295,26 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Query</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">query</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">Query</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">query</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">Query</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
         <span class="ident">Query</span> {
             <span class="ident">query</span>: <span class="ident">query</span>,
             <span class="ident">parameters</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">set_query</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">query</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_query</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">query</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) {
         <span class="self">self</span>.<span class="ident">query</span> <span class="op">=</span> <span class="ident">query</span>;
     }
 
-    <span class="kw">fn</span> <span class="ident">parameters_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Parameter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parameters_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Parameter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;&gt;</span> {
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">parameters</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">query</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">query</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span> {
         <span class="self">self</span>.<span class="ident">query</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">parameters</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">Parameter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>] {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parameters</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">Parameter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>] {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">parameters</span>
     }
 }
@@ -355,7 +358,10 @@
 
         <span class="kw">let</span> <span class="ident">ser</span> <span class="op">=</span> <span class="ident">serde_json</span>::<span class="ident">to_string</span>(<span class="kw-2">&amp;</span><span class="ident">query</span>).<span class="ident">unwrap</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">ser</span>, <span class="string">r#&quot;{&quot;query&quot;:&quot;SELECT * FROM Table&quot;,&quot;parameters&quot;:[{&quot;name&quot;:&quot;p1&quot;,&quot;value&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;p2&quot;,&quot;value&quot;:&quot;100&quot;},{&quot;name&quot;:&quot;p3&quot;,&quot;value&quot;:&quot;palazzo&quot;}]}&quot;#</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">ser</span>,
+            <span class="string">r#&quot;{&quot;query&quot;:&quot;SELECT * FROM Table&quot;,&quot;parameters&quot;:[{&quot;name&quot;:&quot;p1&quot;,&quot;value&quot;:&quot;string&quot;},{&quot;name&quot;:&quot;p2&quot;,&quot;value&quot;:&quot;100&quot;},{&quot;name&quot;:&quot;p3&quot;,&quot;value&quot;:&quot;palazzo&quot;}]}&quot;#</span>
+        );
     }
 }
 </pre>

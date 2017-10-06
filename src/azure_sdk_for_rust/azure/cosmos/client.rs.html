@@ -1467,6 +1467,10 @@
 <span id="1422">1422</span>
 <span id="1423">1423</span>
 <span id="1424">1424</span>
+<span id="1425">1425</span>
+<span id="1426">1426</span>
+<span id="1427">1427</span>
+<span id="1428">1428</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">cosmos</span>::<span class="ident">authorization_token</span>::{<span class="ident">AuthorizationToken</span>, <span class="ident">TokenType</span>};
 
@@ -1546,7 +1550,7 @@
 <span class="macro">header</span><span class="macro">!</span> { (<span class="ident">CosmosDBPartitionKey</span>, <span class="string">&quot;x-ms-documentdb-partitionkey&quot;</span>) <span class="op">=&gt;</span> [<span class="ident">String</span>] }
 <span class="macro">header</span><span class="macro">!</span> { (<span class="ident">DocumentDBIsQuery</span>, <span class="string">&quot;x-ms-documentdb-isquery&quot;</span>) <span class="op">=&gt;</span> [<span class="ident">bool</span>] }
 <span class="macro">header</span><span class="macro">!</span> { (<span class="ident">DocumentDBQueryEnableCrossPartition</span>,
-    <span class="string">&quot;x-ms-documentdb-query-enablecrosspartition&quot;</span>) <span class="op">=&gt;</span> [<span class="ident">bool</span>] }
+<span class="string">&quot;x-ms-documentdb-query-enablecrosspartition&quot;</span>) <span class="op">=&gt;</span> [<span class="ident">bool</span>] }
 
 <span class="kw">const</span> <span class="ident">AZURE_KEYS</span>: [<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>; <span class="number">5</span>] <span class="op">=</span> [<span class="string">&quot;_attachments&quot;</span>, <span class="string">&quot;_etag&quot;</span>, <span class="string">&quot;_rid&quot;</span>, <span class="string">&quot;_self&quot;</span>, <span class="string">&quot;_ts&quot;</span>];
 
@@ -1568,7 +1572,6 @@
         <span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="ident">tokio_core</span>::<span class="ident">reactor</span>::<span class="ident">Handle</span>,
         <span class="ident">authorization_token</span>: <span class="ident">AuthorizationToken</span>,
     ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Client</span>, <span class="ident">native_tls</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-
         <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">hyper</span>::<span class="ident">Client</span>::<span class="ident">configure</span>()
             .<span class="ident">connector</span>(<span class="ident">hyper_tls</span>::<span class="ident">HttpsConnector</span>::<span class="ident">new</span>(<span class="number">4</span>, <span class="ident">handle</span>)<span class="question-mark">?</span>)
             .<span class="ident">build</span>(<span class="ident">handle</span>);
@@ -1607,7 +1610,8 @@
     }
 
     <span class="doccomment">/// Returns database list associated to the account</span>
-    <span class="doccomment">/// specified in the  `azure_sdk_for_rust::azure::cosmos::authorization_token::AuthorizationToken`.</span>
+    <span class="doccomment">/// specified in the</span>
+    <span class="doccomment">///     `azure_sdk_for_rust::azure::cosmos::authorization_token::AuthorizationToken`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">list_databases</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw">impl</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Database</span><span class="op">&gt;</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">AzureError</span><span class="op">&gt;</span> {
         <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;list_databases called&quot;</span>);
 
@@ -1873,8 +1877,8 @@
             <span class="ident">ResourceType</span>::<span class="ident">Collections</span>,
             <span class="op">|</span><span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">headers</span><span class="op">|</span> {
                 <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">OfferThroughput</span>(<span class="ident">required_throughput</span>));
-            }
-            );
+            },
+        );
 
         <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;request prepared&quot;</span>);
 
@@ -1926,7 +1930,7 @@
             <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Delete</span>,
             <span class="prelude-val">None</span>,
             <span class="ident">ResourceType</span>::<span class="ident">Collections</span>,
-            <span class="op">|</span>_<span class="op">|</span> {}
+            <span class="op">|</span>_<span class="op">|</span> {},
         );
 
         <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;request prepared&quot;</span>);
@@ -2022,18 +2026,19 @@
         <span class="comment">// Optional headers as per</span>
         <span class="comment">// https://docs.microsoft.com/en-us/rest/api/documentdb/create-a-document</span>
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">prepare_request</span>(
-                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_token</span>,
-                <span class="ident">uri</span>,
-                <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Post</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">document_str</span>.<span class="ident">as_ref</span>()),
-                <span class="ident">ResourceType</span>::<span class="ident">Documents</span>,
-                <span class="op">|</span><span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">headers</span><span class="op">|</span> {
-                   <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">DocumentIsUpsert</span>(<span class="ident">is_upsert</span>));
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_token</span>,
+            <span class="ident">uri</span>,
+            <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Post</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">document_str</span>.<span class="ident">as_ref</span>()),
+            <span class="ident">ResourceType</span>::<span class="ident">Documents</span>,
+            <span class="op">|</span><span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">headers</span><span class="op">|</span> {
+                <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">DocumentIsUpsert</span>(<span class="ident">is_upsert</span>));
 
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">id</span>) <span class="op">=</span> <span class="ident">indexing_directive</span> {
-                        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">DocumentIndexingDirective</span>(<span class="ident">id</span>));
-                    }
-                });
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">id</span>) <span class="op">=</span> <span class="ident">indexing_directive</span> {
+                    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">DocumentIndexingDirective</span>(<span class="ident">id</span>));
+                }
+            },
+        );
 
         <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;request prepared&quot;</span>);
 
@@ -2156,34 +2161,35 @@
         ))<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">prepare_request</span>(
-                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_token</span>,
-                <span class="ident">uri</span>,
-                <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Get</span>,
-                <span class="prelude-val">None</span>,
-                <span class="ident">ResourceType</span>::<span class="ident">Documents</span>,
-                <span class="op">|</span><span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">headers</span><span class="op">|</span> {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">ldo</span>.<span class="ident">max_item_count</span> {
-                        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">MaxItemCount</span>(<span class="ident">val</span>));
-                    }
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">ldo</span>.<span class="ident">continuation_token</span> {
-                        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ContinuationTokenHeader</span>(<span class="ident">val</span>.<span class="ident">to_owned</span>()));
-                    }
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">ldo</span>.<span class="ident">consistency_level_override</span> {
-                        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ConsistencyLevelHeader</span>(<span class="ident">val</span>));
-                    }
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">ldo</span>.<span class="ident">session_token</span> {
-                        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">SessionTokenHeader</span>(<span class="ident">val</span>.<span class="ident">to_owned</span>()));
-                    }
-                    <span class="kw">if</span> <span class="ident">ldo</span>.<span class="ident">incremental_feed</span> {
-                        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">AIM</span>(<span class="string">&quot;Incremental feed&quot;</span>.<span class="ident">to_owned</span>()));
-                    }
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">ldo</span>.<span class="ident">if_none_match</span> {
-                        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">IfNoneMatch</span>(<span class="ident">val</span>.<span class="ident">to_owned</span>()));
-                    }
-                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">ldo</span>.<span class="ident">partition_range_id</span> {
-                        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">PartitionRangeId</span>(<span class="ident">val</span>.<span class="ident">to_owned</span>()));
-                    }
-                 });
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_token</span>,
+            <span class="ident">uri</span>,
+            <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Get</span>,
+            <span class="prelude-val">None</span>,
+            <span class="ident">ResourceType</span>::<span class="ident">Documents</span>,
+            <span class="op">|</span><span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">headers</span><span class="op">|</span> {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">ldo</span>.<span class="ident">max_item_count</span> {
+                    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">MaxItemCount</span>(<span class="ident">val</span>));
+                }
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">ldo</span>.<span class="ident">continuation_token</span> {
+                    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ContinuationTokenHeader</span>(<span class="ident">val</span>.<span class="ident">to_owned</span>()));
+                }
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">ldo</span>.<span class="ident">consistency_level_override</span> {
+                    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ConsistencyLevelHeader</span>(<span class="ident">val</span>));
+                }
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">ldo</span>.<span class="ident">session_token</span> {
+                    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">SessionTokenHeader</span>(<span class="ident">val</span>.<span class="ident">to_owned</span>()));
+                }
+                <span class="kw">if</span> <span class="ident">ldo</span>.<span class="ident">incremental_feed</span> {
+                    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">AIM</span>(<span class="string">&quot;Incremental feed&quot;</span>.<span class="ident">to_owned</span>()));
+                }
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">ldo</span>.<span class="ident">if_none_match</span> {
+                    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">IfNoneMatch</span>(<span class="ident">val</span>.<span class="ident">to_owned</span>()));
+                }
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">ldo</span>.<span class="ident">partition_range_id</span> {
+                    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">PartitionRangeId</span>(<span class="ident">val</span>.<span class="ident">to_owned</span>()));
+                }
+            },
+        );
 
         <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;request prepared&quot;</span>);
 
@@ -2191,7 +2197,7 @@
     }
 
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">list_documents</span><span class="op">&lt;</span><span class="lifetime">&#39;b</span>, <span class="ident">S1</span>, <span class="ident">S2</span>, <span class="ident">T</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">list_documents</span><span class="op">&lt;</span><span class="ident">S1</span>, <span class="ident">S2</span>, <span class="ident">T</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">database</span>: <span class="ident">S1</span>,
         <span class="ident">collection</span>: <span class="ident">S2</span>,
@@ -2215,11 +2221,11 @@
         <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">list_documents_create_request</span>(<span class="ident">database</span>, <span class="ident">collection</span>, <span class="ident">ldo</span>);
 
         <span class="ident">done</span>(<span class="ident">req</span>).<span class="ident">from_err</span>().<span class="ident">and_then</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">future_response</span><span class="op">|</span> {
-            <span class="ident">check_status_extract_headers_and_body</span>(<span class="ident">future_response</span>, <span class="ident">StatusCode</span>::<span class="prelude-val">Ok</span>)
-                .<span class="ident">and_then</span>(<span class="kw">move</span> <span class="op">|</span>(<span class="ident">headers</span>, <span class="ident">whole_body</span>)<span class="op">|</span> {
-                    <span class="ident">done</span>(<span class="ident">list_documents_extract_result</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">whole_body</span>, <span class="ident">headers</span>))
-                        .<span class="ident">and_then</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">result</span><span class="op">|</span> <span class="ident">ok</span>(<span class="ident">result</span>))
-                })
+            <span class="ident">check_status_extract_headers_and_body</span>(<span class="ident">future_response</span>, <span class="ident">StatusCode</span>::<span class="prelude-val">Ok</span>).<span class="ident">and_then</span>(
+                <span class="kw">move</span> <span class="op">|</span>(<span class="ident">headers</span>, <span class="ident">whole_body</span>)<span class="op">|</span> {
+                    <span class="ident">done</span>(<span class="ident">list_documents_extract_result</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">whole_body</span>, <span class="kw-2">&amp;</span><span class="ident">headers</span>))
+                },
+            )
         })
     }
 
@@ -2247,25 +2253,26 @@
         };
 
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">prepare_request</span>(
-                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_token</span>,
-                <span class="ident">uri</span>,
-                <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Get</span>,
-                <span class="prelude-val">None</span>,
-                <span class="ident">ResourceType</span>::<span class="ident">Documents</span>,
-                <span class="kw">move</span> <span class="op">|</span><span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">headers</span><span class="op">|</span> {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">gdo</span>.<span class="ident">consistency_level_override</span> {
-                        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ConsistencyLevelHeader</span>(<span class="ident">val</span>));
-                    }
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">gdo</span>.<span class="ident">session_token</span> {
-                        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">SessionTokenHeader</span>(<span class="ident">val</span>.<span class="ident">to_owned</span>()));
-                    }
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">gdo</span>.<span class="ident">if_none_match</span> {
-                        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">IfNoneMatch</span>(<span class="ident">val</span>.<span class="ident">to_owned</span>()));
-                    }
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">serialized_partition_key</span> {
-                        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">CosmosDBPartitionKey</span>(<span class="ident">val</span>));
-                    }
-                 });
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_token</span>,
+            <span class="ident">uri</span>,
+            <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Get</span>,
+            <span class="prelude-val">None</span>,
+            <span class="ident">ResourceType</span>::<span class="ident">Documents</span>,
+            <span class="kw">move</span> <span class="op">|</span><span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">headers</span><span class="op">|</span> {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">gdo</span>.<span class="ident">consistency_level_override</span> {
+                    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ConsistencyLevelHeader</span>(<span class="ident">val</span>));
+                }
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">gdo</span>.<span class="ident">session_token</span> {
+                    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">SessionTokenHeader</span>(<span class="ident">val</span>.<span class="ident">to_owned</span>()));
+                }
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">gdo</span>.<span class="ident">if_none_match</span> {
+                    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">IfNoneMatch</span>(<span class="ident">val</span>.<span class="ident">to_owned</span>()));
+                }
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">serialized_partition_key</span> {
+                    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">CosmosDBPartitionKey</span>(<span class="ident">val</span>));
+                }
+            },
+        );
 
         <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;request prepared&quot;</span>);
 
@@ -2303,7 +2310,7 @@
         <span class="ident">done</span>(<span class="ident">req</span>).<span class="ident">from_err</span>().<span class="ident">and_then</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">future_response</span><span class="op">|</span> {
             <span class="ident">extract_status_headers_and_body</span>(<span class="ident">future_response</span>).<span class="ident">and_then</span>(
                 <span class="kw">move</span> <span class="op">|</span>(<span class="ident">status</span>, <span class="ident">headers</span>, <span class="ident">v_body</span>)<span class="op">|</span> {
-                    <span class="ident">done</span>(<span class="ident">get_document_extract_result</span>(<span class="ident">status</span>, <span class="ident">headers</span>, <span class="kw-2">&amp;</span><span class="ident">v_body</span>))
+                    <span class="ident">done</span>(<span class="ident">get_document_extract_result</span>(<span class="ident">status</span>, <span class="kw-2">&amp;</span><span class="ident">headers</span>, <span class="kw-2">&amp;</span><span class="ident">v_body</span>))
                 },
             )
         })
@@ -2340,7 +2347,8 @@
         <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">collection</span>.<span class="ident">as_ref</span>();
 
         <span class="macro">trace</span><span class="macro">!</span>(
-            <span class="string">&quot;query_document_json called(database == {}, collection == {}, query == {:?}, options = {:?}&quot;</span>,
+            <span class="string">&quot;query_document_json called(database == {}, \
+             collection == {}, query == {:?}, options = {:?}&quot;</span>,
             <span class="ident">database</span>,
             <span class="ident">collection</span>,
             <span class="ident">query</span>,
@@ -2350,10 +2358,11 @@
         <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">query_document_create_request</span>(<span class="ident">database</span>, <span class="ident">collection</span>, <span class="ident">query</span>, <span class="ident">options</span>);
 
         <span class="ident">done</span>(<span class="ident">req</span>).<span class="ident">from_err</span>().<span class="ident">and_then</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">future_response</span><span class="op">|</span> {
-            <span class="ident">check_status_extract_headers_and_body</span>(<span class="ident">future_response</span>, <span class="ident">StatusCode</span>::<span class="prelude-val">Ok</span>)
-                .<span class="ident">and_then</span>(<span class="kw">move</span> <span class="op">|</span>(<span class="ident">headers</span>, <span class="ident">v_body</span>)<span class="op">|</span> {
-                    <span class="ident">done</span>(<span class="ident">query_documents_extract_result_json</span>(<span class="kw-2">&amp;</span><span class="ident">v_body</span>, <span class="ident">headers</span>))
-                })
+            <span class="ident">check_status_extract_headers_and_body</span>(<span class="ident">future_response</span>, <span class="ident">StatusCode</span>::<span class="prelude-val">Ok</span>).<span class="ident">and_then</span>(
+                <span class="kw">move</span> <span class="op">|</span>(<span class="ident">headers</span>, <span class="ident">v_body</span>)<span class="op">|</span> {
+                    <span class="ident">done</span>(<span class="ident">query_documents_extract_result_json</span>(<span class="kw-2">&amp;</span><span class="ident">v_body</span>, <span class="kw-2">&amp;</span><span class="ident">headers</span>))
+                },
+            )
         })
     }
 
@@ -2377,31 +2386,32 @@
         <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;query_json == {}&quot;</span>, <span class="ident">query_json</span>);
 
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">prepare_request</span>(
-                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_token</span>,
-                <span class="ident">uri</span>,
-                <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Post</span>,
-                <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">query_json</span>),
-                <span class="ident">ResourceType</span>::<span class="ident">Documents</span>,
-                <span class="kw">move</span> <span class="op">|</span><span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">headers</span><span class="op">|</span> {
-                    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">DocumentDBIsQuery</span>(<span class="bool-val">true</span>));
-                    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ContentType</span>(<span class="ident">get_query_content_type</span>()));
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_token</span>,
+            <span class="ident">uri</span>,
+            <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Post</span>,
+            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">query_json</span>),
+            <span class="ident">ResourceType</span>::<span class="ident">Documents</span>,
+            <span class="kw">move</span> <span class="op">|</span><span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">headers</span><span class="op">|</span> {
+                <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">DocumentDBIsQuery</span>(<span class="bool-val">true</span>));
+                <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ContentType</span>(<span class="ident">get_query_content_type</span>()));
 
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">options</span>.<span class="ident">max_item_count</span> {
-                        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">MaxItemCount</span>(<span class="ident">val</span>));
-                    }
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">options</span>.<span class="ident">continuation_token</span> {
-                        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ContinuationTokenHeader</span>(<span class="ident">val</span>.<span class="ident">to_owned</span>()));
-                    }
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">options</span>.<span class="ident">enable_cross_partition</span> {
-                        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">DocumentDBQueryEnableCrossPartition</span>(<span class="ident">val</span>));
-                    }
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">options</span>.<span class="ident">consistency_level_override</span> {
-                        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ConsistencyLevelHeader</span>(<span class="ident">val</span>));
-                    }
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">options</span>.<span class="ident">session_token</span> {
-                        <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">SessionTokenHeader</span>(<span class="ident">val</span>.<span class="ident">to_owned</span>()));
-                    }
-                 });
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">options</span>.<span class="ident">max_item_count</span> {
+                    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">MaxItemCount</span>(<span class="ident">val</span>));
+                }
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">options</span>.<span class="ident">continuation_token</span> {
+                    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ContinuationTokenHeader</span>(<span class="ident">val</span>.<span class="ident">to_owned</span>()));
+                }
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">options</span>.<span class="ident">enable_cross_partition</span> {
+                    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">DocumentDBQueryEnableCrossPartition</span>(<span class="ident">val</span>));
+                }
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">options</span>.<span class="ident">consistency_level_override</span> {
+                    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ConsistencyLevelHeader</span>(<span class="ident">val</span>));
+                }
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">options</span>.<span class="ident">session_token</span> {
+                    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">SessionTokenHeader</span>(<span class="ident">val</span>.<span class="ident">to_owned</span>()));
+                }
+            },
+        );
 
         <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;request prepared&quot;</span>);
 
@@ -2409,9 +2419,9 @@
     }
 }
 
-<span class="kw">fn</span> <span class="ident">get_document_extract_result</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span>(
+<span class="kw">fn</span> <span class="ident">get_document_extract_result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
     <span class="ident">status</span>: <span class="ident">hyper</span>::<span class="ident">StatusCode</span>,
-    <span class="ident">headers</span>: <span class="ident">hyper</span>::<span class="ident">Headers</span>,
+    <span class="ident">headers</span>: <span class="kw-2">&amp;</span><span class="ident">hyper</span>::<span class="ident">Headers</span>,
     <span class="ident">v_body</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
 ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">GetDocumentResponse</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">AzureError</span><span class="op">&gt;</span>
 <span class="kw">where</span>
@@ -2466,7 +2476,7 @@
 
 <span class="kw">fn</span> <span class="ident">query_documents_extract_result_json</span>(
     <span class="ident">v_body</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-    <span class="ident">headers</span>: <span class="ident">Headers</span>,
+    <span class="ident">headers</span>: <span class="kw-2">&amp;</span><span class="ident">Headers</span>,
 ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">QueryDocumentResponse</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">AzureError</span><span class="op">&gt;</span> {
     <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;headers == {:?}&quot;</span>, <span class="ident">headers</span>);
 
@@ -2502,7 +2512,7 @@
 
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v_docs</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
 
-    <span class="kw">for</span> <span class="ident">doc</span> <span class="kw">in</span> <span class="ident">d</span>.<span class="ident">as_array</span>().<span class="ident">unwrap</span>().<span class="ident">into_iter</span>() {
+    <span class="kw">for</span> <span class="ident">doc</span> <span class="kw">in</span> <span class="ident">d</span>.<span class="ident">as_array</span>().<span class="ident">unwrap</span>() {
         <span class="comment">// We could either have a Document or a plain entry.</span>
         <span class="comment">// We will find out here.</span>
 
@@ -2519,10 +2529,10 @@
         <span class="kw">let</span> <span class="ident">o_new</span> <span class="op">=</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">o_new</span> <span class="op">=</span> <span class="ident">Value</span>::<span class="ident">Object</span>(<span class="ident">Map</span>::<span class="ident">new</span>());
             {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">m_new</span> <span class="op">=</span> <span class="ident">o_new</span>.<span class="ident">as_object_mut</span>().<span class="ident">unwrap</span>();
+                <span class="kw">let</span> <span class="ident">m_new</span> <span class="op">=</span> <span class="ident">o_new</span>.<span class="ident">as_object_mut</span>().<span class="ident">unwrap</span>();
 
                 <span class="kw">for</span> (<span class="ident">key</span>, <span class="ident">val</span>) <span class="kw">in</span> <span class="ident">doc</span>.<span class="ident">as_object</span>().<span class="ident">unwrap</span>() {
-                    <span class="kw">if</span> <span class="ident">AZURE_KEYS</span>.<span class="ident">binary_search</span>(<span class="kw-2">&amp;</span>(<span class="kw-2">&amp;</span><span class="ident">key</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">str</span>)).<span class="ident">is_err</span>() {
+                    <span class="kw">if</span> <span class="ident">AZURE_KEYS</span>.<span class="ident">binary_search</span>(<span class="kw-2">&amp;</span>(<span class="ident">key</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">str</span>)).<span class="ident">is_err</span>() {
                         <span class="ident">m_new</span>.<span class="ident">insert</span>(<span class="ident">key</span>.<span class="ident">clone</span>(), <span class="ident">val</span>.<span class="ident">clone</span>());
                     }
                 }
@@ -2567,9 +2577,9 @@
     <span class="prelude-val">Ok</span>(<span class="ident">qdr_converted</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">list_documents_extract_result</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span>(
+<span class="kw">fn</span> <span class="ident">list_documents_extract_result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
     <span class="ident">v_body</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-    <span class="ident">headers</span>: <span class="ident">Headers</span>,
+    <span class="ident">headers</span>: <span class="kw-2">&amp;</span><span class="ident">Headers</span>,
 ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ListDocumentsResponse</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">AzureError</span><span class="op">&gt;</span>
 <span class="kw">where</span>
     <span class="ident">T</span>: <span class="ident">DeserializeOwned</span>,
@@ -2726,7 +2736,6 @@
     <span class="ident">resource_link</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     <span class="ident">time</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
 ) <span class="op">-&gt;</span> <span class="ident">String</span> {
-
     <span class="comment">// From official docs:</span>
     <span class="comment">// StringToSign =</span>
     <span class="comment">//      Verb.toLowerCase() + &quot;\n&quot; +</span>
@@ -2889,7 +2898,6 @@ mon, 01 jan 1900 01:00:00 gmt
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">generate_resource_link</span>(<span class="kw-2">&amp;</span><span class="ident">u</span>), <span class="string">&quot;colls/second/third&quot;</span>);
         <span class="kw">let</span> <span class="ident">u</span> <span class="op">=</span> <span class="ident">Uri</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://mindflavor.documents.azure.com/dbs/test_db/colls&quot;</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">generate_resource_link</span>(<span class="kw-2">&amp;</span><span class="ident">u</span>), <span class="string">&quot;dbs/test_db&quot;</span>);
-
     }
 }
 </pre>

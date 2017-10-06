@@ -521,6 +521,8 @@
 <span id="476">476</span>
 <span id="477">477</span>
 <span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">range</span>;
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">errors</span>::<span class="ident">AzureError</span>;
@@ -854,13 +856,15 @@
 
     <span class="ident">request</span>.<span class="ident">headers_mut</span>().<span class="ident">set</span>(<span class="ident">Authorization</span>(<span class="ident">auth</span>));
 
+    <span class="comment">// println!(&quot;{:?}&quot;, request.headers());</span>
+
     <span class="prelude-val">Ok</span>(<span class="ident">client</span>.<span class="ident">request</span>(<span class="ident">request</span>))
 }
 
 
 <span class="kw">mod</span> <span class="ident">test</span> {
-    <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">hyper</span>;
     <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">chrono</span>;
+    <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">hyper</span>;
     <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">url</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>

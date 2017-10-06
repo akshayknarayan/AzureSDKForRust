@@ -321,7 +321,6 @@
 <span id="276">276</span>
 <span id="277">277</span>
 <span id="278">278</span>
-<span id="279">279</span>
 </pre><pre class="rust ">
 <span class="kw">mod</span> <span class="ident">batch</span>;
 
@@ -355,15 +354,14 @@
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">list_tables</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw">impl</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">AzureError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">query_entities</span>(<span class="ident">TABLE_TABLES</span>, <span class="prelude-val">None</span>).<span class="ident">and_then</span>(
-            <span class="op">|</span><span class="ident">entities</span><span class="op">|</span> {
+        <span class="self">self</span>.<span class="ident">query_entities</span>(<span class="ident">TABLE_TABLES</span>, <span class="prelude-val">None</span>)
+            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">entities</span><span class="op">|</span> {
                 <span class="kw">let</span> <span class="ident">e</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">entities</span>
                     .<span class="ident">into_iter</span>()
                     .<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span>: <span class="ident">TableEntity</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">TableName</span>)
                     .<span class="ident">collect</span>();
                 <span class="ident">ok</span>(<span class="ident">e</span>)
-            },
-        )
+            })
     }
 
     <span class="comment">// Create table if not exists.</span>

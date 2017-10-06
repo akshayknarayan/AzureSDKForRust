@@ -69,30 +69,18 @@
 <span id="24">24</span>
 <span id="25">25</span>
 <span id="26">26</span>
-<span id="27">27</span>
-<span id="28">28</span>
-<span id="29">29</span>
-<span id="30">30</span>
-<span id="31">31</span>
-<span id="32">32</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Deref</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Database</span> {
     <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">String</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_rid&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">rid</span>: <span class="ident">String</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_ts&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">ts</span>: <span class="ident">u64</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_self&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">_self</span>: <span class="ident">String</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_etag&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">etag</span>: <span class="ident">String</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_colls&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">colls</span>: <span class="ident">String</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_users&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">users</span>: <span class="ident">String</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_rid&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">rid</span>: <span class="ident">String</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_ts&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">ts</span>: <span class="ident">u64</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_self&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">_self</span>: <span class="ident">String</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_etag&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">etag</span>: <span class="ident">String</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_colls&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">colls</span>: <span class="ident">String</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_users&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">users</span>: <span class="ident">String</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">Database</span> {

@@ -80,41 +80,39 @@
 <span id="35">35</span>
 <span id="36">36</span>
 <span id="37">37</span>
-<span id="38">38</span>
 </pre><pre class="rust ">
-<span class="attribute">#<span class="op">!</span>[<span class="ident">recursion_limit</span><span class="op">=</span><span class="string">&quot;128&quot;</span>]</span>
-
+<span class="attribute">#![<span class="ident">recursion_limit</span> <span class="op">=</span> <span class="string">&quot;128&quot;</span>]</span>
 <span class="comment">// this will force us on nightly. The alternative is to</span>
 <span class="comment">// Box everything which is annoying. This will *eventually* become</span>
 <span class="comment">// stable so we will support stable too.</span>
-<span class="attribute">#<span class="op">!</span>[<span class="ident">feature</span>(<span class="ident">conservative_impl_trait</span>)]</span>
+<span class="attribute">#![<span class="ident">feature</span>(<span class="ident">conservative_impl_trait</span>)]</span>
 
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">chrono</span>;
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">hyper</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">mime</span>;
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">chrono</span>;
 
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">futures</span>;
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">tokio_core</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">hyper_tls</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">native_tls</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">tokio_core</span>;
 
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">base64</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">crypto</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">time</span>;
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">url</span>;
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">crypto</span>;
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">base64</span>;
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">xml</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">uuid</span>;
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">time</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">xml</span>;
 
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">log</span>;
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">quick_error</span>;
 
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde</span>;
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde_derive</span>;
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde_json</span>;
 
 

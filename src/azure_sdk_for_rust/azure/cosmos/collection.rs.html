@@ -150,28 +150,6 @@
 <span id="105">105</span>
 <span id="106">106</span>
 <span id="107">107</span>
-<span id="108">108</span>
-<span id="109">109</span>
-<span id="110">110</span>
-<span id="111">111</span>
-<span id="112">112</span>
-<span id="113">113</span>
-<span id="114">114</span>
-<span id="115">115</span>
-<span id="116">116</span>
-<span id="117">117</span>
-<span id="118">118</span>
-<span id="119">119</span>
-<span id="120">120</span>
-<span id="121">121</span>
-<span id="122">122</span>
-<span id="123">123</span>
-<span id="124">124</span>
-<span id="125">125</span>
-<span id="126">126</span>
-<span id="127">127</span>
-<span id="128">128</span>
-<span id="129">129</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Deref</span>;
 
@@ -193,35 +171,27 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">IndexingMode</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;consistent&quot;</span>)]</span>
-    <span class="ident">Consistent</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;lazy&quot;</span>)]</span>
-    <span class="ident">Lazy</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;consistent&quot;</span>)]</span> <span class="ident">Consistent</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;lazy&quot;</span>)]</span> <span class="ident">Lazy</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">IncludedPath</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;path&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">path</span>: <span class="ident">String</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;indexes&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">indexes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">IncludedPathIndex</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;path&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">path</span>: <span class="ident">String</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;indexes&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">indexes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">IncludedPathIndex</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">IncludedPathIndex</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;dataType&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">data_type</span>: <span class="ident">DataType</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;precision&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">precision</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i8</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;kind&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">KeyKind</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;dataType&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">data_type</span>: <span class="ident">DataType</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;precision&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">precision</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i8</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;kind&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">KeyKind</span>,
 }
 
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ExcludedPath</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;path&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">path</span>: <span class="ident">String</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;path&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">path</span>: <span class="ident">String</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
@@ -232,42 +202,28 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">IndexingPolicy</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;automatic&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">automatic</span>: <span class="ident">bool</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;indexingMode&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">indexing_mode</span>: <span class="ident">IndexingMode</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;includedPaths&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">included_paths</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">IncludedPath</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;excludedPaths&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">excluded_paths</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ExcludedPath</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;automatic&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">automatic</span>: <span class="ident">bool</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;indexingMode&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">indexing_mode</span>: <span class="ident">IndexingMode</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;includedPaths&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">included_paths</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">IncludedPath</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;excludedPaths&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">excluded_paths</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ExcludedPath</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Collection</span> {
     <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">String</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;indexingPolicy&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">indexing_policy</span>: <span class="ident">IndexingPolicy</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;indexingPolicy&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">indexing_policy</span>: <span class="ident">IndexingPolicy</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;partitionKey&quot;</span>)]</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">parition_key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PartitionKey</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_rid&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">rid</span>: <span class="ident">String</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_ts&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">ts</span>: <span class="ident">u64</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_self&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">_self</span>: <span class="ident">String</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_etag&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">etag</span>: <span class="ident">String</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_docs&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">docs</span>: <span class="ident">String</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_sprocs&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">sprocs</span>: <span class="ident">String</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_triggers&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">triggers</span>: <span class="ident">String</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_udfs&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">udfs</span>: <span class="ident">String</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_conflicts&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">conflicts</span>: <span class="ident">String</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_rid&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">rid</span>: <span class="ident">String</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_ts&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">ts</span>: <span class="ident">u64</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_self&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">_self</span>: <span class="ident">String</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_etag&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">etag</span>: <span class="ident">String</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_docs&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">docs</span>: <span class="ident">String</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_sprocs&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">sprocs</span>: <span class="ident">String</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_triggers&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">triggers</span>: <span class="ident">String</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_udfs&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">udfs</span>: <span class="ident">String</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;_conflicts&quot;</span>)]</span> <span class="kw">pub</span> <span class="ident">conflicts</span>: <span class="ident">String</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Collection</span> {
