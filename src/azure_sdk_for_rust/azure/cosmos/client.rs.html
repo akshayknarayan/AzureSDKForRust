@@ -1471,6 +1471,15 @@
 <span id="1426">1426</span>
 <span id="1427">1427</span>
 <span id="1428">1428</span>
+<span id="1429">1429</span>
+<span id="1430">1430</span>
+<span id="1431">1431</span>
+<span id="1432">1432</span>
+<span id="1433">1433</span>
+<span id="1434">1434</span>
+<span id="1435">1435</span>
+<span id="1436">1436</span>
+<span id="1437">1437</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">cosmos</span>::<span class="ident">authorization_token</span>::{<span class="ident">AuthorizationToken</span>, <span class="ident">TokenType</span>};
 
@@ -1498,6 +1507,7 @@
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">cosmos</span>::<span class="ident">query_document</span>::<span class="ident">QueryDocumentOptions</span>;
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">core</span>::<span class="ident">incompletevector</span>::<span class="ident">ContinuationToken</span>;
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">cosmos</span>::<span class="ident">query</span>::<span class="ident">Query</span>;
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">cosmos</span>::<span class="ident">partition_key</span>::<span class="ident">PartitionKey</span>;
 
 
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::{<span class="ident">FromStr</span>, <span class="ident">from_utf8</span>};
@@ -1528,9 +1538,9 @@
 
 <span class="kw">use</span> <span class="ident">futures</span>::<span class="ident">future</span>::<span class="kw-2">*</span>;
 
-<span class="kw">const</span> <span class="ident">AZURE_VERSION</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;2017-02-22&quot;</span>;
-<span class="kw">const</span> <span class="ident">VERSION</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;1.0&quot;</span>;
-<span class="kw">const</span> <span class="ident">TIME_FORMAT</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;%a, %d %h %Y %T GMT&quot;</span>;
+<span class="kw">const</span> <span class="ident">AZURE_VERSION</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;2017-02-22&quot;</span>;
+<span class="kw">const</span> <span class="ident">VERSION</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;1.0&quot;</span>;
+<span class="kw">const</span> <span class="ident">TIME_FORMAT</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;%a, %d %h %Y %T GMT&quot;</span>;
 
 <span class="macro">header</span><span class="macro">!</span> { (<span class="ident">XMSVersion</span>, <span class="string">&quot;x-ms-version&quot;</span>) <span class="op">=&gt;</span> [<span class="ident">String</span>] }
 <span class="macro">header</span><span class="macro">!</span> { (<span class="ident">XMSDate</span>, <span class="string">&quot;x-ms-date&quot;</span>) <span class="op">=&gt;</span> [<span class="ident">String</span>] }
@@ -1552,7 +1562,7 @@
 <span class="macro">header</span><span class="macro">!</span> { (<span class="ident">DocumentDBQueryEnableCrossPartition</span>,
 <span class="string">&quot;x-ms-documentdb-query-enablecrosspartition&quot;</span>) <span class="op">=&gt;</span> [<span class="ident">bool</span>] }
 
-<span class="kw">const</span> <span class="ident">AZURE_KEYS</span>: [<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>; <span class="number">5</span>] <span class="op">=</span> [<span class="string">&quot;_attachments&quot;</span>, <span class="string">&quot;_etag&quot;</span>, <span class="string">&quot;_rid&quot;</span>, <span class="string">&quot;_self&quot;</span>, <span class="string">&quot;_ts&quot;</span>];
+<span class="kw">const</span> <span class="ident">AZURE_KEYS</span>: [<span class="kw-2">&amp;</span><span class="ident">str</span>; <span class="number">5</span>] <span class="op">=</span> [<span class="string">&quot;_attachments&quot;</span>, <span class="string">&quot;_etag&quot;</span>, <span class="string">&quot;_rid&quot;</span>, <span class="string">&quot;_self&quot;</span>, <span class="string">&quot;_ts&quot;</span>];
 
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
@@ -1598,7 +1608,7 @@
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">prepare_request</span>(
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_token</span>,
             <span class="ident">uri</span>,
-            <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Get</span>,
+            <span class="kw-2">&amp;</span><span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Get</span>,
             <span class="prelude-val">None</span>,
             <span class="ident">ResourceType</span>::<span class="ident">Databases</span>,
             <span class="op">|</span>_<span class="op">|</span> {},
@@ -1643,7 +1653,7 @@
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">prepare_request</span>(
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_token</span>,
             <span class="ident">uri</span>,
-            <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Get</span>,
+            <span class="kw-2">&amp;</span><span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Get</span>,
             <span class="prelude-val">None</span>,
             <span class="ident">ResourceType</span>::<span class="ident">Collections</span>,
             <span class="op">|</span>_<span class="op">|</span> {},
@@ -1687,7 +1697,7 @@
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">prepare_request</span>(
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_token</span>,
             <span class="ident">uri</span>,
-            <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Post</span>,
+            <span class="kw-2">&amp;</span><span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Post</span>,
             <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">req</span>),
             <span class="ident">ResourceType</span>::<span class="ident">Databases</span>,
             <span class="op">|</span>_<span class="op">|</span> {},
@@ -1732,7 +1742,7 @@
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">prepare_request</span>(
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_token</span>,
             <span class="ident">uri</span>,
-            <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Get</span>,
+            <span class="kw-2">&amp;</span><span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Get</span>,
             <span class="prelude-val">None</span>,
             <span class="ident">ResourceType</span>::<span class="ident">Databases</span>,
             <span class="op">|</span>_<span class="op">|</span> {},
@@ -1774,7 +1784,7 @@
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">prepare_request</span>(
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_token</span>,
             <span class="ident">uri</span>,
-            <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Delete</span>,
+            <span class="kw-2">&amp;</span><span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Delete</span>,
             <span class="prelude-val">None</span>,
             <span class="ident">ResourceType</span>::<span class="ident">Databases</span>,
             <span class="op">|</span>_<span class="op">|</span> {},
@@ -1819,7 +1829,7 @@
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">prepare_request</span>(
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_token</span>,
             <span class="ident">uri</span>,
-            <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Get</span>,
+            <span class="kw-2">&amp;</span><span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Get</span>,
             <span class="prelude-val">None</span>,
             <span class="ident">ResourceType</span>::<span class="ident">Collections</span>,
             <span class="op">|</span>_<span class="op">|</span> {},
@@ -1872,7 +1882,7 @@
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">prepare_request</span>(
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_token</span>,
             <span class="ident">uri</span>,
-            <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Post</span>,
+            <span class="kw-2">&amp;</span><span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Post</span>,
             <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">collection_serialized</span>),
             <span class="ident">ResourceType</span>::<span class="ident">Collections</span>,
             <span class="op">|</span><span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">headers</span><span class="op">|</span> {
@@ -1927,7 +1937,7 @@
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">prepare_request</span>(
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_token</span>,
             <span class="ident">uri</span>,
-            <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Delete</span>,
+            <span class="kw-2">&amp;</span><span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Delete</span>,
             <span class="prelude-val">None</span>,
             <span class="ident">ResourceType</span>::<span class="ident">Collections</span>,
             <span class="op">|</span>_<span class="op">|</span> {},
@@ -1976,7 +1986,7 @@
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">prepare_request</span>(
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_token</span>,
             <span class="ident">uri</span>,
-            <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Put</span>,
+            <span class="kw-2">&amp;</span><span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Put</span>,
             <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">collection_serialized</span>),
             <span class="ident">ResourceType</span>::<span class="ident">Collections</span>,
             <span class="op">|</span>_<span class="op">|</span> {},
@@ -2010,6 +2020,7 @@
         <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
         <span class="ident">is_upsert</span>: <span class="ident">bool</span>,
         <span class="ident">indexing_directive</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">IndexingDirective</span><span class="op">&gt;</span>,
+        <span class="ident">partition_key</span>: <span class="kw-2">&amp;</span><span class="ident">PartitionKey</span>,
         <span class="ident">document_str</span>: <span class="ident">S</span>,
     ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">hyper</span>::<span class="ident">client</span>::<span class="ident">FutureResponse</span>, <span class="ident">AzureError</span><span class="op">&gt;</span>
     <span class="kw">where</span>
@@ -2022,13 +2033,15 @@
             <span class="ident">collection</span>
         ))<span class="question-mark">?</span>;
 
+        <span class="kw">let</span> <span class="ident">serialized_partition_key</span> <span class="op">=</span> <span class="ident">partition_key</span>.<span class="ident">to_json</span>()<span class="question-mark">?</span>;
+
         <span class="comment">// Standard headers (auth and version) will be provied by perform_request</span>
         <span class="comment">// Optional headers as per</span>
         <span class="comment">// https://docs.microsoft.com/en-us/rest/api/documentdb/create-a-document</span>
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">prepare_request</span>(
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_token</span>,
             <span class="ident">uri</span>,
-            <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Post</span>,
+            <span class="kw-2">&amp;</span><span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Post</span>,
             <span class="prelude-val">Some</span>(<span class="ident">document_str</span>.<span class="ident">as_ref</span>()),
             <span class="ident">ResourceType</span>::<span class="ident">Documents</span>,
             <span class="op">|</span><span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">headers</span><span class="op">|</span> {
@@ -2036,6 +2049,10 @@
 
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">id</span>) <span class="op">=</span> <span class="ident">indexing_directive</span> {
                     <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">DocumentIndexingDirective</span>(<span class="ident">id</span>));
+                }
+
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">val</span>) <span class="op">=</span> <span class="ident">serialized_partition_key</span> {
+                    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">CosmosDBPartitionKey</span>(<span class="ident">val</span>.<span class="ident">to_owned</span>()));
                 }
             },
         );
@@ -2052,6 +2069,7 @@
         <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
         <span class="ident">is_upsert</span>: <span class="ident">bool</span>,
         <span class="ident">indexing_directive</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">IndexingDirective</span><span class="op">&gt;</span>,
+        <span class="ident">partition_key</span>: <span class="kw-2">&amp;</span><span class="ident">PartitionKey</span>,
         <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>,
     ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">hyper</span>::<span class="ident">client</span>::<span class="ident">FutureResponse</span>, <span class="ident">AzureError</span><span class="op">&gt;</span>
     <span class="kw">where</span>
@@ -2065,6 +2083,7 @@
             <span class="ident">collection</span>,
             <span class="ident">is_upsert</span>,
             <span class="ident">indexing_directive</span>,
+            <span class="ident">partition_key</span>,
             <span class="kw-2">&amp;</span><span class="ident">document_serialized</span>,
         )
     }
@@ -2075,6 +2094,7 @@
         <span class="ident">collection</span>: <span class="ident">S2</span>,
         <span class="ident">is_upsert</span>: <span class="ident">bool</span>,
         <span class="ident">indexing_directive</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">IndexingDirective</span><span class="op">&gt;</span>,
+        <span class="ident">partition_key</span>: <span class="kw-2">&amp;</span><span class="ident">PartitionKey</span>,
         <span class="ident">document_str</span>: <span class="ident">S3</span>,
     ) <span class="op">-&gt;</span> <span class="kw">impl</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">DocumentAttributes</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">AzureError</span><span class="op">&gt;</span>
     <span class="kw">where</span>
@@ -2094,10 +2114,11 @@
         );
 
         <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">create_document_as_str_create_request</span>(
-            <span class="ident">database</span>.<span class="ident">as_ref</span>(),
-            <span class="ident">collection</span>.<span class="ident">as_ref</span>(),
+            <span class="ident">database</span>,
+            <span class="ident">collection</span>,
             <span class="ident">is_upsert</span>,
             <span class="ident">indexing_directive</span>,
+            <span class="ident">partition_key</span>,
             <span class="ident">document_str</span>,
         );
 
@@ -2114,6 +2135,7 @@
         <span class="ident">collection</span>: <span class="ident">S2</span>,
         <span class="ident">is_upsert</span>: <span class="ident">bool</span>,
         <span class="ident">indexing_directive</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">IndexingDirective</span><span class="op">&gt;</span>,
+        <span class="ident">partition_key</span>: <span class="kw-2">&amp;</span><span class="ident">PartitionKey</span>,
         <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>,
     ) <span class="op">-&gt;</span> <span class="kw">impl</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">DocumentAttributes</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">AzureError</span><span class="op">&gt;</span>
     <span class="kw">where</span>
@@ -2125,7 +2147,7 @@
         <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">collection</span>.<span class="ident">as_ref</span>();
 
         <span class="macro">trace</span><span class="macro">!</span>(
-            <span class="string">&quot;create_document called(database == {}, collection == {}, is_upsert == {}&quot;</span>,
+            <span class="string">&quot;create_document_as_entity called(database == {}, collection == {}, is_upsert == {}&quot;</span>,
             <span class="ident">database</span>,
             <span class="ident">collection</span>,
             <span class="ident">is_upsert</span>
@@ -2136,6 +2158,7 @@
             <span class="ident">collection</span>,
             <span class="ident">is_upsert</span>,
             <span class="ident">indexing_directive</span>,
+            <span class="ident">partition_key</span>,
             <span class="ident">document</span>,
         );
 
@@ -2163,7 +2186,7 @@
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">prepare_request</span>(
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_token</span>,
             <span class="ident">uri</span>,
-            <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Get</span>,
+            <span class="kw-2">&amp;</span><span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Get</span>,
             <span class="prelude-val">None</span>,
             <span class="ident">ResourceType</span>::<span class="ident">Documents</span>,
             <span class="op">|</span><span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">headers</span><span class="op">|</span> {
@@ -2246,16 +2269,12 @@
             <span class="ident">document_id</span>
         ))<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">serialized_partition_key</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">gdo</span>.<span class="ident">partition_key</span> {
-            <span class="comment">// the partition key should be a json formatted string list</span>
-            <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">val</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">serde_json</span>::<span class="ident">to_string</span>(<span class="ident">val</span>)<span class="question-mark">?</span>),
-            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
-        };
+        <span class="kw">let</span> <span class="ident">serialized_partition_key</span> <span class="op">=</span> <span class="ident">gdo</span>.<span class="ident">partition_key</span>.<span class="ident">to_json</span>()<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">prepare_request</span>(
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_token</span>,
             <span class="ident">uri</span>,
-            <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Get</span>,
+            <span class="kw-2">&amp;</span><span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Get</span>,
             <span class="prelude-val">None</span>,
             <span class="ident">ResourceType</span>::<span class="ident">Documents</span>,
             <span class="kw">move</span> <span class="op">|</span><span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">headers</span><span class="op">|</span> {
@@ -2388,7 +2407,7 @@
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">prepare_request</span>(
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_token</span>,
             <span class="ident">uri</span>,
-            <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Post</span>,
+            <span class="kw-2">&amp;</span><span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Post</span>,
             <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">query_json</span>),
             <span class="ident">ResourceType</span>::<span class="ident">Documents</span>,
             <span class="kw">move</span> <span class="op">|</span><span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">headers</span><span class="op">|</span> {
@@ -2639,7 +2658,7 @@
 <span class="kw">fn</span> <span class="ident">prepare_request</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(
     <span class="ident">authorization_token</span>: <span class="kw-2">&amp;</span><span class="ident">AuthorizationToken</span>,
     <span class="ident">uri</span>: <span class="ident">hyper</span>::<span class="ident">Uri</span>,
-    <span class="ident">http_method</span>: <span class="ident">hyper</span>::<span class="ident">Method</span>,
+    <span class="ident">http_method</span>: <span class="kw-2">&amp;</span><span class="ident">hyper</span>::<span class="ident">Method</span>,
     <span class="ident">request_body</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>,
     <span class="ident">resource_type</span>: <span class="ident">ResourceType</span>,
     <span class="ident">headers_func</span>: <span class="ident">F</span>,
@@ -2661,14 +2680,14 @@
 
         <span class="ident">generate_authorization</span>(
             <span class="ident">authorization_token</span>,
-            <span class="ident">http_method</span>.<span class="ident">clone</span>(),
+            <span class="ident">http_method</span>,
             <span class="ident">resource_type</span>,
             <span class="ident">resource_link</span>,
             <span class="kw-2">&amp;</span><span class="ident">time</span>,
         )
     };
     <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;prepare_request::auth == {:?}&quot;</span>, <span class="ident">auth</span>);
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">hyper</span>::<span class="ident">Request</span>::<span class="ident">new</span>(<span class="ident">http_method</span>, <span class="ident">uri</span>);
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">hyper</span>::<span class="ident">Request</span>::<span class="ident">new</span>(<span class="ident">http_method</span>.<span class="ident">clone</span>(), <span class="ident">uri</span>);
 
     <span class="comment">// This will give the caller the ability to add custom headers.</span>
     <span class="comment">// The closure is needed to because request.headers_mut().set_raw(...) requires</span>
@@ -2694,7 +2713,7 @@
 
 <span class="kw">fn</span> <span class="ident">generate_authorization</span>(
     <span class="ident">authorization_token</span>: <span class="kw-2">&amp;</span><span class="ident">AuthorizationToken</span>,
-    <span class="ident">http_method</span>: <span class="ident">hyper</span>::<span class="ident">Method</span>,
+    <span class="ident">http_method</span>: <span class="kw-2">&amp;</span><span class="ident">hyper</span>::<span class="ident">Method</span>,
     <span class="ident">resource_type</span>: <span class="ident">ResourceType</span>,
     <span class="ident">resource_link</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     <span class="ident">time</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
@@ -2731,7 +2750,7 @@
 }
 
 <span class="kw">fn</span> <span class="ident">string_to_sign</span>(
-    <span class="ident">http_method</span>: <span class="ident">hyper</span>::<span class="ident">Method</span>,
+    <span class="ident">http_method</span>: <span class="kw-2">&amp;</span><span class="ident">hyper</span>::<span class="ident">Method</span>,
     <span class="ident">rt</span>: <span class="ident">ResourceType</span>,
     <span class="ident">resource_link</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     <span class="ident">time</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
@@ -2747,7 +2766,7 @@
 
     <span class="macro">format</span><span class="macro">!</span>(
         <span class="string">&quot;{}\n{}\n{}\n{}\n\n&quot;</span>,
-        <span class="kw">match</span> <span class="ident">http_method</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">http_method</span> {
             <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Get</span> <span class="op">=&gt;</span> <span class="string">&quot;get&quot;</span>,
             <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Put</span> <span class="op">=&gt;</span> <span class="string">&quot;put&quot;</span>,
             <span class="ident">hyper</span>::<span class="ident">Method</span>::<span class="ident">Post</span> <span class="op">=&gt;</span> <span class="string">&quot;post&quot;</span>,
@@ -2835,13 +2854,12 @@ mon, 01 jan 1900 01:00:00 gmt
         <span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span> <span class="ident">time</span>.<span class="ident">with_timezone</span>(<span class="kw-2">&amp;</span><span class="ident">chrono</span>::<span class="ident">Utc</span>);
         <span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">time</span>.<span class="ident">format</span>(<span class="ident">TIME_FORMAT</span>));
 
-        <span class="kw">let</span> <span class="ident">authorization_token</span> <span class="op">=</span>
-            <span class="ident">authorization_token</span>::<span class="ident">AuthorizationToken</span>::<span class="ident">new</span>(
-                <span class="string">&quot;mindflavor&quot;</span>.<span class="ident">to_owned</span>(),
-                <span class="ident">authorization_token</span>::<span class="ident">TokenType</span>::<span class="ident">Master</span>,
-                <span class="string">&quot;8F8xXXOptJxkblM1DBXW7a6NMI5oE8NnwPGYBmwxLCKfejOK7B7yhcCHMGvN3PBrlMLIOeol1Hv9RCdzAZR5sg==&quot;</span>
-                    .<span class="ident">to_owned</span>())
-            .<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">authorization_token</span> <span class="op">=</span> <span class="ident">authorization_token</span>::<span class="ident">AuthorizationToken</span>::<span class="ident">new</span>(
+            <span class="string">&quot;mindflavor&quot;</span>.<span class="ident">to_owned</span>(),
+            <span class="ident">authorization_token</span>::<span class="ident">TokenType</span>::<span class="ident">Master</span>,
+            <span class="string">&quot;8F8xXXOptJxkblM1DBXW7a6NMI5oE8NnwPGYBmwxLCKfejOK7B7yhcCHMGvN3PBrlMLIOeol1Hv9RCdzAZR5sg==&quot;</span>
+                .<span class="ident">to_owned</span>(),
+        ).<span class="ident">unwrap</span>();
 
         <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">generate_authorization</span>(
             <span class="kw-2">&amp;</span><span class="ident">authorization_token</span>,
@@ -2918,13 +2936,15 @@ mon, 01 jan 1900 01:00:00 gmt
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt>↑</dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt>↓</dt>
                     <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>

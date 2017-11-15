@@ -59,23 +59,33 @@
 <span id="14">14</span>
 <span id="15">15</span>
 <span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">cosmos</span>::<span class="ident">ConsistencyLevel</span>;
+<span class="kw">use</span> <span class="ident">azure</span>::<span class="ident">cosmos</span>::<span class="ident">partition_key</span>::<span class="ident">PartitionKey</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GetDocumentOptions</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="kw">pub</span> <span class="ident">consistency_level_override</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ConsistencyLevel</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">session_token</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">if_none_match</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">partition_key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">partition_key</span>: <span class="ident">PartitionKey</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">GET_DOCUMENT_OPTIONS_DEFAULT</span>: <span class="ident">GetDocumentOptions</span> <span class="op">=</span> <span class="ident">GetDocumentOptions</span> {
-    <span class="ident">consistency_level_override</span>: <span class="prelude-val">None</span>,
-    <span class="ident">session_token</span>: <span class="prelude-val">None</span>,
-    <span class="ident">if_none_match</span>: <span class="prelude-val">None</span>,
-    <span class="ident">partition_key</span>: <span class="prelude-val">None</span>,
-};
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> ::<span class="ident">std</span>::<span class="ident">default</span>::<span class="ident">Default</span> <span class="kw">for</span> <span class="ident">GetDocumentOptions</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">GetDocumentOptions</span> {
+            <span class="ident">consistency_level_override</span>: <span class="prelude-val">None</span>,
+            <span class="ident">session_token</span>: <span class="prelude-val">None</span>,
+            <span class="ident">if_none_match</span>: <span class="prelude-val">None</span>,
+            <span class="ident">partition_key</span>: <span class="ident">PartitionKey</span>::<span class="ident">new</span>(),
+        }
+    }
+}
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -94,13 +104,15 @@
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt>↑</dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt>↓</dt>
                     <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
