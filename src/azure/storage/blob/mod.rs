@@ -367,9 +367,9 @@ impl Blob {
         // 'static lifetimes.
         let container_name = container_name.to_owned();
 
-        done(req).from_err().and_then(move |future_response| {
+        result(req).from_err().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::Ok).and_then(move |body| {
-                done(incomplete_vector_from_response(&body, &container_name)).from_err()
+                result(incomplete_vector_from_response(&body, &container_name)).from_err()
             })
         })
     }
@@ -423,10 +423,10 @@ impl Blob {
         let container_name = container_name.to_owned();
         let blob_name = blob_name.to_owned();
 
-        done(req).from_err().and_then(move |future_response| {
+        result(req).from_err().and_then(move |future_response| {
             check_status_extract_headers_and_body(future_response, expected_status_code).and_then(
                 move |(headers, body)| {
-                    done(Blob::from_headers(&blob_name, &container_name, &headers))
+                    result(Blob::from_headers(&blob_name, &container_name, &headers))
                         .and_then(move |blob| ok((blob, body)))
                 },
             )
@@ -536,7 +536,7 @@ impl Blob {
         r: Option<&[u8]>,
     ) -> impl Future<Item = (), Error = AzureError> {
         ok(self.put_create_request(c, po, r)).and_then(|req| {
-            done(req)
+            result(req)
                 .from_err()
                 .and_then(move |future_response| {
                     check_status_extract_body(future_response, StatusCode::Created)
@@ -596,7 +596,7 @@ impl Blob {
             LeaseAction::Break => StatusCode::Accepted,
         };
 
-        done(req)
+        result(req)
             .from_err()
             .and_then(move |future_response| {
                 check_status_extract_headers_and_body(future_response, expected_result)
@@ -644,7 +644,7 @@ impl Blob {
             Some(content),
         );
 
-        done(req)
+        result(req)
             .from_err()
             .and_then(move |future_response| {
                 check_status_extract_body(future_response, StatusCode::Created)
@@ -689,7 +689,7 @@ impl Blob {
             Some(content),
         );
 
-        done(req)
+        result(req)
             .from_err()
             .and_then(move |future_response| {
                 check_status_extract_body(future_response, StatusCode::Created)
@@ -724,7 +724,7 @@ impl Blob {
             None,
         );
 
-        done(req)
+        result(req)
             .from_err()
             .and_then(move |future_response| {
                 check_status_extract_body(future_response, StatusCode::Created)
@@ -756,7 +756,7 @@ impl Blob {
             None,
         );
 
-        done(req)
+        result(req)
             .from_err()
             .and_then(move |future_response| {
                 check_status_extract_body(future_response, StatusCode::Accepted)
