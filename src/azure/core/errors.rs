@@ -2,6 +2,7 @@ use azure::core::enumerations::ParsingError;
 use azure::core::range::ParseError;
 use chrono;
 use futures::future::*;
+use futures::prelude::*;
 use futures::Future;
 use futures::Stream;
 use hyper;
@@ -184,12 +185,12 @@ impl From<()> for AzureError {
 pub fn extract_status_headers_and_body(
     resp: hyper::client::FutureResponse,
 ) -> impl Future<Item = (hyper::StatusCode, hyper::Headers, Vec<u8>), Error = AzureError> {
-    resp.from_err().and_then(|res| {
+    resp.and_then(|res| {
         let status = res.status();
         let headers = res.headers().clone();
         res.body()
             .concat2()
-            .from_err()
+            .err_into()
             .and_then(move |whole_body| ok((status, headers, Vec::from(&whole_body as &[u8]))))
     })
 }
@@ -219,9 +220,9 @@ pub fn check_status_extract_headers_and_body(
 pub fn extract_status_and_body(
     resp: hyper::client::FutureResponse,
 ) -> impl Future<Item = (hyper::StatusCode, String), Error = AzureError> {
-    resp.from_err().and_then(|res| {
+    resp.err_into().and_then(|res| {
         let status = res.status();
-        res.body().concat2().from_err().and_then(move |whole_body| {
+        res.body().concat2().err_into().and_then(move |whole_body| {
             match str::from_utf8(&whole_body) {
                 Ok(s_body) => ok((status, s_body.to_owned())),
                 Err(error) => err(AzureError::UTF8Error(error)),

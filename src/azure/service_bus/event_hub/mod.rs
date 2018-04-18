@@ -87,7 +87,7 @@ fn send_event(
         duration,
     );
 
-    result(req).from_err().and_then(move |future_response| {
+    result(req).err_into().and_then(move |future_response| {
         check_status_extract_body(future_response, StatusCode::Created).and_then(|_| ok(()))
     })
 }

@@ -51,7 +51,7 @@ impl TableService {
         debug!("body == {}", body);
         let req = self.request_with_default_header(TABLE_TABLES, Method::Post, Some(body));
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::Created)
                 .and_then(move |_| ok(()))
         })
@@ -65,7 +65,7 @@ impl TableService {
     ) -> impl Future<Item = Option<T>, Error = AzureError> {
         let path = &entity_path(table_name, partition_key, row_key);
         let req = self.request_with_default_header(path, Method::Get, None);
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             extract_status_and_body(future_response).and_then(move |(status, body)| {
                 if status == StatusCode::NotFound {
                     ok(None)
@@ -98,10 +98,10 @@ impl TableService {
 
         let req = self.request_with_default_header(path.as_str(), Method::Get, None);
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::Ok).and_then(move |body| {
                 result(serde_json::from_str::<EntityCollection<T>>(&body))
-                    .from_err()
+                    .err_into()
                     .and_then(|ec| ok(ec.value))
             })
         })
@@ -126,7 +126,7 @@ impl TableService {
     ) -> impl Future<Item = (), Error = AzureError> {
         let req = self._prepare_insert_entity(table_name, entity);
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::Created)
                 .and_then(move |_| ok(()))
         })
@@ -155,7 +155,7 @@ impl TableService {
         entity: &T,
     ) -> impl Future<Item = (), Error = AzureError> {
         let req = self._prepare_update_entity(table_name, partition_key, row_key, entity);
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::NoContent)
                 .and_then(move |_| ok(()))
         })
@@ -173,7 +173,7 @@ impl TableService {
             headers.set(Accept(vec![qitem(get_json_mime_nometadata())]));
             headers.set(IfMatch::Any);
         });
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::NoContent)
                 .and_then(move |_| ok(()))
         })
@@ -195,7 +195,7 @@ impl TableService {
         let req = self.request("$batch", Method::Post, Some(payload), |ref mut headers| {
             headers.set(ContentType(get_batch_mime()));
         });
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::Accepted).and_then(move |_| {
                 // TODO deal with body response, handle batch failure.
                 // let ref body = get_response_body(&mut response)?;

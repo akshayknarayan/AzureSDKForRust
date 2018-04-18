@@ -89,7 +89,7 @@ impl Container {
 
         let req = c.perform_request(&uri, Method::Delete, |_| {}, None);
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::Accepted).and_then(|_| ok(()))
         })
     }
@@ -114,7 +114,7 @@ impl Container {
             None,
         );
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::Created).and_then(|_| ok(()))
         })
     }
@@ -150,9 +150,9 @@ impl Container {
 
         let req = c.perform_request(&uri, Method::Get, |_| {}, None);
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::Ok)
-                .and_then(|body| result(incomplete_vector_from_response(&body)).from_err())
+                .and_then(|body| result(incomplete_vector_from_response(&body)).err_into())
         })
     }
 }

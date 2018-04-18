@@ -142,10 +142,10 @@ impl<'a> Client {
 
         let req = self.list_databases_create_request();
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::Ok).and_then(move |body| {
                 result(serde_json::from_str::<ListDatabasesResponse>(&body))
-                    .from_err()
+                    .err_into()
                     .and_then(move |response| ok(response.databases))
             })
         })
@@ -187,10 +187,10 @@ impl<'a> Client {
 
         let req = self.list_collections_create_request(database_name);
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::Ok).and_then(move |body| {
                 result(serde_json::from_str::<ListCollectionsResponse>(&body))
-                    .from_err()
+                    .err_into()
                     .and_then(|database_response| ok(database_response.collections))
             })
         })
@@ -234,9 +234,9 @@ impl<'a> Client {
 
         let req = self.create_database_create_request(database_name);
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::Created)
-                .and_then(move |body| result(serde_json::from_str::<Database>(&body)).from_err())
+                .and_then(move |body| result(serde_json::from_str::<Database>(&body)).err_into())
         })
     }
 
@@ -275,9 +275,9 @@ impl<'a> Client {
 
         let req = self.get_database_create_request(database_name);
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::Ok)
-                .and_then(move |body| result(serde_json::from_str::<Database>(&body)).from_err())
+                .and_then(move |body| result(serde_json::from_str::<Database>(&body)).err_into())
         })
     }
 
@@ -319,7 +319,7 @@ impl<'a> Client {
 
         let req = self.delete_database_create_request(database_name);
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::NoContent).and_then(|_| ok(()))
         })
     }
@@ -366,9 +366,9 @@ impl<'a> Client {
 
         let req = self.get_collection_create_request(database_name, collection_name);
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::Ok)
-                .and_then(move |body| result(serde_json::from_str::<Collection>(&body)).from_err())
+                .and_then(move |body| result(serde_json::from_str::<Collection>(&body)).err_into())
         })
     }
 
@@ -424,9 +424,9 @@ impl<'a> Client {
         let req =
             self.create_collection_create_request(database_name, required_throughput, collection);
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::Created)
-                .and_then(move |body| result(serde_json::from_str::<Collection>(&body)).from_err())
+                .and_then(move |body| result(serde_json::from_str::<Collection>(&body)).err_into())
         })
     }
 
@@ -472,7 +472,7 @@ impl<'a> Client {
 
         let req = self.delete_collection_create_request(database_name, collection_name);
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::NoContent).and_then(|_| ok(()))
         })
     }
@@ -517,9 +517,9 @@ impl<'a> Client {
 
         let req = self.replace_collection_prepare_request(database_name, collection);
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::Created)
-                .and_then(move |body| result(serde_json::from_str::<Collection>(&body)).from_err())
+                .and_then(move |body| result(serde_json::from_str::<Collection>(&body)).err_into())
         })
     }
 
@@ -632,9 +632,9 @@ impl<'a> Client {
             document_str,
         );
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::Created).and_then(move |body| {
-                result(serde_json::from_str::<DocumentAttributes>(&body)).from_err()
+                result(serde_json::from_str::<DocumentAttributes>(&body)).err_into()
             })
         })
     }
@@ -672,9 +672,9 @@ impl<'a> Client {
             document,
         );
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::Created).and_then(move |body| {
-                result(serde_json::from_str::<DocumentAttributes>(&body)).from_err()
+                result(serde_json::from_str::<DocumentAttributes>(&body)).err_into()
             })
         })
     }
@@ -752,7 +752,7 @@ impl<'a> Client {
 
         let req = self.list_documents_create_request(database, collection, ldo);
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_headers_and_body(future_response, StatusCode::Ok).and_then(
                 move |(headers, whole_body)| {
                     result(list_documents_extract_result::<T>(&whole_body, &headers))
@@ -834,7 +834,7 @@ impl<'a> Client {
 
         let req = self.get_document_create_request(database, collection, document_id, gdo);
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             extract_status_headers_and_body(future_response).and_then(
                 move |(status, headers, v_body)| {
                     result(get_document_extract_result(status, &headers, &v_body))
@@ -884,7 +884,7 @@ impl<'a> Client {
 
         let req = self.query_document_create_request(database, collection, query, options);
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_headers_and_body(future_response, StatusCode::Ok).and_then(
                 move |(headers, v_body)| {
                     result(query_documents_extract_result_json(&v_body, &headers))

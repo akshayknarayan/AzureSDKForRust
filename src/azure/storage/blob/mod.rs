@@ -367,9 +367,9 @@ impl Blob {
         // 'static lifetimes.
         let container_name = container_name.to_owned();
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_body(future_response, StatusCode::Ok).and_then(move |body| {
-                result(incomplete_vector_from_response(&body, &container_name)).from_err()
+                result(incomplete_vector_from_response(&body, &container_name)).err_into()
             })
         })
     }
@@ -423,7 +423,7 @@ impl Blob {
         let container_name = container_name.to_owned();
         let blob_name = blob_name.to_owned();
 
-        result(req).from_err().and_then(move |future_response| {
+        result(req).err_into().and_then(move |future_response| {
             check_status_extract_headers_and_body(future_response, expected_status_code).and_then(
                 move |(headers, body)| {
                     result(Blob::from_headers(&blob_name, &container_name, &headers))
@@ -537,7 +537,7 @@ impl Blob {
     ) -> impl Future<Item = (), Error = AzureError> {
         ok(self.put_create_request(c, po, r)).and_then(|req| {
             result(req)
-                .from_err()
+                .err_into()
                 .and_then(move |future_response| {
                     check_status_extract_body(future_response, StatusCode::Created)
                 })
@@ -597,7 +597,7 @@ impl Blob {
         };
 
         result(req)
-            .from_err()
+            .err_into()
             .and_then(move |future_response| {
                 check_status_extract_headers_and_body(future_response, expected_result)
             })
@@ -645,7 +645,7 @@ impl Blob {
         );
 
         result(req)
-            .from_err()
+            .err_into()
             .and_then(move |future_response| {
                 check_status_extract_body(future_response, StatusCode::Created)
             })
@@ -690,7 +690,7 @@ impl Blob {
         );
 
         result(req)
-            .from_err()
+            .err_into()
             .and_then(move |future_response| {
                 check_status_extract_body(future_response, StatusCode::Created)
             })
@@ -725,7 +725,7 @@ impl Blob {
         );
 
         result(req)
-            .from_err()
+            .err_into()
             .and_then(move |future_response| {
                 check_status_extract_body(future_response, StatusCode::Created)
             })
@@ -757,7 +757,7 @@ impl Blob {
         );
 
         result(req)
-            .from_err()
+            .err_into()
             .and_then(move |future_response| {
                 check_status_extract_body(future_response, StatusCode::Accepted)
             })
