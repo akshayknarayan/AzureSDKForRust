@@ -518,7 +518,7 @@ impl Blob {
         );
 
         if let Some(ref timeout) = po.timeout {
-            uri = format!("{}&timeout={}", uri, timeout);
+            uri = format!("{}?timeout={}", uri, timeout);
         }
 
         c.perform_request(
