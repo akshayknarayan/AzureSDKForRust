@@ -1,5 +1,8 @@
 extern crate uuid;
 
+mod append_block_options;
+pub use self::append_block_options::{AppendOptions, APPEND_OPTIONS_DEFAULT};
+
 mod put_options;
 pub use self::put_options::{PutOptions, PUT_OPTIONS_DEFAULT};
 
@@ -562,6 +565,98 @@ impl Blob {
         r: Option<&[u8]>,
     ) -> impl Future<Item = (), Error = AzureError> {
         ok(self.put_create_request(c, po, r)).and_then(|req| {
+            done(req)
+                .from_err()
+                .and_then(move |future_response| {
+                    check_status_extract_body(future_response, StatusCode::Created)
+                })
+                .and_then(|_| ok(()))
+        })
+    }
+
+    fn do_append(
+        &self,
+        c: &Client,
+        ao: &AppendOptions,
+        r: Option<&[u8]>,
+    ) -> Result<hyper::client::FutureResponse, AzureError> {
+        // parameter sanity check
+        match self.blob_type {
+            BlobType::BlockBlob |
+            BlobType::PageBlob => {
+                return Err(AzureError::InputParametersError(
+                    "cannot use append_block with \
+                     PageBlob or BlockBlob"
+                        .to_owned(),
+                ));
+            }
+            BlobType::AppendBlob => if r.is_none() {
+                return Err(AzureError::InputParametersError(
+                    "cannot use append_block with \
+                     AppendBlob without a Read"
+                        .to_owned(),
+                ));
+            },
+        };
+
+        let ce = if let Some(ref content_encoding) = self.content_encoding {
+            use hyper::header::Encoding;
+            match content_encoding.parse::<Encoding>() {
+                Ok(ct) => Some(ct),
+                Err(error) => return Err(AzureError::HyperError(error)),
+            }
+        } else {
+            None
+        };
+
+        let mut uri = format!(
+            "https://{}.blob.core.windows.net/{}/{}?comp=appendblock",
+            c.account(),
+            self.container_name,
+            self.name
+        );
+
+        if let Some(ref timeout) = ao.timeout {
+            uri = format!("{}&timeout={}", uri, timeout);
+        }
+
+        c.perform_request(
+            &uri,
+            Method::Put,
+            move |ref mut headers| {
+                if let Some(ct) = self.content_type.clone() {
+                    headers.set(ContentType(ct));
+                }
+
+                if let Some(ce) = ce {
+                    headers.set(ContentEncoding(vec![ce]));
+                }
+
+                // TODO Content-Language
+
+                if let Some(ref content_md5) = self.content_md5 {
+                    headers.set(ContentMD5(content_md5.to_owned()));
+                };
+
+                headers.set(XMSBlobType(self.blob_type));
+
+                // TODO x-ms-blob-content-disposition
+
+                if self.blob_type == BlobType::PageBlob {
+                    headers.set(XMSBlobContentLength(self.content_length));
+                }
+            },
+            r,
+        )
+    }
+
+    pub fn append(
+        &self,
+        c: &Client,
+        ao: &AppendOptions,
+        r: Option<&[u8]>,
+    ) -> impl Future<Item = (), Error = AzureError> {
+        ok(self.do_append(c, ao, r)).and_then(|req| {
             done(req)
                 .from_err()
                 .and_then(move |future_response| {
